@@ -1,0 +1,24 @@
+{
+  "name": "sandwichfiller",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattladd23/SandwichFiller.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mattladd23/SandwichFiller/issues"
+  },
+  "homepage": "https://github.com/mattladd23/SandwichFiller#readme",
+  "dependencies": {
+    "node": "^17.7.2",
+    "nodemon": "^2.0.16"
+  }
+}
