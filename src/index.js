@@ -21,15 +21,15 @@ const port = process.env.PORT || 3000;
 // Define paths for handlebars engine to read
 const publicPath = path.join(__dirname, '../public');
 const viewsPath = path.join(__dirname, '../templates/views');
-const partialsPath = path.join(__dirname, '../template/partials');
+const partialsPath = path.join(__dirname, '../templates/partials');
+
+// Set up a static directory for public directory
+app.use(express.static(publicPath));
 
 // Initialize handlebars engine and locate paths
 app.set('view engine', 'hbs');
 app.set('views', viewsPath);
 hbs.registerPartials(partialsPath);
-
-// Set up a static directory for public directory
-app.use(express.static(publicPath));
 
 // So express can read information from forms
 app.use(express.urlencoded({ extended: false }));
@@ -56,7 +56,7 @@ app.get('/', (req, res) => {
 // Render homepage
 app.get('/home', (req, res) => {
     res.render('home', {
-        title: 'Welcome to SandwichFiller'
+        title: 'Welcome to SandwichFiller!'
     });
 })
 

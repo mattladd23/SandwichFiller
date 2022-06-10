@@ -1,0 +1,32 @@
+/* .home-hero {
+    color: orange;
+}
+
+h1 {
+    color: orange;
+}
+
+body {
+    background-color: aqua;
+} */
+
+
+.home-hero {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: -1;
+    background-image: url('../images/compsci.jpg');
+    text-align: center;
+    padding: 1rem;
+    background-position: center center;
+    background-size: cover;
+    color: #fff;
+    text-shadow: 0 0 8px #66757f;
+};
