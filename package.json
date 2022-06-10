@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=development nodemon index.js -e js, hbs, css",
+    "start": "NODE_ENV=development nodemon src/index.js -e js, hbs, css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
