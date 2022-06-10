@@ -29,7 +29,7 @@ app.set('views', viewsPath);
 hbs.registerPartials(partialsPath);
 
 // Set up a static directory for public directory
-app.use(exoress.static(publicPath));
+app.use(express.static(publicPath));
 
 // So express can read information from forms
 app.use(express.urlencoded({ extended: false }));
@@ -55,7 +55,9 @@ app.get('/', (req, res) => {
 
 // Render homepage
 app.get('/home', (req, res) => {
-    res.render('home');
+    res.render('home', {
+        title: 'Welcome to SandwichFiller'
+    });
 })
 
 
