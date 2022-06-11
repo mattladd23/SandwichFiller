@@ -16,4 +16,17 @@
     background-size: cover;
     color: #fff;
     text-shadow: 0 0 8px #66757f;
-};
+}
+
+.home-hero button {
+    background-color: #e89513;
+    border-color: #e89513;
+    margin-top: 2rem;            
+}
+
+.home-hero button:hover {
+    background-color: #e89513;
+    opacity: 0.8;
+    color: #fff;
+    border-color: #e89513;
+}                
