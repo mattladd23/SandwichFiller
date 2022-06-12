@@ -12,31 +12,33 @@
 
 {{>notAuthNavbar}}
     
-    <div class="home-hero" action="/register/staff" method="POST">
+    <div class="home-hero">
         <h1>Staff registration</h1>
         <br>
-        <form>
+        <form action="/register/staff" method="POST">
             <div class="form-group">
                 <label for="staff-fname">First name:</label>
-                <input type="text" class="form-control" id="staff-fname" placeholder="" required>
+                <input type="text" class="form-control" id="staff-fname" name="stafffname" placeholder="" required>
             </div>
             <div class="form-group">
                 <label for="staff-lname">Last name:</label>
-                <input type="text" class="form-control" id="staff-lname" placeholder="" required>
+                <input type="text" class="form-control" id="staff-lname" name="stafflname" placeholder="" required>
             </div>
             <div class="form-group">
                 <label for="staff-email">Email:</label>
-                <input type="email" class="form-control" id="staff-email" placeholder="" required>
+                <input type="email" class="form-control" id="staff-email" name="staffemail" placeholder="" required>
             </div>
             <div class="form-group">
                 <label for="staff-password">Password:</label>
-                <input type="password" class="form-control" id="staff-password" placeholder="" required>
+                <input type="password" class="form-control" id="staff-password" name="staffpassword" placeholder="" required>
             </div>
             <div class="form-group">
-                <label for="staff-confirm-pw">Another label</label>
-                <input type="password" class="form-control" id="staff-confirm-pw" placeholder="" required>
+                <label for="staff-confirm-pw">Confirm password:</label>
+                <input type="password" class="form-control" id="staff-confirm-pw" name="staffconfirmpw" placeholder="">
             </div>
-            <button class="btn btn-primary" type="submit">Sign up</button>
+            <div>
+                <button class="btn btn-primary" type="submit" id="signup-button">Sign up</button>
+            </div>            
         </form>               
     </div>
 

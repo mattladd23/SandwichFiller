@@ -19,14 +19,16 @@
   },
   "homepage": "https://github.com/mattladd23/SandwichFiller#readme",
   "dependencies": {
-    "chai": "^4.3.6",    
+    "bcrypt": "^5.0.1",
+    "chai": "^4.3.6",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "hbs": "^4.2.0",    
+    "hbs": "^4.2.0",
     "mocha": "^10.0.0",
     "node": "^17.7.2",
-    "nodemon": "^2.0.16",    
+    "nodemon": "^2.0.16",
     "path": "^0.12.7",
-    "pg": "^8.7.3",    
+    "pg": "^8.7.3",
     "win-node-env": "^0.6.1"
   }
 }
