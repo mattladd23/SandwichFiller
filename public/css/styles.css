@@ -1,3 +1,5 @@
+/* Navbar */
+
 .navbar-brand {
     text-align: center;
 }
@@ -14,6 +16,9 @@
 .nav-item a:hover {
     opacity: 0.8;
 }
+
+
+/* Home navigation */
 
 .home-hero {
     width: 100vw;
@@ -47,6 +52,9 @@
     color: #fff;
     border-color: #e89513;
 }
+
+
+/* Footer */
 
 footer {
     position: absolute;
