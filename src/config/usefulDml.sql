@@ -6,3 +6,20 @@ INSERT INTO users (user_id, f_name, l_name, email, password)
 VALUES (1000000, 'm', 'm', 'm@m', 'm');
 INSERT INTO student (user_id, student_id, course, school, placement_year, grad_year, pref_sector, other_sectors)
 VALUES (1000000, 1010101010, 'm', 'm', 'm', 2025, 'm', 'm');
+
+/* Create a member of staff */
+
+INSERT INTO staff (user_id, f_name, l_name, email, password)
+VALUES (100006680, 'Eddie', 'Howe', 'eddie@gmail.com', 'eddie');
+
+/* Create a student */
+
+INSERT INTO student (user_id, f_name, l_name, email, password,
+					 student_id, course, school, placement_year,
+					 grad_year, pref_sector, other_sectors)
+VALUES (100000000, 'Miguel', 'Almiron', 'miggy@gmail.com', 'miggy',
+	   100120449, 'BA History', 'History', '2023-2024',
+	   2025, 'Business', 'Football');
+
+
+
