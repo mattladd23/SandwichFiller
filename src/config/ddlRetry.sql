@@ -22,7 +22,7 @@ CREATE TABLE student (
     user_id BIGINT NOT NULL,    
     student_id BIGINT NOT NULL,
     course VARCHAR (50) NOT NULL,
-    school CHAR NOT NULL,
+    school VARCHAR NOT NULL,
     placement_year VARCHAR(40) NOT NULL, 
     grad_year INTEGER NOT NULL
         CHECK (grad_year >= '2023'),
