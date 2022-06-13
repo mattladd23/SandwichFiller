@@ -2,6 +2,9 @@
 const path = require('path');
 const express = require('express');
 const hbs = require('hbs');
+const session = require('express-session');
+const passport = require('passport');
+const initializeStaff = require('./config/passportStaff');
 
 // Define routes
 const registerRoute = require('./routes/register');
@@ -9,6 +12,7 @@ const loginRoute = require('./routes/login');
 const studentRoute = require('./routes/student');
 const staffRoute = require('./routes/staff');
 const testRoute = require('./routes/test');
+
 
 // Instantiate server
 const app = express();
@@ -28,11 +32,28 @@ app.set('view engine', 'hbs');
 app.set('views', viewsPath);
 hbs.registerPartials(partialsPath);
 
+// Set up session
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    roling: true,
+    saveUninitialized: false,
+    cookie: {
+        expires: 120000
+    }
+}));
+
 // So express can read information from forms
 app.use(express.urlencoded({ extended: false }));
 
 // To read information in .json format
 app.use(express.json());
+
+// Passport
+initializeStaff(passport);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 // Call routes
