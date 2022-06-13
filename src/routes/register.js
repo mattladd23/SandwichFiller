@@ -56,7 +56,7 @@ router.post('/staff', async (req, res) => {
     // Query to insert user into database
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE registerStaff(bigint, text, text, text, text) AS '
-    + 'INSERT INTO users (user_id, f_name, l_name, email, password) '
+    + 'INSERT INTO staff (user_id, f_name, l_name, email, password) '
     + 'VALUES ($1, $2, $3, $4, $5);'
     + `EXECUTE registerStaff(${staffUserId}, '${staffFName}', '${staffLName}', '${staffEmail}', '${staffPassword}');`
     + 'DEALLOCATE registerStaff;'
@@ -111,27 +111,12 @@ router.post('/student', async (req, res) => {
 
     // Query to check existing credentials
 
-    // Query to insert user into database
-    // let q_users = 'SET SEARCH_PATH TO sf;'
-    // + 'PREPARE registerStudentInUsers(bigint, text, text, text, text) AS '
-    // + 'INSERT INTO users (user_id, f_name, l_name, email, password) '
-    // + 'VALUES ($1, $2, $3, $4, $5);'    + 
-    // + `EXECUTE registerStudentInUsers(${studentUserId}, '${studentFName}', '${studentLName}', '${studentEmail}', '${studentPassword}');`
-    // + 'DEALLOCATE registerStudentInUsers;'
-
-    // let q_student = 'SET SEARCH_PATH TO sf;'
-    // + 'PREPARE registerStudentInStudent(bigint, numeric, text, text, text, numeric, text, text) AS '
-    // + 'INSERT INTO student (user_id, student_id, course, school, placement_year, grad_year, pref_sector, other_sectors) '
-    // + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8);'
-    // + `EXECUTE registerStudentInStudent(${studentUserId}, ${studentId}, '${course}', '${school}', '${placementYear}', ${gradYear}, '${prefSector}', '${otherSectors}');`
-    // + 'DEALLOCATE registerStudentInStudent;'
-    
-    // Unprepared statement for testing
     let q = 'SET SEARCH_PATH TO sf;'
-    + 'INSERT INTO users (user_id, f_name, l_name, email, password)'
-    + `VALUES (${studentUserId}, '${studentFName}', '${studentLName}', '${studentEmail}', '${studentPassword}');`
-    + 'INSERT INTO student (user_id, student_id, course, school, placement_year, grad_year, pref_sector, other_sectors) '
-    + `VALUES (${studentUserId}, ${studentId}, '${course}', '${school}', '${placementYear}', ${gradYear}, '${prefSector}', '${otherSectors}');`
+    + 'PREPARE registerStudent(bigint, text, text, text, text, bigint, text, text, text, numeric, text, text) AS '
+    + 'INSERT INTO student (user_id, f_name, l_name, email, password, student_id, course, school, placement_year, grad_year, pref_sector, other_sectors) '
+    + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);'
+    + `EXECUTE registerStudent(${studentUserId}, '${studentFName}', '${studentLName}', '${studentEmail}', '${studentPassword}', ${studentId}, '${course}', '${school}', '${placementYear}', ${gradYear}, '${prefSector}', '${otherSectors}');`
+    + 'DEALLOCATE registerStudent;'    
 
     await pool
         .query(q)        
