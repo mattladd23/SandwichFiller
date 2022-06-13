@@ -49,16 +49,14 @@ router.post('/staff', async (req, res) => {
     const staffFName = req.body.stafffname;
     const staffLName = req.body.stafflname;
     const staffEmail = req.body.staffemail;
-    const staffPassword = staffhashedPw;
-
-    console.log(staffUserId, staffFName, staffFName, staffEmail, staffPassword);
+    const staffPassword = staffhashedPw;    
 
     // Query to check existing credentials
 
     // Query to insert user into database
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE registerStaff(bigint, text, text, text, text) AS '
-    + 'INSERT INTO staff (user_id, f_name, l_name, email, password) '
+    + 'INSERT INTO users (user_id, f_name, l_name, email, password) '
     + 'VALUES ($1, $2, $3, $4, $5);'
     + `EXECUTE registerStaff(${staffUserId}, '${staffFName}', '${staffLName}', '${staffEmail}', '${staffPassword}');`
     + 'DEALLOCATE registerStaff;'
