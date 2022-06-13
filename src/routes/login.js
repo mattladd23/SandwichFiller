@@ -10,7 +10,9 @@ router.get('/', (req, res) => {
     });
 });
 
-// Staff login
+// STAFF LOGIN
+
+// Render page
 router.get('/staff', (req, res) => {
     res.render('login-staff', {
         title: 'Login as a member of staff',
@@ -18,7 +20,13 @@ router.get('/staff', (req, res) => {
     });
 });
 
-// Student login
+// Login post request
+
+
+
+// STUDENT LOGIN
+
+// Render page
 router.get('/student', (req, res) => {
     res.render('login-student', {
         title: 'Login as a student',

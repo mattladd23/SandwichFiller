@@ -13,7 +13,33 @@
 {{>notAuthNavbar}}
     
     <div class="home-hero">
-        <h1>Student login</h1>               
+        <h1>Student login</h1>
+        <br>
+        <form action="/login/student" method="POST">
+            <div class="form-group">
+                <label for="studentemaillogin">Email:</label>
+                <input type="email" class="form-control" id="studentemaillogin" name="studentemaillogin" placeholder="student.email@uea.ac.uk">
+            </div>
+            <div class="form-group">
+                <label for="studentpwlogin">Password:</label>
+                <input type="password" class="form-control" id="studentpwlogin" name="studentpwlogin" placeholder="************">
+            </div>
+            <div>
+                <button class="btn btn-primary" type="submit" id="signup-button">Login</button>
+            </div>
+            <br>
+            <div>
+                <a id="stafflogin-redir" href="/login/staff">Staff login</a>
+            </div>
+            <br>
+            <div>
+                <a id="forgotpw" href="/forgot">Forgot your password?</a>
+            </div>
+            <br>
+            <div>
+                <a id="create-acc" href="/register/student">Create an account</a>
+            </div>
+        </form>             
     </div>    
         
 

@@ -13,8 +13,34 @@
 {{>notAuthNavbar}}
     
     <div class="home-hero">
-        <h1>Staff login</h1>               
-    </div>    
+        <h1>Staff login</h1>
+        <br>
+        <form action="/login/staff" method="POST">
+            <div class="form-group">
+                <label for="staffemaillogin">Email:</label>
+                <input type="email" class="form-control" id="staffemaillogin" name="staffemaillogin" placeholder="staff.email@uea.ac.uk">
+            </div>
+            <div class="form-group">
+                <label for="staffpwlogin">Password:</label>
+                <input type="password" class="form-control" id="staffpwlogin" name="staffpwlogin" placeholder="************">
+            </div>
+            <div>
+                <button class="btn btn-primary" type="submit" id="signup-button">Login</button>
+            </div>
+            <br>
+            <div>
+                <a id="studentlogin-redir" href="/login/student">Student login</a>
+            </div>
+            <br>
+            <div>
+                <a id="forgotpw" href="/forgot">Forgot your password?</a>
+            </div>
+            <br>
+            <div>
+                <a id="create-acc" href="/register/staff">Create an account</a>
+            </div>
+        </form>             
+    </div>       
         
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

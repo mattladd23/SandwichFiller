@@ -43,7 +43,7 @@
 .home-hero button {
     background-color: #e89513;
     border-color: #e89513;
-    margin-top: 2rem;            
+    margin-top: 2rem;                   
 }
 
 .home-hero button:hover {
@@ -51,6 +51,17 @@
     opacity: 0.8;
     color: #fff;
     border-color: #e89513;
+}
+
+.home-hero a {
+    color: #fff;
+    text-shadow: 0 0 8px #66757f;
+    padding: 1rem;
+}
+
+.home-hero a:hover {
+    text-decoration: none;
+    opacity: 0.8;
 }
 
 
