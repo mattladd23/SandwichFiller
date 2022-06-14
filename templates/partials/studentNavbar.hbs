@@ -1,0 +1,23 @@
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1e335e">
+  
+    <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">            
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Applications</a>
+            <a class="dropdown-item" href="#">Account</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Logout</a>
+        </div>
+    </div>
+
+    <div class="navbar-brand mx-auto">
+        <a class="navbar-brand navbar-center" href="/home">Sandwich<span style="color: #e89513">Filler</span></a>
+    </div>
+  
+   <div>
+        <form class="form-inline my-2 my-lg-0" action="/user/logout?_method=DELETE" method="POST">
+            <button type="submit" id="logout-button">Log out</button>
+        </form>
+    </div>  
+</nav>

@@ -17,6 +17,19 @@
     opacity: 0.8;
 }
 
+/* Navbar log out button */
+
+#logout-button {
+    background-color: #1e335e;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+#logout-button:hover {
+    opacity: 0.8;
+}
+
 
 /* Home navigation */
 
