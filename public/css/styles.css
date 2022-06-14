@@ -1,5 +1,4 @@
 /* Navbar */
-
 .navbar-brand {
     text-align: center;
 }
@@ -127,7 +126,7 @@
 /* Footer */
 
 footer {
-    position: absolute;
+    position: fixed;
     height: 10%;
     width: 100%;
     bottom: 0;
