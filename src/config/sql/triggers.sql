@@ -1,6 +1,6 @@
 SET SEARCH_PATH TO sf;
 
--- STAFF
+-- STAFF -------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION staff_user_insert()
 
@@ -33,7 +33,9 @@ CREATE TRIGGER staff_user_insert
     EXECUTE PROCEDURE staff_user_insert();
 
 
--- STUDENT
+
+
+-- STUDENT ----------------------------------------------
 
 CREATE OR REPLACE FUNCTION student_user_insert()
 

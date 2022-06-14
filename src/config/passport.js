@@ -7,48 +7,33 @@ const bcrypt = require('bcrypt');
 function initialize(passport) {    
 
     // Authentication logic with placeholder params
-    const authenticateUser = (async (email, password, done) => {
-        console.log(email, password);
+    const authenticateUser = (async (email, password, done) => {        
 
         // Select query and prepared statement
         let q = 'SET SEARCH_PATH TO sf;'
         + 'PREPARE login(text) AS '
         + 'SELECT * FROM users WHERE email = $1;'
         + `EXECUTE login('${email}');`
-        + 'DEALLOCATE login;'
-
-        console.log(q);
+        + 'DEALLOCATE login;'        
 
         // Run query through database - is results index 2 or 3?
         await pool
             .query(q)
             .then(async (results) => {
                 if (results[2].rows.length > 0) {
-                    const user = results[2].rows[0];
-
-                    console.log(results);
-                    console.log(user);
-
-                    console.log(user.user_id);
-                    console.log(user.email);
-                    console.log(user.password);
-                    console.log(user.is_authorised);
+                    const user = results[2].rows[0];                   
 
                     bcrypt.compare(password, user.password, async (err, result) => {
-                        if (result) {
-                            console.log('Success');                            
+                        if (result) {                                                        
                             return done(null, user);
                         } 
-                        if (err) {
-                            console.log(password);
-                            console.log('Error1');
-                        } else {
-                            console.log('Email or password incorrect1');
+                        if (err) {                            
+                            console.log(err);
+                        } else {                            
                             return done(null, false, { message: 'Email or password incorrect'});                            
                         }
                     })
-                } else {
-                    console.log('Email or password incorrect2');
+                } else {                    
                     return done(null, false, { message: 'Email or password incorrect'});
                 }
             })

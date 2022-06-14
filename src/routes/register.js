@@ -75,8 +75,6 @@ router.post('/staff', async (req, res) => {
 });
 
 
-
-
 // STUDENT REGISTRATION
 
 // Render page

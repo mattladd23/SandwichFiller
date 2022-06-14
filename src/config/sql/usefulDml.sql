@@ -2,6 +2,8 @@
 
 SET SEARCH_PATH TO sf;
 
+/* Not that useful but shows inserting into two separate tables, albeit as unprepared statements */
+
 INSERT INTO users (user_id, f_name, l_name, email, password)
 VALUES (1000000, 'm', 'm', 'm@m', 'm');
 INSERT INTO student (user_id, student_id, course, school, placement_year, grad_year, pref_sector, other_sectors)
