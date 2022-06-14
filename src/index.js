@@ -4,11 +4,12 @@ const express = require('express');
 const hbs = require('hbs');
 const session = require('express-session');
 const passport = require('passport');
-const initializeStaff = require('./config/passportStaff');
+const initializePassport = require('./config/passport');
 
 // Define routes
 const registerRoute = require('./routes/register');
 const loginRoute = require('./routes/login');
+const userRoute = require('./routes/user');
 const studentRoute = require('./routes/student');
 const staffRoute = require('./routes/staff');
 const testRoute = require('./routes/test');
@@ -50,7 +51,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Passport
-initializeStaff(passport);
+initializePassport(passport);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -59,6 +60,7 @@ app.use(passport.session());
 // Call routes
 app.use('/register', registerRoute);
 app.use('/login', loginRoute);
+app.use('/user', userRoute);
 app.use('/student', studentRoute);
 app.use('/staff', staffRoute);
 app.use('/test', testRoute);

@@ -64,7 +64,7 @@ router.post('/staff', async (req, res) => {
     await pool
         .query(q)
         .then(() => {
-            res.redirect('/login/staff');
+            res.redirect('/login');
         })
     .catch((e) => {
         console.log(e);
@@ -121,7 +121,7 @@ router.post('/student', async (req, res) => {
     await pool
         .query(q)        
         .then(() => {
-            res.redirect('/login/student');
+            res.redirect('/login');
         })               
     .catch((e) => {
         console.log(e);

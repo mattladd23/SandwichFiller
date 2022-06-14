@@ -12,13 +12,13 @@ const pool = require('../config/db');
 
 // Import and initialize passport
 const passport = require('passport');
-const initializeStaffPassport = require('../config/passportStaff');
+const initializePassport = require('../config/passport');
 
 // Other relevant libraries
 const flash = require('express-flash');
 
 // Instantiate passport
-initializeStaffPassport(passport);
+initializePassport(passport);
 
 // Middleware
 router.use(passport.initialize());
@@ -36,17 +36,17 @@ router.get('/', (req, res) => {
 // STAFF LOGIN
 
 // Render page
-router.get('/staff', (req, res) => {
-    res.render('login-staff', {
-        title: 'Login as a member of staff',
-        error: req.query.error
-    });
-});
+// router.get('/staff', (req, res) => {
+//     res.render('login-staff', {
+//         title: 'Login as a member of staff',
+//         error: req.query.error
+//     });
+// });
 
 // Login post request
-router.post('/staff', passport.authenticate('local', {
-    successRedirect: '/staff',
-    failureRedirect: '/login/staff?error=true',
+router.post('/', passport.authenticate('local', {
+    successRedirect: '/user',
+    failureRedirect: '/login?error=true',
     failureFlash: true
 }));
 
@@ -54,15 +54,15 @@ router.post('/staff', passport.authenticate('local', {
 // STUDENT LOGIN
 
 // Render page
-router.get('/student', (req, res) => {
-    res.render('login-student', {
-        title: 'Login as a student',
-        error: false
-    });
-});
+// router.get('/student', (req, res) => {
+//     res.render('login-student', {
+//         title: 'Login as a student',
+//         error: false
+//     });
+// });
 
-// Login post request
-router.post('/student')
+// // Login post request
+// router.post('/student')
 
 
 module.exports = router;
