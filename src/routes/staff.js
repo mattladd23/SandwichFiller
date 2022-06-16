@@ -171,14 +171,14 @@ router.get('/students', async (req, res) => {
     // });
 
     let query = req.query.search;
-    console.log(query)
+    console.log(query);
 
     query = '%'+query+'%';
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE searchStudents(text) AS '
     + 'SELECT student.f_name, student.l_name, student.email, student.student_id, student.course, '
-    + 'student.school '
+    + 'student.school, student.placement_year, student.grad_year, student.pref_sector, other_sectors '
     + 'FROM student '
     + 'WHERE student.f_name ILIKE $1 OR student.l_name ILIKE $1 OR student.email ILIKE $1 ' 
     + 'ORDER BY student.l_name ASC;'

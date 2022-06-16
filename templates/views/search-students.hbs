@@ -13,7 +13,49 @@
 {{>staffNavbar}}
     
     <div class="user-hero">
-        <h1>Search results</h1>
+
+        <div class="results-container">
+            <h1>Search results</h1>
+            {{#if result}}            
+            <div class="results-table-container">
+                <table>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Email</th>
+                        <th>Course</th>
+                        <th>School</th>
+                        <th>Placement year</th>
+                        <th>Graduation year</th>
+                        <th>Preferred sector</th>
+                        <th>Other sectors of interest</th>
+                    </tr>                    
+                    {{#each students as |value key|}}
+                    <tr>
+                        <td>{{{value.student_id}}}</td>
+                        <td>{{{value.f_name}}}</td>
+                        <td>{{{value.l_name}}}</td>
+                        <td>{{{value.email}}}</td>
+                        <td>{{{value.course}}}</td>
+                        <td>{{{value.school}}}</td>
+                        <td>{{{value.placement_year}}}</td>
+                        <td>{{{value.grad_year}}}</td>
+                        <td>{{{value.pref_sector}}}</td>
+                        <td>{{{value.other_sectors}}}</td>
+                    </tr>
+                    <br>
+                    {{/each}}                  
+                </table>
+            </div>
+            
+            {{else}}
+            <div class="no-results-container">
+                <p>No results found for: {{{userSearch}}}</p>
+            </div>
+            {{/if}}
+        </div>      
+
         {{!-- <form class="form-inline" action="/staff/students">
             <i class="fas fa-search" aria-hidden="true"></i>
             <input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
