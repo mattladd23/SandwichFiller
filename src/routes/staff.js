@@ -161,4 +161,56 @@ router.get('/applications', async (req, res) => {
         });
 })
 
+// Search student records
+
+// Render page
+router.get('/students', async (req, res) => {
+    // res.render('search-students', {
+    //     title: 'Search students',
+    //     error: false
+    // });
+
+    let query = req.query.search;
+    console.log(query)
+
+    query = '%'+query+'%';
+
+    let q = 'SET SEARCH_PATH TO sf;'
+    + 'PREPARE searchStudents(text) AS '
+    + 'SELECT student.f_name, student.l_name, student.email, student.student_id, student.course, '
+    + 'student.school '
+    + 'FROM student '
+    + 'WHERE student.f_name ILIKE $1 OR student.l_name ILIKE $1 OR student.email ILIKE $1 ' 
+    + 'ORDER BY student.l_name ASC;'
+    + `EXECUTE searchStudents('${query}');`
+    + 'DEALLOCATE searchStudents;'
+
+    console.log(q);
+
+    await pool
+        .query(q)
+        .then((results) => {
+            console.log(results);
+            if (results[2].rowCount === 0) {
+                res.render('search-students', {
+                    title: 'Search students',
+                    userSearch: query,
+                    result: false
+                })
+            } else {
+                const students = results[2].rows;
+                console.log(students);
+
+                res.render('search-students', {
+                    title: 'Search students',
+                    students: students,
+                    result: true
+                })                
+            }
+        })
+        .catch((e) => {
+            console.log(e);
+        })
+});
+
 module.exports = router;
