@@ -16,7 +16,7 @@ function initialize(passport) {
         + `EXECUTE login('${email}');`
         + 'DEALLOCATE login;'        
 
-        // Run query through database - is results index 2 or 3?
+        // Run query through database
         await pool
             .query(q)
             .then(async (results) => {
@@ -42,7 +42,7 @@ function initialize(passport) {
             })
     });
 
-    // Pass through input from the email and password
+    // Pass through input from email and password fields
     passport.use(
         new LocalStrategy(
             { usernameField: 'emaillogin', passwordField: 'passwordlogin' },

@@ -1,7 +1,11 @@
-/* Navbar */
+/* Global */
+
 html {
     overflow-y: scroll;
 }
+
+
+/* Navbar */
 
 .navbar {
     position: fixed;

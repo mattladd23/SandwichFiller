@@ -165,11 +165,7 @@ router.get('/applications', async (req, res) => {
 
 // Render page
 router.get('/students', async (req, res) => {
-    // res.render('search-students', {
-    //     title: 'Search students',
-    //     error: false
-    // });
-
+    
     let query = req.query.search;
     console.log(query);
 
