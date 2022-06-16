@@ -24,6 +24,7 @@
                     {{#each status as |value key|}}
                     <option>{{{value.app_status}}}</option>
                     {{/each}}
+                    {{else}}
                     <option>{{{filter}}}</option>
                     {{#each status as |value key|}}
                     <option>{{{value.app_status}}}</option>
