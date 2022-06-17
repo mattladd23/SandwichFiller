@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../css/styles.css">    
+</head>
+<body>
+
+{{>studentNavbar}}
+    
+    <div class="user-hero">
+        <div class="student-applications-container">
+            <h1>Your applications</h1>
+            {{#if result}}            
+            <div class="applications-table-container">
+                <table>
+                    <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Role</th>
+                        <th>Organisation</th>
+                        <th>City</th>
+                        <th>Country</th>
+                        <th>Date application submitted</th>
+                        <th>Application deadline</th>
+                        <th>Description</th>
+                        <th>Application status</th>
+                        <th>Last updated</th>
+                    </tr>                    
+                    {{#each apps as |value key|}}
+                    <tr>
+                        <td>{{{value.f_name}}}</td>
+                        <td>{{{value.l_name}}}</td>
+                        <td>{{{value.role}}}</td>
+                        <td>{{{value.organisation}}}</td>
+                        <td>{{{value.city}}}</td>
+                        <td>{{{value.country}}}</td>
+                        <td>{{{value.app_date}}}</td>
+                        <td>{{{value.deadline}}}</td>
+                        <td>{{{value.description}}}</td>
+                        <td>{{{value.app_status}}}</td>
+                        <td>{{{value.last_updated}}}</td>
+                    </tr>
+                    <br>
+                    {{/each}}                  
+                </table>
+            </div>
+            
+            {{else}}
+            <div class="no-results-container">
+                <p>No results found for: {{{userSearch}}}</p>
+            </div>
+            {{/if}}
+        </div>                            
+    </div>       
+        
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+{{>footer}} 
+</body>
+</html>

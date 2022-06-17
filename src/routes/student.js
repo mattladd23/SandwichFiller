@@ -13,6 +13,50 @@ router.get('/', (req, res) => {
     });
 });
 
+// Get all applications of a student
+router.get('/applications', async (req, res) => {
+
+    let userId = req.session.passport.user;
+
+    let q = 'SET SEARCH_PATH TO sf;'
+    + 'PREPARE userApps(bigint) AS '
+    + 'SELECT student.f_name, student.l_name, application.role, application.organisation, application.city, '
+    + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
+    + 'application.last_updated '
+    + 'FROM student JOIN application '
+    + 'ON student.user_id = application.user_id '
+    + 'WHERE application.user_id = $1 '
+    + 'ORDER BY application.last_updated DESC; '
+    + `EXECUTE userApps(${userId});`
+    + 'DEALLOCATE userApps;'
+
+    console.log(q);
+
+    await pool
+        .query(q)
+        .then((results) => {
+            console.log(results);
+            if (results[2].rowCount === 0) {
+                res.render('student-applications', {
+                    title: 'Your applications',
+                    result: false
+                })
+            } else {
+                const apps = results[2].rows;
+                console.log(apps);
+
+                res.render('student-applications', {
+                    title: 'Your applications',
+                    result:true,
+                    apps: apps                    
+                })
+            }
+        })
+        .catch((e) => {
+            console.log(e);
+        })
+});
+
 // Render create application page
 router.get('/applications/new', (req, res) => {
     res.render('new-application', {
@@ -23,7 +67,8 @@ router.get('/applications/new', (req, res) => {
 
 // Post a new application
 router.post('/applications/new', async (req, res) => {
-    // const userId = parseInt(req.session.passport.user.user_id);
+
+    const userId = req.session.passport.user;    
     const appId = Date.now().toString();
     const role = req.body.role;
     const organisation = req.body.organisation;
@@ -35,12 +80,12 @@ router.post('/applications/new', async (req, res) => {
     const description = req.body.description;
 
     let q = 'SET SEARCH_PATH TO sf;'
-    + 'PREPARE newApp(bigint, text, text, text, text, date, date, text, text, text) AS '
-    + 'INSERT INTO application(app_id, role, organisation, city, country, app_date, deadline, description, app_status, last_updated)'
-    + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, LOCALTIMESTAMP(0));'
-    + `EXECUTE newApp(${appId}, '${role}', '${organisation}', '${city}', '${country}', '${appDate}', '${deadline}', '${description}', '${appStatus}', 1);`
-    + 'DEALLOCATE newApp;'    
-
+    + 'PREPARE newApp(bigint, bigint, text, text, text, text, date, date, text, text, text) AS '
+    + 'INSERT INTO application(user_id, app_id, role, organisation, city, country, app_date, deadline, description, app_status, last_updated)'
+    + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, LOCALTIMESTAMP(0));'
+    + `EXECUTE newApp(${userId}, ${appId}, '${role}', '${organisation}', '${city}', '${country}', '${appDate}', '${deadline}', '${description}', '${appStatus}', 1);`
+    + 'DEALLOCATE newApp;'
+    
     await pool
         .query(q)
         .then(() => {
