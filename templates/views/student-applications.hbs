@@ -16,7 +16,7 @@
         <div class="student-applications-container">
             <h1>Your applications</h1>
             {{#if result}}            
-            <div class="applications-table-container">
+            {{!-- <div class="applications-table-container">
                 <table>
                     <tr>
                         <th>First name</th>
@@ -46,9 +46,47 @@
                         <td>{{{value.last_updated}}}</td>
                     </tr>
                     <br>
+                
                     {{/each}}                  
                 </table>
-            </div>
+            </div> --}}
+                {{#each apps as |value key|}}
+                <div class="card text-white mb-3">
+                    <div class="card-header">Created by: {{{value.f_name}}} {{{value.l_name}}}</div>
+                    <div class="card-body">
+                        <div class="row">                         
+                            <div class="card-info col-sm-6">
+                                <div class="row">
+                                    <h3 class="card-title">{{{value.role}}}</h3>
+                                </div>
+                                <div class="row">
+                                    <h5 class="card-text">{{{value.organisation}}}</h5>
+                                </div>
+                                <div class="row">
+                                    <p class="card-text">{{{value.city}}}, {{{value.country}}}</p>
+                                </div>
+                                <div class="row">
+                                    <p class="card-text">{{{value.description}}}</p>
+                                </div>
+                            </div>
+                            <div class="card-dates col-sm-6">
+                                <div class="row">
+                                    <p class="card-text">Application submitted: {{{value.app_date}}}</p>
+                                </div>
+                                <div class="row">
+                                    <p class="card-text">Application deadline: {{{value.deadline}}}</p>
+                                </div>
+                                <div class="row">
+                                    <p class="card-text">Application status: {{{value.app_status}}}</p>
+                                </div>                                
+                            </div>
+                        </div>                        
+                    </div>
+                    <div class="card-footer">
+                        <small>Last updated: {{{value.last_updated}}}</small>
+                    </div>
+                </div>
+                {{/each}}            
             
             {{else}}
             <div class="no-results-container">

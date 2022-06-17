@@ -96,4 +96,13 @@ router.post('/applications/new', async (req, res) => {
         })
 });
 
+// Render edit applications page
+
+router.get('/applications/edit', (req, res) => {
+    res.render('edit-applications', {
+        title: 'SandwichFiller: Edit or delete an application',
+        error: false
+    });
+});
+
 module.exports = router;
