@@ -7,8 +7,8 @@ const pool = require('../config/db');
 
 // Render student home page
 router.get('/', (req, res) => {
-    res.render('student-welcome', {
-        title: 'Welcome Student',
+    res.render('student-dashboard', {
+        title: 'SandwichFiller: Students',
         error: false
     });
 });

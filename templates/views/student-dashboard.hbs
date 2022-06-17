@@ -13,7 +13,25 @@
 {{>studentNavbar}}
     
     <div class="user-hero">
-        <h1>Welcome to your student account</h1>                     
+        <h1>Dashboard</h1>
+        <br>
+        <h3>What would you like to do?</h3>
+        <br>
+        <form action="/student/applications" method="GET">
+            <button type="submit" class="btn btn-primary">View my applications</button>            
+        </form>
+        <form action="/student/applications/new" method="GET">
+            <button type="submit" class="btn btn-primary">Create a new application</button>            
+        </form>
+        <form action="/student/applications/edit" method="GET">
+            <button type="submit" class="btn btn-primary">Edit or delete an application</button>            
+        </form>
+        <form action="/student/account" method="GET">
+            <button type="submit" class="btn btn-primary">Manage my account</button>            
+        </form>
+        <form>
+            <button>Log out</button>            
+        </form>                   
     </div>       
         
 
