@@ -26,6 +26,7 @@
     "express-flash": "^0.0.2",
     "express-session": "^1.17.3",
     "hbs": "^4.2.0",
+    "method-override": "^3.0.0",
     "mocha": "^10.0.0",
     "node": "^17.7.2",
     "nodemon": "^2.0.16",

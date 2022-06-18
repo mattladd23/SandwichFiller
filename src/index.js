@@ -40,7 +40,7 @@ app.use(session({
     roling: true,
     saveUninitialized: false,
     cookie: {
-        expires: 300000
+        expires: 10000000
     }
 }));
 
