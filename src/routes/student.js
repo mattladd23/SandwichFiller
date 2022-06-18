@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
 // Get all applications of a student
 router.get('/applications', async (req, res) => {
 
-    let userId = req.session.passport.user;
+    const userId = req.session.passport.user;
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE userApps(bigint) AS '
@@ -103,10 +103,9 @@ router.post('/applications/new', async (req, res) => {
 });
 
 // Render edit applications page
-
 router.get('/applications/edit', async (req, res) => {
 
-    let userId = req.session.passport.user;
+    const userId = req.session.passport.user;
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE userApps(bigint) AS '
@@ -205,15 +204,6 @@ router.delete('/applications/edit/:id', async (req, res) => {
 });
 
 // Render student manage profile page
-
-// router.get('/account', (req, res) => {
-//     res.render('student-manage', {
-//         title: 'Manage my account',
-//         error: false
-//     })
-// });
-
-
 router.get('/account', async (req, res) => {
 
     const userId = req.session.passport.user;
@@ -246,6 +236,7 @@ router.get('/account', async (req, res) => {
     })
 })
 
+// Edit student account details
 router.put('/account', async (req, res) => {
     
     const studentId = req.body.studentid;

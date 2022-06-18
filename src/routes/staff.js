@@ -42,8 +42,7 @@ router.get('/applications', async (req, res) => {
         + 'ORDER BY application.last_updated DESC;'
         console.log(q);
 
-    } else {
-        
+    } else {        
 
         if (req.query.filter) {
             console.log(req.query.filter);
@@ -125,10 +124,12 @@ router.get('/applications', async (req, res) => {
                     });
                 }
 
-                const appFeatures = ['role', 'organisation', 'city', 'country', 'app_date', 
-                                     'deadline', 'description', 'app_status', 'last_updated'];
-                let appResults = [apps, appFeatures, ['last_updated']];
-                sanAppResults = [appResults, 'last_updated'];
+                // Keep lines below for input sanitisation
+
+                // const appFeatures = ['role', 'organisation', 'city', 'country', 'app_date', 
+                //                      'deadline', 'description', 'app_status', 'last_updated'];
+                // let appResults = [apps, appFeatures, ['last_updated']];
+                // sanAppResults = [appResults, 'last_updated'];
                 // console.log(sanAppResults);
 
                 return res.render('all-applications', {
@@ -143,10 +144,12 @@ router.get('/applications', async (req, res) => {
             const apps = results[3].rows;
             console.log(apps);
 
-            const appFeatures = ['role', 'organisation', 'city', 'country', 'app_date', 
-                                     'deadline', 'description', 'app_status', 'last_updated'];
-            let appResults = [apps, appFeatures, ['last_updated']];
-            sanAppResults = [appResults, 'last_updated'];
+            // Keep lines below for input sanitisation
+
+            // const appFeatures = ['role', 'organisation', 'city', 'country', 'app_date', 
+            //                          'deadline', 'description', 'app_status', 'last_updated'];
+            // let appResults = [apps, appFeatures, ['last_updated']];
+            // sanAppResults = [appResults, 'last_updated'];
             // console.log(sanAppResults);
 
             return res.render('all-applications', {
