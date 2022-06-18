@@ -23,5 +23,11 @@ VALUES (100000000, 'Miguel', 'Almiron', 'miggy@gmail.com', 'miggy',
 	   100120449, 'BA History', 'History', '2023-2024',
 	   2025, 'Business', 'Football');
 
+/* Edit an application */
 
+UPDATE application SET role = 'Farmer', organisation = 'Self-employed', city = 'Somerset', 
+country = 'UK', app_date = '11-11-2022', deadline = '01-01-2023', app_status = 'Applied',
+description = 'Need to escape to the countryside'
+WHERE app_id = 1655396214535
+RETURNING *;
 
