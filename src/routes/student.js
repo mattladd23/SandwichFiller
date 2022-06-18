@@ -5,6 +5,12 @@ const router = express.Router();
 // Import db model
 const pool = require('../config/db');
 
+// Other modules
+const methodOverride = require('method-override');
+
+// Middleware
+router.use(methodOverride('_method'));
+
 // Render student home page
 router.get('/', (req, res) => {
     res.render('student-dashboard', {
@@ -20,7 +26,7 @@ router.get('/applications', async (req, res) => {
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE userApps(bigint) AS '
-    + 'SELECT student.f_name, student.l_name, application.role, application.organisation, application.city, '
+    + 'SELECT student.f_name, student.l_name, application.app_id, application.role, application.organisation, application.city, '
     + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
     + 'application.last_updated '
     + 'FROM student JOIN application '
@@ -47,7 +53,7 @@ router.get('/applications', async (req, res) => {
 
                 res.render('student-applications', {
                     title: 'Your applications',
-                    result:true,
+                    result: true,
                     apps: apps                    
                 })
             }
@@ -98,11 +104,86 @@ router.post('/applications/new', async (req, res) => {
 
 // Render edit applications page
 
-router.get('/applications/edit', (req, res) => {
-    res.render('edit-applications', {
-        title: 'SandwichFiller: Edit or delete an application',
-        error: false
-    });
+router.get('/applications/edit', async (req, res) => {
+
+    let userId = req.session.passport.user;
+
+    let q = 'SET SEARCH_PATH TO sf;'
+    + 'PREPARE userApps(bigint) AS '
+    + 'SELECT student.f_name, student.l_name, application.app_id, application.role, application.organisation, application.city, '
+    + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
+    + 'application.last_updated '
+    + 'FROM student JOIN application '
+    + 'ON student.user_id = application.user_id '
+    + 'WHERE application.user_id = $1 '
+    + 'ORDER BY application.last_updated DESC; '
+    + `EXECUTE userApps(${userId});`
+    + 'DEALLOCATE userApps;'
+
+    console.log(q);
+
+    await pool
+        .query(q)
+        .then((results) => {
+            console.log(results);
+            if (results[2].rowCount === 0) {
+                res.render('edit-applications', {
+                    title: 'Your applications',
+                    result: false
+                })
+            } else {
+                const apps = results[2].rows;
+                console.log(apps);
+
+                res.render('edit-applications', {
+                    title: 'Your applications',
+                    result:true,
+                    apps: apps                    
+                })
+            }
+        })
+        .catch((e) => {
+            console.log(e);
+        })
 });
+
+// Edit an application(s)
+router.put('/applications/edit/:id', async (req, res) => {
+        
+    const appId = req.params.id;
+    const role = req.body.editRole;
+    const organisation = req.body.editOrganisation;
+    const city = req.body.editCity;
+    const country = req.body.editCountry;
+    const appDate = req.body.editAppDate;
+    const deadline = req.body.editDeadline;
+    const appStatus = req.body.editAppStatus;
+    const description = req.body.editDescription;
+
+    let q = 'SET SEARCH_PATH TO sf;'
+    + 'PREPARE editApp(text, text, text, text, text, text, text, text, bigint) AS '
+    + 'UPDATE application '
+    + 'SET role = $1, organisation = $2, city = $3, country = $4, app_date = $5, '
+    + 'deadline = $6, app_status = $7, description = $8 '
+    + 'WHERE app_id = $9;'
+    + `EXECUTE editApp('${role}', '${organisation}', '${city}', '${country}', '${appDate}', '${deadline}', `
+    + `'${appStatus}', '${description}', ${appId});`
+    + 'DEALLOCATE editApp;'
+
+    console.log(q);
+
+    await pool
+        .query(q)
+        .then(() => {
+            return res.redirect('/student/applications?success=true');
+        })
+    .catch((e) => {
+        console.log(e);
+    })    
+});
+
+// Delete an application
+
+
 
 module.exports = router;
