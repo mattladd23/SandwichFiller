@@ -183,7 +183,34 @@ router.put('/applications/edit/:id', async (req, res) => {
 });
 
 // Delete an application
+router.delete('/applications/edit/:id', async (req, res) => {
+    
+    const appId = req.params.id;
 
+    let q = 'SET SEARCH_PATH TO sf;'
+    + 'PREPARE deleteApp(bigint) AS '
+    + 'DELETE FROM application '
+    + 'WHERE application.app_id = $1; '
+    + `EXECUTE deleteApp(${appId});`
+    + 'DEALLOCATE deleteApp;'
 
+    await pool
+        .query(q)
+        .then(() => {
+            return res.redirect('/student/applications');
+        })
+    .catch((e) => {
+        console.log(e);
+    })
+});
+
+// Render student manage profile page
+
+router.get('/account', (req, res) => {
+    res.render('student-manage', {
+        title: 'Manage my account',
+        error: false
+    })
+});
 
 module.exports = router;
