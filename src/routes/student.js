@@ -206,11 +206,75 @@ router.delete('/applications/edit/:id', async (req, res) => {
 
 // Render student manage profile page
 
-router.get('/account', (req, res) => {
-    res.render('student-manage', {
-        title: 'Manage my account',
-        error: false
+// router.get('/account', (req, res) => {
+//     res.render('student-manage', {
+//         title: 'Manage my account',
+//         error: false
+//     })
+// });
+
+
+router.get('/account', async (req, res) => {
+
+    const userId = req.session.passport.user;
+
+    let q = 'SET SEARCH_PATH TO sf;'
+    + 'PREPARE getAccount(bigint) AS '
+    + 'SELECT student.f_name, student.l_name, student.email, student.student_id, student.course, '
+    + 'student.school, student.placement_year, student.grad_year, student.pref_sector, student.other_sectors '
+    + 'FROM student '
+    + 'WHERE student.user_id = $1;'
+    + `EXECUTE getAccount(${userId});`
+    + 'DEALLOCATE getAccount;'
+
+    console.log(q);
+
+    await pool
+        .query(q)
+        .then((results) => {
+            console.log(results);
+            const accDetails = results[2].rows;
+            console.log(accDetails);
+            res.render('student-manage', {
+                title: 'Manage my account',
+                error: false,
+                accDetails: accDetails
+            });
+        })
+    .catch((e) => {
+        console.log(e);
     })
-});
+})
+
+router.put('/account', async (req, res) => {
+    
+    const studentId = req.body.studentid;
+    const course = req.body.course;
+    const school = req.body.school;
+    const placementYear = req.body.placementyear;
+    const gradYear = req.body.gradyear;
+    const prefSector = req.body.prefsector;
+    const otherSectors = req.body.othersectors;
+    const userId = req.session.passport.user;
+
+    let q = 'SET SEARCH_PATH TO sf;'
+    + 'PREPARE editAccount(bigint, text, text, text, int, text, text, bigint) AS '
+    + 'UPDATE student '
+    + 'SET student_id = $1, course = $2, school = $3, placement_year = $4, '
+    + 'grad_year = $5, pref_sector = $6, other_sectors = $7 '
+    + 'WHERE user_id = $8;'
+    + `EXECUTE editAccount(${studentId}, '${course}', '${school}', '${placementYear}', '${gradYear}', '${prefSector}', `
+    + `'${otherSectors}', ${userId});`
+    + 'DEALLOCATE editAccount;'
+
+    await pool
+        .query(q)
+        .then(() => {
+            res.redirect('/student');
+        })
+    .catch((e) => {
+        console.log(e);
+    })
+})
 
 module.exports = router;
