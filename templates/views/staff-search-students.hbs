@@ -10,28 +10,17 @@
 </head>
 <body>
 
-{{>studentNavbar}}
+{{>staffNavbar}}
     
     <div class="user-hero">
-        <h1>Student Dashboard</h1>
-        <br>
-        <h3>What would you like to do?</h3>
-        <br>
-        <form action="/student/applications" method="GET">
-            <button type="submit" class="btn btn-primary">View my applications</button>            
+        <h1>Find a student</h1>
+
+        <p>Search by name:</p>
+        <form class="form-inline" action="/staff/students">
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
+                aria-label="Search" name="search">
         </form>
-        <form action="/student/applications/new" method="GET">
-            <button type="submit" class="btn btn-primary">Create a new application</button>            
-        </form>
-        <form action="/student/applications/edit" method="GET">
-            <button type="submit" class="btn btn-primary">Edit or delete an application</button>            
-        </form>
-        <form action="/student/account" method="GET">
-            <button type="submit" class="btn btn-primary">Manage my account</button>            
-        </form>
-        <form action="/student/logout?_method=DELETE" method="POST">
-            <button type="submit" class="btn btn-primary">Log out</button>            
-        </form>                   
     </div>       
         
 

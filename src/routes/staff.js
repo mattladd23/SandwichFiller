@@ -6,10 +6,16 @@ const router = express.Router();
 // Import database model
 const pool = require('../config/db');
 
+// Other modules
+const methodOverride = require('method-override');
+
+// Middleware
+router.use(methodOverride('_method'));
+
 // Render login success page
 router.get('/', (req, res) => {
-    res.render('staff-welcome', {
-        title: 'Welcome Staff',
+    res.render('staff-dashboard', {
+        title: 'SandwichFiller :: Staff',
         error: false
     });
 });
@@ -191,8 +197,8 @@ router.get('/students', async (req, res) => {
         .then((results) => {
             console.log(results);
             if (results[2].rowCount === 0) {
-                res.render('search-students', {
-                    title: 'Search students',
+                res.render('staff-search-students', {
+                    title: 'Find a student',
                     userSearch: query,
                     result: false
                 })
@@ -210,6 +216,18 @@ router.get('/students', async (req, res) => {
         .catch((e) => {
             console.log(e);
         })
+});
+
+
+// Staff log out
+router.delete('/logout', (req, res, next) => {
+    req.logOut((err) => {
+        if (err) {
+            return next(err);
+        }
+        res.status(301);
+        res.redirect('/home');
+    });    
 });
 
 module.exports = router;

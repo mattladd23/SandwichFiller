@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
     //     error: req.query.error      
     // });
     // Redirect to student while working on student user story
-    res.redirect('/student');
+    res.redirect('/staff');
 });
 
 module.exports = router;
