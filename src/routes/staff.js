@@ -218,6 +218,64 @@ router.get('/students', async (req, res) => {
         })
 });
 
+// Render student manage profile page
+router.get('/account', async (req, res) => {
+
+    const userId = req.session.passport.user;
+
+    let q = 'SET SEARCH_PATH TO sf;'
+    + 'PREPARE getStaffAccount(bigint) AS '
+    + 'SELECT staff.f_name, staff.l_name, staff.email '
+    + 'FROM staff '
+    + 'WHERE staff.user_id = $1;'
+    + `EXECUTE getStaffAccount(${userId});`
+    + 'DEALLOCATE getStaffAccount;'
+
+    console.log(q);
+
+    await pool
+        .query(q)
+        .then((results) => {
+            console.log(results);
+            const accDetails = results[2].rows;
+            console.log(accDetails);
+            res.render('staff-manage', {
+                title: 'Manage my account',
+                error: false,
+                accDetails: accDetails
+            });
+        })
+    .catch((e) => {
+        console.log(e);
+    })
+})
+
+// Edit student account details
+router.put('/account', async (req, res) => {
+    
+    const staffFName = req.body.stafffname;
+    const staffLName = req.body.stafflname;
+    const staffEmail = req.body.staffemail;
+    const userId = req.session.passport.user;
+
+    let q = 'SET SEARCH_PATH TO sf;'
+    + 'PREPARE editStaffAccount(text, text, text, bigint) AS '
+    + 'UPDATE staff '
+    + 'SET f_name = $1, l_name = $2, email = $3 '
+    + 'WHERE user_id = $4;'
+    + `EXECUTE editStaffAccount('${staffFName}', '${staffLName}', '${staffEmail}', ${userId}); `
+    + 'DEALLOCATE editStaffAccount';
+
+    await pool
+        .query(q)
+        .then(() => {
+            res.redirect('/staff');
+        })
+    .catch((e) => {
+        console.log(e);
+    })
+});
+
 
 // Staff log out
 router.delete('/logout', (req, res, next) => {
