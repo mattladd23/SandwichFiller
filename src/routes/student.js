@@ -266,6 +266,17 @@ router.put('/account', async (req, res) => {
     .catch((e) => {
         console.log(e);
     })
-})
+});
+
+// Student log out
+router.delete('/logout', (req, res, next) => {
+    req.logOut((err) => {
+        if (err) {
+            return next(err);
+        }
+        res.status(301);
+        res.redirect('/home');
+    });    
+});
 
 module.exports = router;
