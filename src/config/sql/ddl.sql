@@ -69,7 +69,7 @@ CREATE TABLE application (
 
     CONSTRAINT application_pk PRIMARY KEY (app_id),
     CONSTRAINT application_fk FOREIGN KEY (user_id) REFERENCES student
-        ON UPDATE CASCADE ON DELETE CASCADE
+        ON UPDATE CASCADE ON DELETE CASCADE 
 );
 
 -- EMPLOYER TABLE (strong entity) --

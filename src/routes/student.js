@@ -91,6 +91,8 @@ router.post('/applications/new', async (req, res) => {
     + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, LOCALTIMESTAMP(0));'
     + `EXECUTE newApp(${userId}, ${appId}, '${role}', '${organisation}', '${city}', '${country}', '${appDate}', '${deadline}', '${description}', '${appStatus}', 1);`
     + 'DEALLOCATE newApp;'
+
+    console.log(q);
     
     await pool
         .query(q)

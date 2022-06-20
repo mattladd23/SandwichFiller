@@ -32,20 +32,20 @@ router.get('/applications', async (req, res) => {
 
     if (Object.keys(req.query).length === 0) {
         // Default query to return all posts ordered by date last updated
-        // q += 'SET SEARCH_PATH TO sf;'
-        // + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
-        // + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
-        // + 'application.last_updated, users.user_id, users.f_name, users.l_name '
-        // + 'FROM application JOIN users ON post.user_id = users.user_id '
-        // + 'ORDER BY application.last_updated DESC;'
-
-        // Query without join prior to setting up user sessions for testing
         q += 'SET SEARCH_PATH TO sf;'
         + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
         + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
-        + 'application.last_updated '
-        + 'FROM application '
+        + 'application.last_updated, student.user_id, student.f_name, student.l_name '
+        + 'FROM application JOIN student ON application.user_id = student.user_id '
         + 'ORDER BY application.last_updated DESC;'
+
+        // Query without join prior to setting up user sessions for testing
+        // q += 'SET SEARCH_PATH TO sf;'
+        // + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
+        // + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
+        // + 'application.last_updated '
+        // + 'FROM application '
+        // + 'ORDER BY application.last_updated DESC;'
         console.log(q);
 
     } else {        
@@ -54,20 +54,20 @@ router.get('/applications', async (req, res) => {
             console.log(req.query.filter);
             if (req.query.filter === 'All applications') {
                 console.log(req.query.filter)
-                // q = 'SET SEARCH_PATH TO sf;'
-                // + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
-                // + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
-                // + 'application.last_updated, users.user_id, users.f_name, users.l_name '
-                // + 'FROM application JOIN users ON post.user_id = users.user_id '
-                // + 'ORDER BY application.last_updated DESC;'
-                
-                // Query without join prior to setting up user sessions for testing
-                q += 'SET SEARCH_PATH TO sf;'
+                q = 'SET SEARCH_PATH TO sf;'
                 + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
                 + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
-                + 'application.last_updated '
-                + 'FROM application '
+                + 'application.last_updated, student.user_id, student.f_name, student.l_name '
+                + 'FROM application JOIN student ON application.user_id = student.user_id '
                 + 'ORDER BY application.last_updated DESC;'
+                
+                // Query without join prior to setting up user sessions for testing
+                // q += 'SET SEARCH_PATH TO sf;'
+                // + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
+                // + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
+                // + 'application.last_updated '
+                // + 'FROM application '
+                // + 'ORDER BY application.last_updated DESC;'
                 console.log(q);
                 
             } else {
@@ -75,28 +75,28 @@ router.get('/applications', async (req, res) => {
                 console.log(`Prepared: ${prepared}`);
                 console.log(req.query.filter);
 
-                // q = 'SET SEARCH_PATH TO sf;'
-                // + 'PREPARE filter(text) AS '
-                // + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
-                // + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
-                // + 'application.last_updated, users.user_id, users.f_name, users.l_name '
-                // + 'FROM application JOIN users ON post.user_id = users.user_id '
-                // + 'WHERE application.app_status = $1 '
-                // + 'ORDER BY application.last_updated DESC;'
-                // + `EXECUTE filter('${req.query.filter}');`
-                // + 'DEALLOCATE filter;'
-                
-                // Query without join prior to setting up user sessions for testing
-                q += 'SET SEARCH_PATH TO sf;'
+                q = 'SET SEARCH_PATH TO sf;'
                 + 'PREPARE filter(text) AS '
                 + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
                 + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
-                + 'application.last_updated '
-                + 'FROM application '
+                + 'application.last_updated, student.user_id, student.f_name, student.l_name '
+                + 'FROM application JOIN student ON application.user_id = student.user_id '
                 + 'WHERE application.app_status = $1 '
                 + 'ORDER BY application.last_updated DESC;'
                 + `EXECUTE filter('${req.query.filter}');`
                 + 'DEALLOCATE filter;'
+                
+                // Query without join prior to setting up user sessions for testing
+                // q += 'SET SEARCH_PATH TO sf;'
+                // + 'PREPARE filter(text) AS '
+                // + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
+                // + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
+                // + 'application.last_updated '
+                // + 'FROM application '
+                // + 'WHERE application.app_status = $1 '
+                // + 'ORDER BY application.last_updated DESC;'
+                // + `EXECUTE filter('${req.query.filter}');`
+                // + 'DEALLOCATE filter;'
                 console.log(q);
             }
         }        
@@ -218,7 +218,7 @@ router.get('/students', async (req, res) => {
         })
 });
 
-// Render student manage profile page
+// Render staff manage profile page
 router.get('/account', async (req, res) => {
 
     const userId = req.session.passport.user;
@@ -250,7 +250,7 @@ router.get('/account', async (req, res) => {
     })
 })
 
-// Edit student account details
+// Edit staff account details
 router.put('/account', async (req, res) => {
     
     const staffFName = req.body.stafffname;
