@@ -105,12 +105,12 @@ router.post('/applications/new', async (req, res) => {
 });
 
 // Render edit applications page
-router.get('/applications/edit', async (req, res) => {
+router.get('/applications/update', async (req, res) => {
 
     const userId = req.session.passport.user;
 
     let q = 'SET SEARCH_PATH TO sf;'
-    + 'PREPARE userApps(bigint) AS '
+    + 'PREPARE getStudentApps(bigint) AS '
     + 'SELECT student.f_name, student.l_name, application.app_id, application.role, application.organisation, application.city, '
     + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
     + 'application.last_updated '
@@ -118,8 +118,8 @@ router.get('/applications/edit', async (req, res) => {
     + 'ON student.user_id = application.user_id '
     + 'WHERE application.user_id = $1 '
     + 'ORDER BY application.last_updated DESC; '
-    + `EXECUTE userApps(${userId});`
-    + 'DEALLOCATE userApps;'
+    + `EXECUTE getStudentApps(${userId});`
+    + 'DEALLOCATE getStudentApps;'
 
     console.log(q);
 
@@ -128,7 +128,7 @@ router.get('/applications/edit', async (req, res) => {
         .then((results) => {
             console.log(results);
             if (results[2].rowCount === 0) {
-                res.render('edit-applications', {
+                res.render('update-applications', {
                     title: 'Your applications',
                     result: false
                 })
@@ -136,9 +136,9 @@ router.get('/applications/edit', async (req, res) => {
                 const apps = results[2].rows;
                 console.log(apps);
 
-                res.render('edit-applications', {
+                res.render('update-applications', {
                     title: 'Your applications',
-                    result:true,
+                    result: true,
                     apps: apps                    
                 })
             }
@@ -149,34 +149,26 @@ router.get('/applications/edit', async (req, res) => {
 });
 
 // Edit an application(s)
-router.put('/applications/edit/:id', async (req, res) => {
+router.put('/applications/update/:id', async (req, res) => {
         
+    const appStatus = req.body.updateAppStatus;
+    const description = req.body.updateDesc;
     const appId = req.params.id;
-    const role = req.body.editRole;
-    const organisation = req.body.editOrganisation;
-    const city = req.body.editCity;
-    const country = req.body.editCountry;
-    const appDate = req.body.editAppDate;
-    const deadline = req.body.editDeadline;
-    const appStatus = req.body.editAppStatus;
-    const description = req.body.editDescription;
 
     let q = 'SET SEARCH_PATH TO sf;'
-    + 'PREPARE editApp(text, text, text, text, text, text, text, text, bigint) AS '
+    + 'PREPARE updateApp(text, text, timestamp, bigint) AS '
     + 'UPDATE application '
-    + 'SET role = $1, organisation = $2, city = $3, country = $4, app_date = $5, '
-    + 'deadline = $6, app_status = $7, description = $8 '
-    + 'WHERE app_id = $9;'
-    + `EXECUTE editApp('${role}', '${organisation}', '${city}', '${country}', '${appDate}', '${deadline}', `
-    + `'${appStatus}', '${description}', ${appId});`
-    + 'DEALLOCATE editApp;'
+    + 'SET app_status = $1, description = $2, last_updated = $3'
+    + 'WHERE app_id = $4; '
+    + `EXECUTE updateApp('${appStatus}', '${description}', LOCALTIMESTAMP, ${appId});`
+    + 'DEALLOCATE updateApp;'
 
     console.log(q);
 
     await pool
         .query(q)
         .then(() => {
-            return res.redirect('/student/applications?success=true');
+            res.redirect('/student/applications');
         })
     .catch((e) => {
         console.log(e);
@@ -184,7 +176,7 @@ router.put('/applications/edit/:id', async (req, res) => {
 });
 
 // Delete an application
-router.delete('/applications/edit/:id', async (req, res) => {
+router.delete('/applications/update/:id', async (req, res) => {
     
     const appId = req.params.id;
 

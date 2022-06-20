@@ -109,6 +109,7 @@ router.post('/student', async (req, res) => {
 
     // Query to check existing credentials
 
+    // Query to insert user into database
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE registerStudent(bigint, text, text, text, text, bigint, text, text, text, numeric, text, text) AS '
     + 'INSERT INTO student (user_id, f_name, l_name, email, password, student_id, course, school, placement_year, grad_year, pref_sector, other_sectors) '
