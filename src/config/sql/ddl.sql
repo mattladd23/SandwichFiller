@@ -71,19 +71,3 @@ CREATE TABLE application (
     CONSTRAINT application_fk FOREIGN KEY (user_id) REFERENCES student
         ON UPDATE CASCADE ON DELETE CASCADE 
 );
-
--- EMPLOYER TABLE (weak entity dependent on student and application) --
-
-CREATE SEQUENCE employer_id_seq;
-
-CREATE TABLE employer (
-    employer_id INT NOT NULL DEFAULT NEXTVAL ('employer_id_seq'),
-    organisation VARCHAR NOT NULL,
-    sector VARCHAR,
-    img VARCHAR,
-
-    CONSTRAINT employer_pk PRIMARY KEY (employer_id)
-);
-
-ALTER SEQUENCE employer_id_seq
-OWNED BY employer.employer_id;

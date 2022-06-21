@@ -69,36 +69,3 @@ CREATE TRIGGER student_user_insert
 
     EXECUTE PROCEDURE student_user_insert();
 
-
--- Insert a row in employer when a student creates an application
-
-CREATE OR REPLACE FUNCTION student_employer_insert()
-
-    RETURNS TRIGGER AS
-
-$$
-
-BEGIN
-
-    INSERT INTO employer (organisation)
-        VALUES (NEW.organisation);
-
-RETURN NEW;
-
-END;
-
-$$
-
-LANGUAGE 'plpgsql';
-
-
-CREATE TRIGGER student_employer_insert
-
-    AFTER INSERT
-
-    ON application
-
-    FOR EACH ROW
-
-    EXECUTE PROCEDURE student_employer_insert();
-
