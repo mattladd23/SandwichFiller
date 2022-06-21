@@ -26,6 +26,14 @@ VALUES (100000000, 'Miguel', 'Almiron', 'miggy@gmail.com', 'miggy',
 	   2025, 'Business', 'Football');
 
 
+/* Create an application */
+
+INSERT INTO application(user_id, app_id, role, organisation, city, country, app_date, deadline,
+						description, app_status, last_updated)
+VALUES (1655717043952, 1655816283228, 'Investment Intern', 'Citi Bank', 'Milan', 'Italy',
+		'06/07/2022', '06/28/2022', 'Must learn italian', 'Applied', LOCALTIMESTAMP(0));
+
+
 /* Edit an application */
 
 UPDATE application 
