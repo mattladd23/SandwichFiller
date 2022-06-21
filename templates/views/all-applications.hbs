@@ -47,8 +47,8 @@
         {{else}}
 
         {{#each apps as |value key|}}
-        <div class="card border-secondary mb-3" style="max-width: 18rem;">
-            <div class="card-header">Student name</div>
+        <div class="card border-secondary mb-3">
+            <div class="card-header">Created by: {{{value.f_name}}} {{{value.l_name}}}</div>
             <div class="card-body text-secondary">
                 <h5 class="card-title">{{{value.role}}}</h5>
                 <p class="card-text">{{{value.description}}}</p>

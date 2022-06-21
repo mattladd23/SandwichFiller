@@ -13,20 +13,23 @@
 
 {{>staffNavbar}}
     
-    <div class="user-hero">
-        <h1>Find a student</h1>
+    <div class="user-hero">       
 
         <div class="search-form-container">
+
+            <h1>Search students...</h1>
+
             <form action="/staff/search/results" method="GET">
 
                 <div class="form-group nameSearch-container">
-                    <label for="nameSearch">Student name:</label>            
+                    <label for="nameSearch">By name:</label>            
                     <input class="form-control form-control" type="text" placeholder=""
-                        aria-label="Search" name="nameSearch">  
+                        aria-label="Search" name="nameSearch">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button> 
                 </div>
 
                 <div class="form-group schoolSearch-container">
-                    <label for="schoolSearch">School:</label>       
+                    <label for="schoolSearch">By school:</label>       
                     <select id="school" class="form-control" name="schoolSearch">
                         <option selected></option>
                         <option>Art, Media and American Studies</option>
@@ -57,10 +60,11 @@
                         <option>Science</option>
                         <option>Social Work</option>                      
                     </select>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
                 </div>
 
                 <div class="form-group placementYearSearch-container">
-                    <label for="placementYearSearch">Placement year:</label>
+                    <label for="placementYearSearch">By placement year:</label>
                     <select id="placementyear" class="form-control" name="placementYearSearch">
                         <option selected></option>
                         <option>2022-2023</option>
@@ -69,10 +73,8 @@
                         <option>2025-2026</option>
                         <option>2026-2027</option>
                     </select>
-                </div>                   
-                <div>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
-                </div>                           
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                </div>
             </form>
         </div> 
     </div>       
