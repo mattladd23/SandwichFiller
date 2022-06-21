@@ -12,20 +12,20 @@
     text-align: center;
     span {
         color: #f03801;
+    };
+    a {
+        font-size: 2rem;
+        text-align: center;
+    };
+    &:hover {
+        opacity: 0.8;        
     }
 }
 
-.navbar-brand a {
-    font-size: 2rem;
-    text-align: center;    
-}
-
-.navbar-brand a:hover {
-    opacity: 0.8;
-}
-
-.nav-item a:hover {
-    opacity: 0.8;
+.nav-item {
+    &:hover {
+        opacity: 0.8;
+    }
 }
 
 /* Navbar log out button */
@@ -35,8 +35,10 @@
     color: #fff;
     border: none;
     cursor: pointer;
-}
-
-#logout-button:hover {
-    opacity: 0.8;
+    &:hover {
+        opacity: 0.8;
+    };
+    &:focus {
+        outline: none;
+    };
 }
