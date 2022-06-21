@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../css/styles.css">    
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
 </head>
 <body>
 
@@ -15,12 +16,65 @@
     <div class="user-hero">
         <h1>Find a student</h1>
 
-        <p>Search by name:</p>
-        <form class="form-inline" action="/staff/students">
-            <i class="fas fa-search" aria-hidden="true"></i>
-            <input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
-                aria-label="Search" name="search">
-        </form>
+        <div class="search-form-container">
+            <form action="/staff/search/results" method="GET">
+
+                <div class="form-group nameSearch-container">
+                    <label for="nameSearch">Student name:</label>            
+                    <input class="form-control form-control" type="text" placeholder=""
+                        aria-label="Search" name="nameSearch">  
+                </div>
+
+                <div class="form-group schoolSearch-container">
+                    <label for="schoolSearch">School:</label>       
+                    <select id="school" class="form-control" name="schoolSearch">
+                        <option selected></option>
+                        <option>Art, Media and American Studies</option>
+                        <option>Arts and Humanities</option>
+                        <option>Biological Sciences</option>
+                        <option>Centre for Continuing Education</option>
+                        <option>Centre for Staff and Educational Development</option>
+                        <option>Chemistry</option>
+                        <option>Computing Sciences</option>
+                        <option>Economics</option>
+                        <option>Education and Lifelong Learning</option>
+                        <option>Engineering</option>
+                        <option>Environmental Sciences</option>
+                        <option>Health Sciences</option>
+                        <option>History</option>
+                        <option>International Development</option>
+                        <option>Law</option>
+                        <option>Literature, Drama and Creative Writing</option>
+                        <option>Mathematics</option>
+                        <option>Medicine and Health Sciences</option>
+                        <option>Music</option>
+                        <option>Natural Sciences</option>
+                        <option>Norwich Business School</option>
+                        <option>Norwich Medical School</option>
+                        <option>Pharmacy</option>
+                        <option>Politics, Philosophy, Language and Communication Studies</option>
+                        <option>Psychology</option>
+                        <option>Science</option>
+                        <option>Social Work</option>                      
+                    </select>
+                </div>
+
+                <div class="form-group placementYearSearch-container">
+                    <label for="placementYearSearch">Placement year:</label>
+                    <select id="placementyear" class="form-control" name="placementYearSearch">
+                        <option selected></option>
+                        <option>2022-2023</option>
+                        <option>2023-2024</option>
+                        <option>2024-2025</option>
+                        <option>2025-2026</option>
+                        <option>2026-2027</option>
+                    </select>
+                </div>                   
+                <div>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>                           
+            </form>
+        </div> 
     </div>       
         
 

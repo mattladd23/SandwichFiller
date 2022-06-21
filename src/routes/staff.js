@@ -172,22 +172,38 @@ router.get('/applications', async (req, res) => {
 
 // Search student records
 
-// Render page
-router.get('/students', async (req, res) => {
-    
-    let query = req.query.search;
-    console.log(query);
+// Render search bar page
+router.get('/search', (req, res) => {
+    res.render('staff-search-students', {
+        title: 'Find a student',
+        error: false
+    });
+});
 
-    query = '%'+query+'%';
+// Render student results
+router.get('/search/results', async (req, res) => {
+    
+    let nameQuery = req.query.nameSearch;
+    // nameQuery = '%'+nameQuery+'%';
+    console.log(nameQuery);
+
+    let schoolQuery = req.query.schoolSearch;
+    // schoolQuery = '%'+schoolQuery+'%';
+    console.log(schoolQuery);
+    
+    let placementYearQuery = req.query.placementYearSearch;
+    // placementYearQuery = '%'+placementYearQuery+'%';
+    console.log(placementYearQuery);
 
     let q = 'SET SEARCH_PATH TO sf;'
-    + 'PREPARE searchStudents(text) AS '
+    + 'PREPARE searchStudents(text, text, text) AS '
     + 'SELECT student.f_name, student.l_name, student.email, student.student_id, student.course, '
     + 'student.school, student.placement_year, student.grad_year, student.pref_sector, other_sectors '
     + 'FROM student '
-    + 'WHERE student.f_name ILIKE $1 OR student.l_name ILIKE $1 OR student.email ILIKE $1 ' 
+    + 'WHERE student.f_name ILIKE $1 OR student.l_name ILIKE $1 OR student.email ILIKE $1 '
+    + 'OR student.school = $2 OR student.placement_year = $3' 
     + 'ORDER BY student.l_name ASC;'
-    + `EXECUTE searchStudents('${query}');`
+    + `EXECUTE searchStudents('${nameQuery}', '${schoolQuery}', '${placementYearQuery}');`
     + 'DEALLOCATE searchStudents;'
 
     console.log(q);
@@ -197,18 +213,23 @@ router.get('/students', async (req, res) => {
         .then((results) => {
             console.log(results);
             if (results[2].rowCount === 0) {
-                res.render('staff-search-students', {
+                res.render('search-results', {
                     title: 'Find a student',
-                    userSearch: query,
+                    nameSearch: nameQuery,
+                    schoolSearch: schoolQuery,
+                    placementYearSearch: placementYearQuery,
                     result: false
                 })
             } else {
                 const students = results[2].rows;
                 console.log(students);
 
-                res.render('search-students', {
+                res.render('search-results', {
                     title: 'Search students',
                     students: students,
+                    nameSearch: nameQuery,
+                    schoolSearch: schoolQuery,
+                    placementYearSearch: placementYearQuery,
                     result: true
                 })                
             }
