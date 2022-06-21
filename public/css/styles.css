@@ -1,196 +1,182 @@
-/* Global */
-
 html {
-    overflow-y: scroll;
+  overflow-y: scroll;
 }
 
-
-/* Navbar */
-
 .navbar {
-    position: fixed;
-    height: 10%;
-    width: 100%;
-    background-color: #1e335e;
-    color: #fff;
-    text-align: center;
-    padding: 1rem;
+  position: fixed;
+  height: 10%;
+  width: 100%;
+  background-color: #1e335e;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
 }
 
 .navbar-brand {
-    text-align: center;
+  text-align: center;
 }
 
 .navbar-brand a {
-    font-size: 2rem;
-    text-align: center;    
+  font-size: 2rem;
+  text-align: center;
 }
 
 .navbar-brand a:hover {
-    opacity: 0.8;
+  opacity: 0.8;
 }
 
 .nav-item a:hover {
-    opacity: 0.8;
+  opacity: 0.8;
 }
 
 /* Navbar log out button */
-
 #logout-button {
-    background-color: #1e335e;
-    color: #fff;
-    border: none;
-    cursor: pointer;
+  background-color: #1e335e;
+  color: #fff;
+  border: none;
+  cursor: pointer;
 }
 
 #logout-button:hover {
-    opacity: 0.8;
+  opacity: 0.8;
 }
 
-
-/* Home navigation */
-
 .home-hero {
-    width: 100vw;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: -1;    
-    background-image: url('../images/compsci.jpg');
-    background-attachment: fixed;
-    text-align: center;
-    padding: 1rem;
-    background-position: center center;
-    background-size: cover;
-    color: #fff;
-    text-shadow: 0 0 8px #66757f;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: -1;
+  background-image: url("../images/compsci.jpg");
+  background-attachment: fixed;
+  text-align: center;
+  padding: 1rem;
+  background-position: center center;
+  background-size: cover;
+  color: #fff;
+  text-shadow: 0 0 8px #66757f;
 }
 
 .home-hero button {
-    background-color: #e89513;
-    border-color: #e89513;
-    margin-top: 2rem;                   
+  background-color: #e89513;
+  border-color: #e89513;
+  margin-top: 2rem;
 }
 
 .home-hero button:hover {
-    background-color: #e89513;
-    opacity: 0.8;
-    color: #fff;
-    border-color: #e89513;
+  background-color: #e89513;
+  opacity: 0.8;
+  color: #fff;
+  border-color: #e89513;
 }
 
 .home-hero a {
-    color: #fff;
-    text-shadow: 0 0 8px #66757f;
-    padding: 1rem;
+  color: #fff;
+  text-shadow: 0 0 8px #66757f;
+  padding: 1rem;
 }
 
 .home-hero a:hover {
-    text-decoration: none;
-    opacity: 0.8;
+  text-decoration: none;
+  opacity: 0.8;
 }
 
-/* User navigation */
-
 .user-hero {
-    width: 100vw;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: -1;
-    background-image: url('../images/PolygonLuminary.svg');
-    background-attachment: fixed;
-    text-align: center;
-    padding: 1rem;
-    background-position: center center;
-    background-size: cover;
-    color: #fff;
-    text-shadow: 0 0 8px #66757f;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: -1;
+  background-image: url("../images/PolygonLuminary.svg");
+  background-attachment: fixed;
+  text-align: center;
+  padding: 1rem;
+  background-position: center center;
+  background-size: cover;
+  color: #fff;
+  text-shadow: 0 0 8px #66757f;
 }
 
 .user-hero button {
-    background-color: #e89513;
-    border-color: #e89513;
-    margin-top: 2rem;                   
+  background-color: #e89513;
+  border-color: #e89513;
+  margin-top: 2rem;
 }
 
 .user-hero button:hover {
-    background-color: #e89513;
-    opacity: 0.8;
-    color: #fff;
-    border-color: #e89513;
+  background-color: #e89513;
+  opacity: 0.8;
+  color: #fff;
+  border-color: #e89513;
 }
 
 .user-hero a {
-    color: #fff;
-    text-shadow: 0 0 8px #66757f;
-    padding: 1rem;
+  color: #fff;
+  text-shadow: 0 0 8px #66757f;
+  padding: 1rem;
 }
 
 .user-hero a:hover {
-    text-decoration: none;
-    opacity: 0.8;
+  text-decoration: none;
+  opacity: 0.8;
 }
 
-/* Application cards */
-
 .student-applications-container {
-    margin-top: 20%;
-    margin-bottom: 20%;    
+  margin-top: 20%;
+  margin-bottom: 20%;
 }
 
 .card {
-    width: 100%;
-    height: 45vh;
-    background-color: #1e335e;
-    opacity: 0.7;    
+  width: 100%;
+  height: 45vh;
+  background-color: #1e335e;
+  opacity: 0.7;
 }
 
 .card-info {
-    align-items: left;
+  align-items: left;
 }
 
 .card-dates {
-    align-items: left;
-    justify-content: space-between;
-    
+  align-items: left;
+  justify-content: space-between;
 }
 
 .card-text {
-    text-align: left;
-    /* padding: 1%; */
+  text-align: left;
+  /* padding: 1%; */
 }
 
 .card-footer {
-    height: 10vh;
+  height: 10vh;
 }
 
 .card-footer-text {
-    margin-top: 0;
-    padding-bottom: 1%;
+  margin-top: 0;
+  padding-bottom: 1%;
 }
 
 .text-muted {
-    color: #fff;
+  color: #fff;
 }
 
 #edit-card {
-    height: 45vh;
+  height: 45vh;
 }
 
 .buttons-row {
-    bottom: 0;
-    align-self: center;
+  bottom: 0;
+  align-self: center;
 }
 
 /* textarea {
@@ -198,40 +184,36 @@ html {
     height: 2rem;
     width: 90%;
 } */
-
 #desc-textarea {
-    width: 100%;
-    height: 3rem;
-    border-radius: 0.3rem;
+  width: 100%;
+  height: 3rem;
+  border-radius: 0.3rem;
 }
 
 .edit-textarea {
-    padding: none;
-    float: left;
+  padding: none;
+  float: left;
 }
 
-
-/* Footer */
-
 footer {
-    position: fixed;
-    height: 10%;
-    width: 100%;
-    bottom: 0;
-    background-color: #1e335e;
-    color: #fff;
-    text-align: center;
-    padding: 1rem;
+  position: fixed;
+  height: 10%;
+  width: 100%;
+  bottom: 0;
+  background-color: #1e335e;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
 }
 
 footer p > a {
-    color: #fff;
-    text-align: center;
-    margin-bottom: 1rem;    
+  color: #fff;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 footer a:hover {
-    text-decoration: none;
-    opacity: 0.8;
-    color: #fff;
-}
+  text-decoration: none;
+  opacity: 0.8;
+  color: #fff;
+}/*# sourceMappingURL=styles.css.map */
