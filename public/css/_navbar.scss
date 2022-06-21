@@ -2,7 +2,7 @@
     position: fixed;
     height: 10%;
     width: 100%;
-    background-color: #1e335e;
+    background-color: #000220;
     color: #fff;
     text-align: center;
     padding: 1rem;
@@ -10,6 +10,9 @@
 
 .navbar-brand {
     text-align: center;
+    span {
+        color: #f03801;
+    }
 }
 
 .navbar-brand a {
@@ -28,7 +31,7 @@
 /* Navbar log out button */
 
 #logout-button {
-    background-color: #1e335e;
+    background-color: #000220;
     color: #fff;
     border: none;
     cursor: pointer;
