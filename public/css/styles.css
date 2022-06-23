@@ -3,20 +3,37 @@ html {
 }
 
 body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-image: url("../images/PolygonLuminaryDark.svg");
   background-attachment: fixed;
   background-size: cover;
+  flex-direction: column;
+}
+
+h1, h2, h4 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  margin-top: 15%;
+}
+
+h2, h4 {
+  margin-top: 0%;
 }
 
 .navbar {
   position: fixed;
   height: 10%;
   width: 100%;
-  background-color: #000220;  
+  background-color: #000220;
   color: #fff;
   text-align: center;
   padding: 1rem;
   z-index: 1;
+  top: 0;
 }
 
 .navbar-brand {
@@ -61,7 +78,7 @@ footer {
   height: 10%;
   width: 100%;
   bottom: 0;
-  background-color: #000220;  
+  background-color: #000220;
   color: #fff;
   text-align: center;
   padding: 1rem;
