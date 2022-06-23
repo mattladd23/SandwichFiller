@@ -12,145 +12,136 @@
 
 {{>notAuthNavbar}}
     
-    <div class="home-bg">
-        <div class="home-container">
-            <h1>Student registration</h1>
-            <br>
-            <form action="/register/student" method="POST">
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="studentfname">First name:</label>
-                        <input type="text" class="form-control" id="studentfname" name="studentfname" placeholder="" required>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="studentlname">Last name:</label>
-                        <input type="text" class="form-control" id="studentlname" name="studentlname" placeholder="" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="studentemail">Email:</label>
-                        <input type="email" class="form-control" id="studentemail" name="studentemail" placeholder="" required>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="studentid">Student ID:</label>
-                        <input type="text" class="form-control" id="studentid" name="studentid" placeholder="" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="course">Course:</label>
-                        <input type="text" class="form-control" id="course" name="course" placeholder="" required>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="school">School:</label>
-                        <select id="school" class="form-control" name="school" required>
-                            <option selected></option>
-                            <option>Art, Media and American Studies</option>
-                            <option>Arts and Humanities</option>
-                            <option>Biological Sciences</option>
-                            <option>Centre for Continuing Education</option>
-                            <option>Centre for Staff and Educational Development</option>
-                            <option>Chemistry</option>
-                            <option>Computing Sciences</option>
-                            <option>Economics</option>
-                            <option>Education and Lifelong Learning</option>
-                            <option>Engineering</option>
-                            <option>Environmental Sciences</option>
-                            <option>Health Sciences</option>
-                            <option>History</option>
-                            <option>International Development</option>
-                            <option>Law</option>
-                            <option>Literature, Drama and Creative Writing</option>
-                            <option>Mathematics</option>
-                            <option>Medicine and Health Sciences</option>
-                            <option>Music</option>
-                            <option>Natural Sciences</option>
-                            <option>Norwich Business School</option>
-                            <option>Norwich Medical School</option>
-                            <option>Pharmacy</option>
-                            <option>Politics, Philosophy, Language and Communication Studies</option>
-                            <option>Psychology</option>
-                            <option>Science</option>
-                            <option>Social Work</option>                      
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="placementyear">Placement year:</label>
-                        <select id="placementyear" class="form-control" name="placementyear" required>
-                            <option selected></option>
-                            <option>2022-2023</option>
-                            <option>2023-2024</option>
-                            <option>2024-2025</option>
-                            <option>2025-2026</option>
-                            <option>2026-2027</option>
-                        </select>                    
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="gradyear">Graduation year:</label>
-                        <select id="gradyear" class="form-control" name="gradyear" required>
-                            <option selected></option>                        
-                            <option>2024</option>
-                            <option>2025</option>
-                            <option>2026</option>
-                            <option>2027</option>
-                            <option>2028</option>
-                        </select>                    
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="prefsector">Preferred career sector:</label>
-                        <select id="prefsector" class="form-control" name="prefsector" required>
-                            <option selected></option>
-                            <option>Undecided</option>
-                            <option>Accountancy and Tax</option>
-                            <option>Business</option>
-                            <option>Construction, Engineering and Design</option>
-                            <option>Finance, Banking and Economics</option>
-                            <option>HR and Recruitment</option>
-                            <option>Humanities</option>
-                            <option>Information Technology</option>
-                            <option>Languages</option>
-                            <option>Legal and Law</option>
-                            <option>Media and Arts</option>
-                            <option>Public Sector</option>
-                            <option>Sciences</option>
-                            <option>Third Sector</option>
-                            <option>Travel and Tourism</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="othersectors">Other sectors of interest:</label>
-                        <input type="text" class="form-control" id="othersectors" name="othersectors" placeholder="">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="studentpassword">Password:</label>
-                        <input type="password" class="form-control" id="studentpassword" name="studentpassword" placeholder="" required>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="confirmstudentpw">Confirm password:</label>
-                        <input type="password" class="form-control" id="confirmstudentpw" name="confirmstudentpw" placeholder="" required>
-                    </div>
-                </div>            
-                <div>
-                    <button class="btn btn-primary" type="submit" id="signup-button">Sign up</button>
-                </div>
-                <br>
-                <div>
-                    <a id="studentlogin-redir" href="/login">Student login</a>
-                </div>                    
-            </form>
+    <h1>Student registration</h1>
+    <br>
+    <form action="/register/student" method="POST">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="studentfname">First name:</label>
+                <input type="text" class="form-control" id="studentfname" name="studentfname" placeholder="" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="studentlname">Last name:</label>
+                <input type="text" class="form-control" id="studentlname" name="studentlname" placeholder="" required>
+            </div>
         </div>
-    </div>
-
-    <div class="home-hero">
-        
-    </div>    
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="studentemail">Email:</label>
+                <input type="email" class="form-control" id="studentemail" name="studentemail" placeholder="" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="studentid">Student ID:</label>
+                <input type="text" class="form-control" id="studentid" name="studentid" placeholder="" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="course">Course:</label>
+                <input type="text" class="form-control" id="course" name="course" placeholder="" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="school">School:</label>
+                <select id="school" class="form-control" name="school" required>
+                    <option selected></option>
+                    <option>Art, Media and American Studies</option>
+                    <option>Arts and Humanities</option>
+                    <option>Biological Sciences</option>
+                    <option>Centre for Continuing Education</option>
+                    <option>Centre for Staff and Educational Development</option>
+                    <option>Chemistry</option>
+                    <option>Computing Sciences</option>
+                    <option>Economics</option>
+                    <option>Education and Lifelong Learning</option>
+                    <option>Engineering</option>
+                    <option>Environmental Sciences</option>
+                    <option>Health Sciences</option>
+                    <option>History</option>
+                    <option>International Development</option>
+                    <option>Law</option>
+                    <option>Literature, Drama and Creative Writing</option>
+                    <option>Mathematics</option>
+                    <option>Medicine and Health Sciences</option>
+                    <option>Music</option>
+                    <option>Natural Sciences</option>
+                    <option>Norwich Business School</option>
+                    <option>Norwich Medical School</option>
+                    <option>Pharmacy</option>
+                    <option>Politics, Philosophy, Language and Communication Studies</option>
+                    <option>Psychology</option>
+                    <option>Science</option>
+                    <option>Social Work</option>                      
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="placementyear">Placement year:</label>
+                <select id="placementyear" class="form-control" name="placementyear" required>
+                    <option selected></option>
+                    <option>2022-2023</option>
+                    <option>2023-2024</option>
+                    <option>2024-2025</option>
+                    <option>2025-2026</option>
+                    <option>2026-2027</option>
+                </select>                    
+            </div>
+            <div class="form-group col-md-6">
+                <label for="gradyear">Graduation year:</label>
+                <select id="gradyear" class="form-control" name="gradyear" required>
+                    <option selected></option>                        
+                    <option>2024</option>
+                    <option>2025</option>
+                    <option>2026</option>
+                    <option>2027</option>
+                    <option>2028</option>
+                </select>                    
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="prefsector">Preferred career sector:</label>
+                <select id="prefsector" class="form-control" name="prefsector" required>
+                    <option selected></option>
+                    <option>Undecided</option>
+                    <option>Accountancy and Tax</option>
+                    <option>Business</option>
+                    <option>Construction, Engineering and Design</option>
+                    <option>Finance, Banking and Economics</option>
+                    <option>HR and Recruitment</option>
+                    <option>Humanities</option>
+                    <option>Information Technology</option>
+                    <option>Languages</option>
+                    <option>Legal and Law</option>
+                    <option>Media and Arts</option>
+                    <option>Public Sector</option>
+                    <option>Sciences</option>
+                    <option>Third Sector</option>
+                    <option>Travel and Tourism</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="othersectors">Other sectors of interest:</label>
+                <input type="text" class="form-control" id="othersectors" name="othersectors" placeholder="">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="studentpassword">Password:</label>
+                <input type="password" class="form-control" id="studentpassword" name="studentpassword" placeholder="" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="confirmstudentpw">Confirm password:</label>
+                <input type="password" class="form-control" id="confirmstudentpw" name="confirmstudentpw" placeholder="" required>
+            </div>
+        </div>            
+        <div>
+            <button class="btn btn-primary" type="submit" id="signup-button">Sign up</button>
+        </div>
+        <br>                            
+    </form>
+    <br>
+    <p><a id="studentlogin-redir" href="/login">Student login</a></p>
         
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

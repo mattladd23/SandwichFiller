@@ -11,90 +11,54 @@
 <body>
 
 {{>studentNavbar}}
+            
+    <h1>Your applications</h1>
     
-    <div class="user-hero">
-        <div class="student-applications-container">
-            <h1>Your applications</h1>
-            {{#if result}}            
-            {{!-- <div class="applications-table-container">
-                <table>
-                    <tr>
-                        <th>First name</th>
-                        <th>Last name</th>
-                        <th>Role</th>
-                        <th>Organisation</th>
-                        <th>City</th>
-                        <th>Country</th>
-                        <th>Date application submitted</th>
-                        <th>Application deadline</th>
-                        <th>Description</th>
-                        <th>Application status</th>
-                        <th>Last updated</th>
-                    </tr>                    
-                    {{#each apps as |value key|}}
-                    <tr>
-                        <td>{{{value.f_name}}}</td>
-                        <td>{{{value.l_name}}}</td>
-                        <td>{{{value.role}}}</td>
-                        <td>{{{value.organisation}}}</td>
-                        <td>{{{value.city}}}</td>
-                        <td>{{{value.country}}}</td>
-                        <td>{{{value.app_date}}}</td>
-                        <td>{{{value.deadline}}}</td>
-                        <td>{{{value.description}}}</td>
-                        <td>{{{value.app_status}}}</td>
-                        <td>{{{value.last_updated}}}</td>
-                    </tr>
-                    <br>
-                
-                    {{/each}}                  
-                </table>
-            </div> --}}
-                {{#each apps as |value key|}}
-                <div class="card text-white mb-3">
-                    <div class="card-header">Created by: {{{value.f_name}}} {{{value.l_name}}}</div>
-                    <div class="card-body">
-                        <div class="row">                         
-                            <div class="card-info col-sm-6">
-                                <div class="row">
-                                    <h3 class="card-title">{{{value.role}}}</h3>
-                                </div>
-                                <div class="row">
-                                    <h5 class="card-text">{{{value.organisation}}}</h5>
-                                </div>
-                                <div class="row">
-                                    <p class="card-text">{{{value.city}}}, {{{value.country}}}</p>
-                                </div>
-                                <div class="row">
-                                    <p class="card-text">{{{value.description}}}</p>
-                                </div>
-                            </div>
-                            <div class="card-dates col-sm-6">
-                                <div class="row">
-                                    <p class="card-text">Application submitted: {{{value.app_date}}}</p>
-                                </div>
-                                <div class="row">
-                                    <p class="card-text">Application deadline: {{{value.deadline}}}</p>
-                                </div>
-                                <div class="row">
-                                    <p class="card-text">Application status: {{{value.app_status}}}</p>
-                                </div>                                
-                            </div>
-                        </div>                        
+    {{#if result}}            
+    
+    {{#each apps as |value key|}}
+    <div class="card text-white bg-dark mb-3">
+        <div class="card-header">Created by: {{{value.f_name}}} {{{value.l_name}}}</div>
+        <div class="card-body">
+            <div class="row">                         
+                <div class="card-info col-sm-6">
+                    <div class="row">
+                        <h3 class="card-title">{{{value.role}}}</h3>
                     </div>
-                    <div class="card-footer">
-                        <small>Last updated: {{{value.last_updated}}}</small>
+                    <div class="row">
+                        <h5 class="card-text">{{{value.organisation}}}</h5>
+                    </div>
+                    <div class="row">
+                        <p class="card-text">{{{value.city}}}, {{{value.country}}}</p>
+                    </div>
+                    <div class="row">
+                        <p class="card-text">{{{value.description}}}</p>
                     </div>
                 </div>
-                {{/each}}            
-            
-            {{else}}
-            <div class="no-results-container">
-                <p>No results found for: {{{userSearch}}}</p>
-            </div>
-            {{/if}}
-        </div>                            
-    </div>       
+                <div class="card-dates col-sm-6">
+                    <div class="row">
+                        <p class="card-text">Application submitted: {{{value.app_date}}}</p>
+                    </div>
+                    <div class="row">
+                        <p class="card-text">Application deadline: {{{value.deadline}}}</p>
+                    </div>
+                    <div class="row">
+                        <p class="card-text">Application status: {{{value.app_status}}}</p>
+                    </div>                                
+                </div>
+            </div>                        
+        </div>
+        <div class="card-footer">
+            <small>Last updated: {{{value.last_updated}}}</small>
+        </div>
+    </div>
+    {{/each}}            
+    
+    {{else}}
+    <div class="student-no-applications-container">
+        <p>You have not posted any applications yet.</p>
+    </div>
+    {{/if}}  
         
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

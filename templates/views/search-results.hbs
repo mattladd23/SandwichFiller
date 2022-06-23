@@ -10,58 +10,52 @@
 </head>
 <body>
 
-{{>staffNavbar}}
+{{>staffNavbar}}    
     
-    <div class="user-hero">
-
-        <div class="results-container">
-            <h1>Search results</h1>
-            {{#if result}}            
-            <div class="results-table-container">
-                <table>
-                    <tr>
-                        <th>Student ID</th>
-                        <th>First name</th>
-                        <th>Last name</th>
-                        <th>Email</th>
-                        <th>Course</th>
-                        <th>School</th>
-                        <th>Placement year</th>
-                        <th>Graduation year</th>
-                        <th>Preferred sector</th>
-                        <th>Other sectors of interest</th>
-                        <th></th>
-                    </tr>                    
-                    {{#each students as |value key|}}
-                    <tr>
-                        <td>{{{value.student_id}}}</td>
-                        <td>{{{value.f_name}}}</td>
-                        <td>{{{value.l_name}}}</td>
-                        <td>{{{value.email}}}</td>
-                        <td>{{{value.course}}}</td>
-                        <td>{{{value.school}}}</td>
-                        <td>{{{value.placement_year}}}</td>
-                        <td>{{{value.grad_year}}}</td>
-                        <td>{{{value.pref_sector}}}</td>
-                        <td>{{{value.other_sectors}}}</td>
-                        <td>
-                            <form action="staff/students/view" method="GET">
-                                <button type="submit" class="btn btn-primary">View</button>                            
-                            </form>
-                        </td>
-                    </tr>
-                    <br>
-                    {{/each}}                  
-                </table>
-            </div>
-            
-            {{else}}
-            <div class="no-results-container">
-                <p>Your search returned no results</p>
-            </div>
-            {{/if}}
-        </div>       
-    </div>       
+    <h1>Search results</h1>
+    {{#if result}}            
+    <div class="results-table-container">
+        <table>
+            <tr>
+                <th>Student ID</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Email</th>
+                <th>Course</th>
+                <th>School</th>
+                <th>Placement year</th>
+                <th>Graduation year</th>
+                <th>Preferred sector</th>
+                <th>Other sectors of interest</th>                
+            </tr>                    
+            {{#each students as |value key|}}
+            <tr>
+                <td>{{{value.student_id}}}</td>
+                <td>{{{value.f_name}}}</td>
+                <td>{{{value.l_name}}}</td>
+                <td>{{{value.email}}}</td>
+                <td>{{{value.course}}}</td>
+                <td>{{{value.school}}}</td>
+                <td>{{{value.placement_year}}}</td>
+                <td>{{{value.grad_year}}}</td>
+                <td>{{{value.pref_sector}}}</td>
+                <td>{{{value.other_sectors}}}</td>
+                <td>
+                    <form action="staff/students/view" method="GET">
+                        <button type="submit" class="btn btn-primary">View</button>                            
+                    </form>
+                </td>
+            </tr>
+            <br>
+            {{/each}}                  
+        </table>
+    </div>
+    
+    {{else}}
+    <div class="no-results-container">
+        <p>Your search returned no results.</p>
+    </div>
+    {{/if}}           
         
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

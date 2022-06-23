@@ -11,42 +11,37 @@
 <body>
 
 {{>notAuthNavbar}}
-
-    <div class="home-bg">
-        <div class="home-container">
-            <h1>Staff registration</h1>
-            <br>
-            <form action="/register/staff" method="POST">
-                <div class="form-group">
-                    <label for="stafffname">First name:</label>
-                    <input type="text" class="form-control" id="stafffname" name="stafffname" placeholder="" required>
-                </div>
-                <div class="form-group">
-                    <label for="stafflname">Last name:</label>
-                    <input type="text" class="form-control" id="stafflname" name="stafflname" placeholder="" required>
-                </div>
-                <div class="form-group">
-                    <label for="staffemail">Email:</label>
-                    <input type="email" class="form-control" id="staffemail" name="staffemail" placeholder="" required>
-                </div>
-                <div class="form-group">
-                    <label for="staffpassword">Password:</label>
-                    <input type="password" class="form-control" id="staffpassword" name="staffpassword" placeholder="" required>
-                </div>
-                <div class="form-group">
-                    <label for="staffconfirmpw">Confirm password:</label>
-                    <input type="password" class="form-control" id="staffconfirm-pw" name="staffconfirmpw" placeholder="">
-                </div>
-                <div>
-                    <button class="btn btn-primary" type="submit" id="signup-button">Sign up</button>
-                </div>
-                <br>
-                <div>
-                    <a id="stafflogin-redir" href="/login">Staff login</a>
-                </div>        
-            </form> 
+    
+    <h1>Staff registration</h1>
+    <br>
+    <form action="/register/staff" method="POST">
+        <div class="form-group">
+            <label for="stafffname">First name:</label>
+            <input type="text" class="form-control" id="stafffname" name="stafffname" placeholder="" required>
         </div>
-    </div>
+        <div class="form-group">
+            <label for="stafflname">Last name:</label>
+            <input type="text" class="form-control" id="stafflname" name="stafflname" placeholder="" required>
+        </div>
+        <div class="form-group">
+            <label for="staffemail">Email:</label>
+            <input type="email" class="form-control" id="staffemail" name="staffemail" placeholder="" required>
+        </div>
+        <div class="form-group">
+            <label for="staffpassword">Password:</label>
+            <input type="password" class="form-control" id="staffpassword" name="staffpassword" placeholder="" required>
+        </div>
+        <div class="form-group">
+            <label for="staffconfirmpw">Confirm password:</label>
+            <input type="password" class="form-control" id="staffconfirm-pw" name="staffconfirmpw" placeholder="">
+        </div>
+        <div>
+            <button class="btn btn-primary" type="submit" id="signup-button">Sign up</button>
+        </div>
+        <br>                  
+    </form>
+    <br>
+    <p><a id="stafflogin-redir" href="/login">Staff login</a></p>  
   
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

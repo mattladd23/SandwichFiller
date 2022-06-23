@@ -6,57 +6,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../css/styles.css">    
+    <link rel="stylesheet" href="../../css/styles.css">
 </head>
 <body>
 
 {{>staffNavbar}}
-    
-    <div class="user-hero">
-        <h1>Student applications</h1>
 
-        <div class="filter-apps">
-            <form action="/staff/applications" method="GET">
-                <label for="filter">Filter by applications status:</label>
-                <select name="filter" id="filter" onchange="this.form.submit()">
-                    {{#if noFilter}}
-                    <option>All applications</option>
-                    {{#each status as |value key|}}
-                    <option>{{{value.app_status}}}</option>
-                    {{/each}}
-                    {{else}}
-                    <option>{{{filter}}}</option>
-                    {{#each status as |value key|}}
-                    <option>{{{value.app_status}}}</option>
-                    {{/each}}
-                    <option>All applications</option>
-                    {{/if}}
-                </select>
-            </form>
-        </div>
+    <h1>Student applications</h1>
 
-        {{#if noApps}}
-        <div class="no-apps">
-            <p>No applications currently have the status: '{{{filter}}}'</p>
+    <div class="apps-filter-container">
+        <form action="/staff/applications" method="GET">
+            <label for="filter">Filter by applications status:</label>
+            <select name="filter" id="filter" onchange="this.form.submit()">
+                {{#if noFilter}}
+                <option>All applications</option>
+                {{#each status as |value key|}}
+                <option>{{{value.app_status}}}</option>
+                {{/each}}
+                {{else}}
+                <option>{{{filter}}}</option>
+                {{#each status as |value key|}}
+                <option>{{{value.app_status}}}</option>
+                {{/each}}
+                <option>All applications</option>
+                {{/if}}
+            </select>
+        </form>
+    </div>
+    {{#if noApps}}
+    <div class="no-apps-container">        
+        <p>No applications currently have the status: '{{{filter}}}'</p>
 
-            <form action="/staff" method="GET">
-                <button type="submit" class="btn btn-primary">Search agin</button>
-            </form>
-        </div>
+        <form action="/staff" method="GET">
+            <button type="submit" class="btn btn-primary">Search agin</button>
+        </form>
+    </div>
+    {{else}}
 
-        {{else}}
-
+    <div class="viewable-app-container">
         {{#each apps as |value key|}}
-        <div class="card border-secondary mb-3">
+        <div class="card text-white bg-dark mb-3">
             <div class="card-header">Created by: {{{value.f_name}}} {{{value.l_name}}}</div>
-            <div class="card-body text-secondary">
-                <h5 class="card-title">{{{value.role}}}</h5>
-                <p class="card-text">{{{value.description}}}</p>
+            <div class="card-body">
+                <div class="row">                         
+                    <div class="card-info col-sm-6">
+                        <div class="row">
+                            <h3 class="card-title">{{{value.role}}}</h3>
+                        </div>
+                        <div class="row">
+                            <h5 class="card-text">{{{value.organisation}}}</h5>
+                        </div>
+                        <div class="row">
+                            <p class="card-text">{{{value.city}}}, {{{value.country}}}</p>
+                        </div>
+                        <div class="row">
+                            <p class="card-text">{{{value.description}}}</p>
+                        </div>
+                    </div>
+                    <div class="card-dates col-sm-6">
+                        <div class="row">
+                            <p class="card-text">Application submitted: {{{value.app_date}}}</p>
+                        </div>
+                        <div class="row">
+                            <p class="card-text">Application deadline: {{{value.deadline}}}</p>
+                        </div>
+                        <div class="row">
+                            <p class="card-text">Application status: {{{value.app_status}}}</p>
+                        </div>                                
+                    </div>
+                </div>                        
+            </div>
+            <div class="card-footer">
+                <small>Last updated: {{{value.last_updated}}}</small>
             </div>
         </div>
         {{/each}}
-        {{/if}}
-    </div>       
+    </div>        
+    {{/if}}         
         
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

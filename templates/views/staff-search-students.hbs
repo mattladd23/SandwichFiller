@@ -12,72 +12,66 @@
 <body>
 
 {{>staffNavbar}}
-    
-    <div class="user-hero">       
 
-        <div class="search-form-container">
+    <h1>Search students...</h1>
 
-            <h1>Search students...</h1>
+    <form action="/staff/search/results" method="GET">
 
-            <form action="/staff/search/results" method="GET">
+        <div class="form-group nameSearch-container">
+            <label for="nameSearch">By name:</label>            
+            <input class="form-control form-control" type="text" placeholder=""
+                aria-label="Search" name="nameSearch">
+            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button> 
+        </div>
 
-                <div class="form-group nameSearch-container">
-                    <label for="nameSearch">By name:</label>            
-                    <input class="form-control form-control" type="text" placeholder=""
-                        aria-label="Search" name="nameSearch">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button> 
-                </div>
+        <div class="form-group schoolSearch-container">
+            <label for="schoolSearch">By school:</label>       
+            <select id="school" class="form-control" name="schoolSearch">
+                <option selected></option>
+                <option>Art, Media and American Studies</option>
+                <option>Arts and Humanities</option>
+                <option>Biological Sciences</option>
+                <option>Centre for Continuing Education</option>
+                <option>Centre for Staff and Educational Development</option>
+                <option>Chemistry</option>
+                <option>Computing Sciences</option>
+                <option>Economics</option>
+                <option>Education and Lifelong Learning</option>
+                <option>Engineering</option>
+                <option>Environmental Sciences</option>
+                <option>Health Sciences</option>
+                <option>History</option>
+                <option>International Development</option>
+                <option>Law</option>
+                <option>Literature, Drama and Creative Writing</option>
+                <option>Mathematics</option>
+                <option>Medicine and Health Sciences</option>
+                <option>Music</option>
+                <option>Natural Sciences</option>
+                <option>Norwich Business School</option>
+                <option>Norwich Medical School</option>
+                <option>Pharmacy</option>
+                <option>Politics, Philosophy, Language and Communication Studies</option>
+                <option>Psychology</option>
+                <option>Science</option>
+                <option>Social Work</option>                      
+            </select>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+        </div>
 
-                <div class="form-group schoolSearch-container">
-                    <label for="schoolSearch">By school:</label>       
-                    <select id="school" class="form-control" name="schoolSearch">
-                        <option selected></option>
-                        <option>Art, Media and American Studies</option>
-                        <option>Arts and Humanities</option>
-                        <option>Biological Sciences</option>
-                        <option>Centre for Continuing Education</option>
-                        <option>Centre for Staff and Educational Development</option>
-                        <option>Chemistry</option>
-                        <option>Computing Sciences</option>
-                        <option>Economics</option>
-                        <option>Education and Lifelong Learning</option>
-                        <option>Engineering</option>
-                        <option>Environmental Sciences</option>
-                        <option>Health Sciences</option>
-                        <option>History</option>
-                        <option>International Development</option>
-                        <option>Law</option>
-                        <option>Literature, Drama and Creative Writing</option>
-                        <option>Mathematics</option>
-                        <option>Medicine and Health Sciences</option>
-                        <option>Music</option>
-                        <option>Natural Sciences</option>
-                        <option>Norwich Business School</option>
-                        <option>Norwich Medical School</option>
-                        <option>Pharmacy</option>
-                        <option>Politics, Philosophy, Language and Communication Studies</option>
-                        <option>Psychology</option>
-                        <option>Science</option>
-                        <option>Social Work</option>                      
-                    </select>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                </div>
-
-                <div class="form-group placementYearSearch-container">
-                    <label for="placementYearSearch">By placement year:</label>
-                    <select id="placementyear" class="form-control" name="placementYearSearch">
-                        <option selected></option>
-                        <option>2022-2023</option>
-                        <option>2023-2024</option>
-                        <option>2024-2025</option>
-                        <option>2025-2026</option>
-                        <option>2026-2027</option>
-                    </select>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                </div>
-            </form>
-        </div> 
-    </div>       
+        <div class="form-group placementYearSearch-container">
+            <label for="placementYearSearch">By placement year:</label>
+            <select id="placementyear" class="form-control" name="placementYearSearch">
+                <option selected></option>
+                <option>2022-2023</option>
+                <option>2023-2024</option>
+                <option>2024-2025</option>
+                <option>2025-2026</option>
+                <option>2026-2027</option>
+            </select>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+        </div>
+    </form>           
         
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
