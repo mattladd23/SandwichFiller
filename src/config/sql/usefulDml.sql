@@ -36,10 +36,10 @@ VALUES (1655717043952, 1655816283228, 'Investment Intern', 'Citi Bank', 'Milan',
 
 /* Edit an application */
 
-UPDATE application 
-SET role = 'Farmer', organisation = 'Self-employed', city = 'Somerset', 
-country = 'UK', app_date = '11-11-2022', deadline = '01-01-2023', app_status = 'Applied',
-description = 'Need to escape to the countryside'
-WHERE app_id = 1655396214535
-RETURNING *;
+-- UPDATE application 
+-- SET role = 'Farmer', organisation = 'Self-employed', city = 'Somerset', 
+-- country = 'UK', app_date = '11-11-2022', deadline = '01-01-2023', app_status = 'Applied',
+-- description = 'Need to escape to the countryside'
+-- WHERE app_id = 1655396214535
+-- RETURNING *;
 
