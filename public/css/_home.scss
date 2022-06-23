@@ -1,54 +1,53 @@
-@mixin flexCenter {
-    display: flex;
-    justify-content: center;    
-    align-items: center;    
-}
+// @mixin flexCenter {
+//     display: flex;
+//     justify-content: center;    
+//     align-items: center;    
+// }
 
-.home-bg {
-    @include flexCenter();
-    width: 100vw;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    left: 0;    
-    flex-direction: column;    
-    z-index: -1;    
-    background-image: url('../images/compsci.jpg');
-    background-attachment: fixed;
-    background-size: cover;
-};
+// .home-bg {
+//     @include flexCenter();
+//     width: 100vw;
+//     height: 100vh;
+//     position: absolute;
+//     top: 0;
+//     left: 0;    
+//     flex-direction: column;    
+//     // z-index: -1;    
+//     // background-image: url('../images/compsci.jpg');
+//     // background-attachment: fixed;
+//     // background-size: cover;
+// };
 
-.home-container {
-    @include flexCenter();
-    margin-top: 5%;
-    width: 90vw;
-    height: 50vh;
-    flex-direction: column;
-    text-align: center;
-    padding: 1rem;
-    background-position: center center;
-    background-size: cover;
-    color: #fff;
-    text-shadow: 0 0 8px #66757f; 
-    a {
-        color: #fff;
-        text-shadow: 0 0 8px #66757f;
-        padding: 1rem;
-        &:hover {
-            text-decoration: none;
-            opacity: 0.8;
-        };
+// .home-container {
+//     @include flexCenter();
+//     margin-top: 5%;
+//     width: 90vw;
+//     height: 50vh;
+//     flex-direction: column;
+//     text-align: center;
+//     padding: 1rem;
+//     // background-position: center center;
+//     color: #fff;
+//     text-shadow: 0 0 8px #66757f; 
+//     a {
+//         color: #fff;
+//         text-shadow: 0 0 8px #66757f;
+//         padding: 1rem;
+//         &:hover {
+//             text-decoration: none;
+//             opacity: 0.8;
+//         };
 
-    };
-    button {
-        background-color: #f03801;
-        border-color: #f03801;
-        margin-top: 2rem;
-        &:hover {
-            background-color: #f03801;
-            opacity: 0.8;
-            color: #fff;
-            border-color: #f03801;
-        };
-    };
-}
+//     };
+//     button {
+//         background-color: #f03801;
+//         border-color: #f03801;
+//         margin-top: 2rem;
+//         &:hover {
+//             background-color: #f03801;
+//             opacity: 0.8;
+//             color: #fff;
+//             border-color: #f03801;
+//         };
+//     };
+// }
