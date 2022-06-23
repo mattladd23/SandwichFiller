@@ -12,47 +12,49 @@
 
 {{>studentNavbar}}
             
-    <h1>Your applications</h1>
+    <h1 class="apps-header">Your applications</h1>
     
-    {{#if result}}            
-    
-    {{#each apps as |value key|}}
-    <div class="card text-white bg-dark mb-3">
-        <div class="card-header">Created by: {{{value.f_name}}} {{{value.l_name}}}</div>
-        <div class="card-body">
-            <div class="row">                         
-                <div class="card-info col-sm-6">
-                    <div class="row">
-                        <h3 class="card-title">{{{value.role}}}</h3>
+    {{#if result}}
+
+    <div class="apps-container">
+        {{#each apps as |value key|}}
+        <div class="card text-white bg-dark mb-3">
+            <div class="card-header">Created by: {{{value.f_name}}} {{{value.l_name}}}</div>
+            <div class="card-body">
+                <div class="row">                         
+                    <div class="card-info col-sm-6">
+                        <div class="row">
+                            <h3 class="card-title">{{{value.role}}}</h3>
+                        </div>
+                        <div class="row">
+                            <h5 class="card-text">{{{value.organisation}}}</h5>
+                        </div>
+                        <div class="row">
+                            <p class="card-text">{{{value.city}}}, {{{value.country}}}</p>
+                        </div>
+                        <div class="row">
+                            <p class="card-text">{{{value.description}}}</p>
+                        </div>
                     </div>
-                    <div class="row">
-                        <h5 class="card-text">{{{value.organisation}}}</h5>
+                    <div class="card-dates col-sm-6">
+                        <div class="row">
+                            <p class="card-text">Application submitted: {{{value.app_date}}}</p>
+                        </div>
+                        <div class="row">
+                            <p class="card-text">Application deadline: {{{value.deadline}}}</p>
+                        </div>
+                        <div class="row">
+                            <p class="card-text">Application status: {{{value.app_status}}}</p>
+                        </div>                                
                     </div>
-                    <div class="row">
-                        <p class="card-text">{{{value.city}}}, {{{value.country}}}</p>
-                    </div>
-                    <div class="row">
-                        <p class="card-text">{{{value.description}}}</p>
-                    </div>
-                </div>
-                <div class="card-dates col-sm-6">
-                    <div class="row">
-                        <p class="card-text">Application submitted: {{{value.app_date}}}</p>
-                    </div>
-                    <div class="row">
-                        <p class="card-text">Application deadline: {{{value.deadline}}}</p>
-                    </div>
-                    <div class="row">
-                        <p class="card-text">Application status: {{{value.app_status}}}</p>
-                    </div>                                
-                </div>
-            </div>                        
+                </div>                        
+            </div>
+            <div class="card-footer">
+                <small>Last updated: {{{value.last_updated}}}</small>
+            </div>
         </div>
-        <div class="card-footer">
-            <small>Last updated: {{{value.last_updated}}}</small>
-        </div>
-    </div>
-    {{/each}}            
+        {{/each}}
+    </div>      
     
     {{else}}
     <div class="student-no-applications-container">

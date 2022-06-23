@@ -24,9 +24,13 @@ h1 {
 
 h2 {
     @extend h1;
-    margin-top:0%;
+    margin-top: 0%;
+}
+
+h3 {
+    @extend h2;
 }
 
 h4 {
-    @extend h2;
+    @extend h3;
 }

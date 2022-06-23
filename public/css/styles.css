@@ -12,7 +12,7 @@ body {
   flex-direction: column;
 }
 
-h1, h2, h4 {
+h1, .apps-header, .reg-login-header, h2, h3, h4 {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,7 +20,7 @@ h1, h2, h4 {
   margin-top: 15%;
 }
 
-h2, h4 {
+h2, h3, h4 {
   margin-top: 0%;
 }
 
@@ -66,6 +66,71 @@ h2, h4 {
 }
 #logout-button:focus {
   outline: none;
+}
+
+html {
+  overflow-y: scroll;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("../images/PolygonLuminaryDark.svg");
+  background-attachment: fixed;
+  background-size: cover;
+  flex-direction: column;
+}
+
+h1, .apps-header, .reg-login-header, h2, h3, h4 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  margin-top: 15%;
+}
+
+h2, h3, h4 {
+  margin-top: 0%;
+}
+
+html {
+  overflow-y: scroll;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("../images/PolygonLuminaryDark.svg");
+  background-attachment: fixed;
+  background-size: cover;
+  flex-direction: column;
+}
+
+h1, .apps-header, h2, h3, h4, .reg-login-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  margin-top: 15%;
+}
+
+h2, h3, h4 {
+  margin-top: 0%;
+}
+
+.reg-header {
+  margin-top: 10%;
+}
+
+.apps-header {
+  margin-top: 8%;
+  padding: 1rem;
+}
+
+.apps-container {
+  margin-bottom: 10%;
 }
 
 /* textarea {

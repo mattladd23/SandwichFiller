@@ -1,3 +1,15 @@
+@import './global';
+
+.apps-header {
+    @extend h1;
+    margin-top: 8%;
+    padding: 1rem;
+}
+
+.apps-container {
+    margin-bottom: 10%;
+}
+
 // .apps-title-container {
 //     flex-direction: column;
 //     margin-top: 20%;

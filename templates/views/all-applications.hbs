@@ -12,7 +12,7 @@
 
 {{>staffNavbar}}
 
-    <h1>Student applications</h1>
+    <h1 class="apps-header">Student applications</h1>
 
     <div class="apps-filter-container">
         <form action="/staff/applications" method="GET">
@@ -43,7 +43,7 @@
     </div>
     {{else}}
 
-    <div class="viewable-app-container">
+    <div class="apps-container">
         {{#each apps as |value key|}}
         <div class="card text-white bg-dark mb-3">
             <div class="card-header">Created by: {{{value.f_name}}} {{{value.l_name}}}</div>
