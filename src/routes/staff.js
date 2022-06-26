@@ -106,8 +106,18 @@ router.get('/applications', async (req, res) => {
         .query(q)        
         .then((results) => {
             console.log(results);
+            // const statusArray = results[1].rows;
 
-            const statusArray = results[1].rows;
+            const statusArray = [
+                { app_status: 'Interested' },
+                { app_status: 'Applied'},
+                { app_status: 'Online tests'},
+                { app_status: 'Assessment centre'},
+                { app_status: 'Interview'},
+                { app_status: 'Accepted'},
+                { app_status: 'Rejected'}
+            ]
+
             console.log(statusArray);
 
             if (prepared) {
@@ -117,7 +127,7 @@ router.get('/applications', async (req, res) => {
                     }
                 }
 
-                const apps = results[4].rows
+                const apps = results[2].rows
                 console.log(apps);
 
                 if (apps.length === 0) {
