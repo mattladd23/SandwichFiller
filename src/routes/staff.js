@@ -53,6 +53,7 @@ router.get('/applications', async (req, res) => {
         if (req.query.filter) {
             console.log(req.query.filter);
             if (req.query.filter === 'All applications') {
+                prepared = false;
                 console.log(req.query.filter)
                 q = 'SET SEARCH_PATH TO sf;'
                 + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
@@ -157,8 +158,23 @@ router.get('/applications', async (req, res) => {
                 });
                         
             }
+
+            if (!prepared) {
+                const apps = results[1].rows;
+                console.log(apps);
+
+                return res.render('all-applications', {
+                    title: 'Applications',
+                    apps: apps,
+                    filter: req.query.filter,
+                    noFilter: false,
+                    status: statusArray
+                });
+            }
+
+            console.log(results);
             const apps = results[3].rows;
-            console.log(apps);
+            console.log(apps);            
 
             // Keep lines below for input sanitisation
 
