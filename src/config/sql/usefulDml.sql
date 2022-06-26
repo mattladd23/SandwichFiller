@@ -42,4 +42,3 @@ VALUES (1655717043952, 1655816283228, 'Investment Intern', 'Citi Bank', 'Milan',
 -- description = 'Need to escape to the countryside'
 -- WHERE app_id = 1655396214535
 -- RETURNING *;
-
