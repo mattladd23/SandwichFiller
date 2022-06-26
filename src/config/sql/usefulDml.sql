@@ -42,3 +42,20 @@ VALUES (1655717043952, 1655816283228, 'Investment Intern', 'Citi Bank', 'Milan',
 -- description = 'Need to escape to the countryside'
 -- WHERE app_id = 1655396214535
 -- RETURNING *;
+
+/* Data from last, not past week */
+
+select * from application
+WHERE last_updated BETWEEN
+    NOW()::DATE-EXTRACT(DOW FROM NOW())::INTEGER-7 
+    AND NOW()::DATE-EXTRACT(DOW from NOW())::INTEGER
+
+/* Data from past week / 7 days */
+
+select * from application
+where last_updated > current_date - interval '7 days'
+
+/* Data from past month */
+
+select * from application
+where last_updated > current_date - interval '7 days'
