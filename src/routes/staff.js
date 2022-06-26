@@ -24,13 +24,18 @@ router.get('/', (req, res) => {
 router.get('/applications', async (req, res) => {
 
     let q = 'SET SEARCH_PATH TO sf;'    
-    + 'SELECT DISTINCT application.app_status FROM application;'
+    // + 'SELECT DISTINCT application.app_status FROM application;'  
 
     // Import to decide whether prepared or not as will need to use string escape for prepared 
     let prepared = false;
     console.log(`Prepared: ${prepared}`);
 
     if (Object.keys(req.query).length === 0) {
+
+        console.log(`req.query.length: ${Object.keys(req.query).length}`)
+
+        prepared = false;
+
         // Default query to return all posts ordered by date last updated
         q += 'SET SEARCH_PATH TO sf;'
         + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
@@ -149,17 +154,17 @@ router.get('/applications', async (req, res) => {
                 // sanAppResults = [appResults, 'last_updated'];
                 // console.log(sanAppResults);
 
-                return res.render('all-applications', {
-                    title: 'Applications',
-                    apps: apps,
-                    filter: req.query.filter,
-                    noFilter: false,
-                    status: statusArray
-                });
+                // return res.render('all-applications', {
+                //     title: 'Applications',
+                //     apps: apps,
+                //     filter: req.query.filter,
+                //     noFilter: false,
+                //     status: statusArray
+                // });
                         
             }
 
-            if (!prepared) {
+            if (req.query.filter = 'All applications') {
                 const apps = results[1].rows;
                 console.log(apps);
 
@@ -168,6 +173,18 @@ router.get('/applications', async (req, res) => {
                     apps: apps,
                     filter: req.query.filter,
                     noFilter: false,
+                    status: statusArray
+                });
+            }
+
+            if (Object.keys(req.query).length === 0) {
+                const apps = results[3].rows;
+                console.log(apps);
+
+                return res.render('all-applications', {
+                    title: 'Applications',
+                    apps: apps,
+                    noFilter: true,
                     status: statusArray
                 });
             }
@@ -223,11 +240,12 @@ router.get('/search/results', async (req, res) => {
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE searchStudents(text, text, text) AS '
-    + 'SELECT student.f_name, student.l_name, student.email, student.student_id, student.course, '
-    + 'student.school, student.placement_year, student.grad_year, student.pref_sector, other_sectors '
+    + 'SELECT student.user_id, student.f_name, student.l_name, student.email, student.student_id, '
+    + 'student.course, student.school, student.placement_year, student.grad_year, student.pref_sector, '
+    + 'other_sectors '
     + 'FROM student '
     + 'WHERE student.f_name ILIKE $1 OR student.l_name ILIKE $1 OR student.email ILIKE $1 '
-    + 'OR student.school = $2 OR student.placement_year = $3' 
+    + 'OR student.school = $2 OR student.placement_year = $3 ' 
     + 'ORDER BY student.l_name ASC;'
     + `EXECUTE searchStudents('${nameQuery}', '${schoolQuery}', '${placementYearQuery}');`
     + 'DEALLOCATE searchStudents;'
@@ -258,6 +276,48 @@ router.get('/search/results', async (req, res) => {
                     placementYearSearch: placementYearQuery,
                     result: true
                 })                
+            }
+        })
+        .catch((e) => {
+            console.log(e);
+        })
+});
+
+// Render individual student profile
+router.get('/search/results/:id', async (req, res) => {
+    studentUserId = req.params.id;
+
+    let q = 'SET SEARCH_PATH TO sf;'
+    + 'PREPARE getStudentApps(bigint) AS '
+    + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
+    + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
+    + 'application.last_updated, student.user_id, student.f_name, student.l_name '
+    + 'FROM application JOIN student ON application.user_id = student.user_id '
+    + 'WHERE student.user_id = $1 '
+    + 'ORDER BY application.last_updated DESC;'
+    + `EXECUTE getStudentApps(${studentUserId});`
+    + 'DEALLOCATE getStudentApps;'
+
+    console.log(q);
+
+    await pool
+        .query(q)
+        .then((results) => {
+            console.log(results);
+            if (results[2].rowCount === 0) {
+                res.render('staff-view-student', {
+                    title: 'Student applications',
+                    result: false
+                })
+            } else {
+                const student = results[2].rows;
+                console.log(student);
+
+                res.render('staff-view-student', {
+                    title: 'Student applications',
+                    result: true,
+                    student: student
+                })
             }
         })
         .catch((e) => {
