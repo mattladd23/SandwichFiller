@@ -310,13 +310,18 @@ router.get('/search/results/:id', async (req, res) => {
                     result: false
                 })
             } else {
-                const student = results[2].rows;
-                console.log(student);
+                const studentApps = results[2].rows;
+                console.log(studentApps);
+                
+                // const studentFName = results[2].rows.f_name;
+                const studentFName = studentApps[0].f_name;
+                console.log(studentFName);
 
                 res.render('staff-view-student', {
                     title: 'Student applications',
                     result: true,
-                    student: student
+                    studentApps: studentApps,
+                    studentFName: studentFName 
                 })
             }
         })

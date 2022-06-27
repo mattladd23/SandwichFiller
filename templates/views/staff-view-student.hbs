@@ -14,8 +14,10 @@
 
     {{#if result}}
 
+    <h1>{{studentFName}}'s applications</h1>
+    <br>
     <div class="apps-container">
-        {{#each student as |value key|}}       
+        {{#each studentApps as |value key|}}       
 
         <div class="card text-white bg-info mb-3">
             <div class="card-header">Created by: {{{value.f_name}}} {{{value.l_name}}}</div>
