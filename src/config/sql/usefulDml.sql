@@ -59,3 +59,124 @@ where last_updated > current_date - interval '7 days'
 
 select * from application
 where last_updated > current_date - interval '7 days'
+
+
+/* Draft or reporting system queries */
+
+-- Application deadlines this week - where student is yet to have applied
+
+select * from application
+where 
+deadline <= NOW() + interval '7 days'
+and
+app_status = 'Interested';
+
+-- Accepted applications active this week
+
+select * from application
+where
+last_updated >= NOW() - interval '7 days'
+and
+app_status = 'Accepted';
+
+-- Rejected applications active this week
+
+select * from application
+where
+last_updated >= NOW() - interval '7 days'
+and
+app_status = 'Rejected';
+
+-- Show all students in order of applications submitted
+
+select student.user_id, student.f_name, student.l_name, student.student_id,
+count(application.app_id) AS num_apps
+from student
+join application
+on student.user_id = application.user_id
+group by student.user_id
+order by num_apps DESC;
+
+-- show all submitted applications
+
+select *
+from application
+where application.app_status
+in ('Applied', 'Online tests', 'Assessment centre', 'Interview', 'Accepted', 'Rejected')
+
+-- create view for all submitted applications
+
+create view all_submitted_apps as
+select student.user_id, student.f_name, student.l_name, student.student_id,
+application.app_id, application.app_status
+from student
+join application
+on student.user_id = application.user_id
+where application.app_status
+in ('Applied', 'Online tests', 'Assessment centre', 'Interview', 'Accepted', 'Rejected');
+
+
+-- select all students in order of apps submitted - MUST USE VIEW!!
+
+select student.user_id, student.f_name, student.l_name, student.student_id,
+count(all_submitted_apps.app_id) AS num_apps
+from student
+join all_submitted_apps
+on student.user_id = all_submitted_apps.user_id
+group by student.user_id
+order by num_apps DESC;
+
+-- Finds upper quartile of number of applications submitted
+
+select percentile_disc(0.75)
+within group
+(order by apps_submitted_ordered.num_apps)
+from apps_submitted_ordered
+
+
+-- Finds lower quartile of number of applications submitted
+
+select percentile_disc(0.25)
+within group
+(order by apps_submitted_ordered.num_apps)
+from apps_submitted_ordered
+
+-- Students with lowest number of applications submitted (lower quartile)
+
+select * from apps_submitted_ordered
+where apps_submitted_ordered.num_apps <= (
+	select percentile_disc(0.25)
+	within group
+	(order by apps_submitted_ordered.num_apps)
+	from apps_submitted_ordered
+);
+
+-- Students with highest number of applications submitted (upper quartile)
+
+select * from apps_submitted_ordered
+where apps_submitted_ordered.num_apps >= (
+	select percentile_disc(0.75)
+	within group
+	(order by apps_submitted_ordered.num_apps)
+	from apps_submitted_ordered
+);
+
+-- Orders only students with applications accepted by number of offers
+
+select student.user_id, student.f_name, student.l_name,
+count(application.app_status) as apps_accepted
+from student
+join application
+on student.user_id = application.user_id
+where application.app_status = 'Accepted'
+group by student.user_id
+order by apps_accepted desc;
+
+-- Selects all students who have submitted applications
+
+select student.user_id, student.f_name, student.l_name,
+count(application.app_status) as total_apps
+from student
+join application
+on student.user_id = application.user_id
+group by student.user_id;
