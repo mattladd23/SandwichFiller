@@ -3,6 +3,7 @@
 SET SEARCH_PATH TO sf;
 
 /* Not that useful but shows inserting into two separate tables, albeit as unprepared statements */
+/* Can only be done as unprepared statements so is not appropriate for this use case */
 
 INSERT INTO users (user_id, f_name, l_name, email, password)
 VALUES (1000000, 'm', 'm', 'm@m', 'm');
@@ -10,7 +11,7 @@ INSERT INTO student (user_id, student_id, course, school, placement_year, grad_y
 VALUES (1000000, 1010101010, 'm', 'm', 'm', 2025, 'm', 'm');
 
 
-/* Create a member of staff */
+/* Create a member of staff (also unprepared, so only to be used in early stage testing) */
 
 INSERT INTO staff (user_id, f_name, l_name, email, password)
 VALUES (100006680, 'Eddie', 'Howe', 'eddie@gmail.com', 'eddie');
@@ -61,7 +62,7 @@ select * from application
 where last_updated > current_date - interval '7 days'
 
 
-/* Draft or reporting system queries */
+/* Draft of reporting system queries */
 
 -- Application deadlines this week - where student is yet to have applied
 
@@ -180,3 +181,23 @@ from student
 join application
 on student.user_id = application.user_id
 group by student.user_id;
+
+-- Organisations with most applications received
+
+select application.organisation, count(application.organisation) as num_apps from application
+where application.app_status = 'Applied' 
+OR application.app_status = 'Online tests' 
+OR application.app_status = 'Assessment centre' 
+OR application.app_status = 'Interview'
+OR application.app_status = 'Accepted' 
+OR application.app_status = 'Rejected'
+group by application.organisation
+order by num_apps;
+
+
+-- Organisations with most offers made
+
+select application.organisation, count(application.organisation) as num_apps from application
+where application.app_status = 'Applied'
+group by application.organisation
+order by num_apps;
