@@ -64,6 +64,18 @@ where last_updated > current_date - interval '7 days'
 
 /* Draft of reporting system queries */
 
+-- Applications due in within the next 7 days
+
+select student.user_id, student.f_name, student.l_name, student.student_id, student.email, student.course,
+application.role, application.organisation, application.deadline
+from student
+join application
+on student.user_id = application.user_id
+where deadline - NOW() <= interval '7 days' 
+and deadline - NOW() >= interval '0' 
+and app_status = 'Interested';
+
+
 -- Application deadlines this week - where student is yet to have applied
 
 select * from application

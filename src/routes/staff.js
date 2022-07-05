@@ -234,6 +234,53 @@ router.get('/search/results/:id', async (req, res) => {
         })
 });
 
+// Render staff insights page
+router.get('/insights', async (req, res) => {
+
+    const week = '7 days';
+    const zero = '0';
+    const status = 'Interested';
+
+    let q = 'SET SEARCH_PATH TO sf;'
+
+    // Add query to find applications with deadlines this week
+    q += 'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, ' +
+    'student.course, application.role, application.organisation, application.deadline ' +
+    'FROM student ' +
+    'JOIN application ' +
+    'ON student.user_id = application.user_id ' +
+    `WHERE deadline - NOW() <= interval '${week}' ` +
+    `AND deadline - NOW() >= interval '${zero}' ` +
+    `AND app_status = '${status}';` 
+
+    console.log(q);
+
+    await pool
+        .query(q)
+        .then((results) => {
+            console.log(results);
+
+            const deadlines = results[1].rows;
+            console.log(deadlines);
+
+            if (deadlines.length === 0) {
+                return res.render('staff-insights', {
+                    title: 'Student insights',
+                    noDeadlines: true
+                })
+            }
+
+            return res.render('staff-insights', {
+                title: 'Student insights',
+                deadlines: deadlines,
+                noDeadlines: false
+            })            
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+})
+
 // Render staff manage profile page
 router.get('/account', async (req, res) => {
 
