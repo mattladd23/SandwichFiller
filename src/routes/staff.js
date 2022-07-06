@@ -237,48 +237,227 @@ router.get('/search/results/:id', async (req, res) => {
 // Render staff insights page
 router.get('/insights', async (req, res) => {
 
+    let searchPath = 'SET SEARCH_PATH TO sf;'
+
+    // Define parameters and queries of all insights prior to executing promises in parallel
+
+    // Parameters to be used across all queries
     const week = '7 days';
     const zero = '0';
-    const status = 'Interested';
+    const interested = 'Interested';
+    const applied = 'Applied';
+    const onlineTests = 'Online tests';
+    const assessmentCentre = 'Assessment centre';
+    const interview = 'Interview';
+    const accepted = 'Accepted';
+    const rejected = 'Rejected';
+    
 
-    let q = 'SET SEARCH_PATH TO sf;'
-
-    // Add query to find applications with deadlines this week
-    q += 'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, ' +
-    'student.course, application.role, application.organisation, application.deadline ' +
+    // Query to find applications with deadlines this week
+    let qDeadlines = searchPath +
+    'SELECT student.user_id, student.f_name, student.l_name, student.student_id, ' +
+    'student.email, student.course, application.role, application.organisation, application.deadline ' +
     'FROM student ' +
     'JOIN application ' +
     'ON student.user_id = application.user_id ' +
     `WHERE deadline - NOW() <= interval '${week}' ` +
     `AND deadline - NOW() >= interval '${zero}' ` +
-    `AND app_status = '${status}';` 
+    `AND app_status = '${interested}';` 
 
-    console.log(q);
+    console.log('------------- \n', qDeadlines);
 
-    await pool
-        .query(q)
-        .then((results) => {
-            console.log(results);
 
-            const deadlines = results[1].rows;
-            console.log(deadlines);
+    // Query to find accepted applications active this week
+    let qAppsAcc = searchPath +
+    'SELECT * FROM application ' +
+    `WHERE last_updated >= NOW() - interval '${week}' ` +
+    `AND app_status = '${accepted}';`
 
-            if (deadlines.length === 0) {
+    console.log('------------- \n', qAppsAcc);   
+
+
+    // Query to find rejected applications active this week
+    let qAppsRej = searchPath +
+    'SELECT * FROM application ' +
+    `WHERE last_updated >= NOW() - interval '${week}' ` +
+    `AND app_status = '${rejected}';`
+
+    console.log('------------- \n', qAppsRej);
+
+
+    // Query to find students with most applications submitted
+    let qMostApps = searchPath +
+    'SELECT * FROM apps_submitted_ordered ' +
+    'WHERE apps_submitted_ordered.num_apps >= (' +
+    'SELECT percentile_disc(0.75) WITHIN GROUP ' +
+    '(ORDER BY apps_submitted_ordered.num_apps) ' +
+    'FROM apps_submitted_ordered' +
+    ');'
+
+    console.log('------------- \n', qMostApps);
+
+    // Query to find students who are yet to have submitted any applications
+    let qNoApps = searchPath +
+    'SELECT student.f_name, student.l_name, student.user_id, ' +
+    'application.app_id ' +
+    'FROM student ' +
+    'LEFT JOIN application ' +
+    'ON student.user_id = application.user_id ' +
+    'WHERE application.user_id IS NULL;'
+
+    console.log('------------- \n', qNoApps);
+
+
+    // Query to find students with the most placement offers received
+    let qMostOffers = searchPath +
+    'SELECT student.user_id, student.f_name, student.l_name, ' +
+    'COUNT(application.app_status) as apps_accepted ' +
+    'FROM student ' +
+    'JOIN application ' +
+    'ON student.user_id = application.user_id ' +
+    `WHERE application.app_status = '${accepted}' ` +
+    'GROUP BY student.user_id ' +
+    'ORDER BY apps_accepted DESC;'
+
+    console.log('------------- \n', qMostOffers);
+
+    // Query to find student who are yet to have received any placement offers
+    let qNoOffers = searchPath +
+    'SELECT student.f_name, student.l_name, student.student_id, accepted_apps.app_status ' +
+    'FROM student ' +
+    'LEFT JOIN accepted_apps ' +
+    'ON student.user_id = accepted_apps.user_id ' +
+    'WHERE app_status is null;'
+
+    console.log('------------- \n', qNoOffers);
+
+
+    // Query to find employers with most applications
+    let qEmpMostApps = searchPath +
+    'SELECT application.organisation, COUNT(application.organisation) AS num_apps ' +
+    'FROM application ' +
+    `WHERE application.app_status = '${applied}' ` +
+    `OR application.app_status = '${onlineTests}' ` +
+    `OR application.app_status = '${assessmentCentre}' ` +
+    `OR application.app_status = '${interview}' ` +
+    `OR application.app_status = '${accepted}' ` +
+    `OR application.app_status = '${rejected}' ` +
+    'GROUP BY application.organisation ' +
+    'ORDER BY num_apps;'
+
+    console.log('------------- \n', qEmpMostApps);
+
+    // Query to find employers with most placement offers
+    let qEmpMostOffers = searchPath +
+    'SELECT * from acc_apps_per_emp;'
+
+    console.log('------------- \n', qEmpMostOffers);
+
+    // Query to find employers with highest percentage of offers to applications
+    let qEmpHighPerc = searchPath +
+    'SELECT acc_apps_per_emp.organisation, acc_apps_per_emp.accepted_apps, ' +
+    'total_apps_per_emp.total_apps, (accepted_apps/total_apps*100) as perc_offers ' +
+    'FROM acc_apps_per_emp ' +
+    'JOIN total_apps_per_emp ' +
+    'ON acc_apps_per_emp.organisation = total_apps_per_emp.organisation ' +
+    'ORDER BY perc_offers;'
+
+    console.log('------------- \n', qEmpHighPerc)         
+
+
+    await Promise.all([
+            pool.query(qDeadlines),
+            pool.query(qAppsAcc),
+            pool.query(qAppsRej),
+            pool.query(qMostApps),
+            pool.query(qNoApps),
+            pool.query(qMostOffers),
+            pool.query(qNoOffers),
+            pool.query(qEmpMostApps),
+            pool.query(qEmpMostOffers),
+            pool.query(qEmpHighPerc)
+        ])
+            .then(([
+                qDeadlinesRes, 
+                qAppsAccRes, 
+                qAppsRejRes, 
+                qMostAppsRes, 
+                qNoAppsRes,
+                qMostOffersRes,
+                qNoOffersRes,
+                qEmpMostAppsRes,
+                qEmpMostOffersRes,
+                qEmpHighPercRes
+            ]) => {
+                console.log(
+                'Deadlines results: \n', qDeadlinesRes, '\n',
+                'Applications accepted active this week results: \n', qAppsAccRes, '\n',
+                'Applications rejected active this week results: \n', qAppsRejRes, '\n',
+                'Students with most applications submitted results: \n', qMostAppsRes, '\n',
+                'Students with no applications submitted results: \n', qNoAppsRes, '\n',
+                'Students with most offers results: \n', qMostOffersRes, '\n',
+                'Students with no offers results: \n', qNoOffersRes, '\n',
+                'Employers with most applications results: \n', qEmpMostAppsRes, '\n',
+                'Employers with most offers results: \n', qEmpMostOffersRes, '\n',
+                'Employers with highest percentage of offers to applications results \n', qEmpHighPercRes, '\n'
+                );
+                
+                // Assign results objects to variables to be produced in hbs
+
+                const deadlines = qDeadlinesRes[1].rows;
+                console.log(deadlines);
+
+                const appsAcc = qAppsAccRes[1].rows;
+                console.log(appsAcc);
+
+                const appsRej = qAppsRejRes[1].rows;
+                console.log(appsRej);
+
+                const mostApps = qMostAppsRes[1].rows;
+                console.log(mostApps);
+
+                const noApps = qNoAppsRes[1].rows;
+                console.log(noApps);
+
+                const mostOffers = qMostOffersRes[1].rows;
+                console.log(mostOffers);
+
+                const noOffers = qNoOffersRes[1].rows;
+                console.log(noOffers);
+
+                const empMostApps = qEmpMostAppsRes[1].rows;
+                console.log(empMostApps);
+
+                const empMostOffers = qEmpMostOffersRes[1].rows;
+                console.log(empMostOffers);
+
+                const empHighPerc = qEmpHighPercRes[1].rows;
+                console.log(empHighPerc);
+
+                // if (deadlines.length === 0) {
+                //     return res.render('staff-insights', {
+                //         title: 'Student insights',
+                //         noDeadlines: true
+                //     })
+                // }
+
                 return res.render('staff-insights', {
                     title: 'Student insights',
-                    noDeadlines: true
-                })
-            }
-
-            return res.render('staff-insights', {
-                title: 'Student insights',
-                deadlines: deadlines,
-                noDeadlines: false
-            })            
-        })
-        .catch((e) => {
-            console.log(e);
-        });
+                    deadlines: deadlines,
+                    appsAcc: appsAcc,
+                    appsRej: appsRej,
+                    mostApps: mostApps,
+                    noApps: noApps,
+                    mostOffers: mostOffers,
+                    noOffers: noOffers,
+                    empMostApps: empMostApps,
+                    empMostOffers: empMostOffers,
+                    empHighPerc: empHighPerc
+                })            
+            })
+            .catch((e) => {
+                console.log(e);
+            });
 })
 
 // Render staff manage profile page

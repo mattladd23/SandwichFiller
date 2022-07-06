@@ -213,3 +213,25 @@ select application.organisation, count(application.organisation) as num_apps fro
 where application.app_status = 'Applied'
 group by application.organisation
 order by num_apps;
+
+-- Drafting no applications to have been accepted yet
+
+set search_path to sf;
+
+-- create view accepted_apps as 
+-- select student.f_name, student.l_name, student.user_id, application.app_id, application.app_status
+-- from student
+-- left join application
+-- on student.user_id = application.user_id
+-- where application.app_status = 'Accepted';
+
+select student.f_name, student.l_name, student.user_id, accepted_apps.app_id, accepted_apps.app_status
+from student
+left join accepted_apps
+on student.user_id = accepted_apps.user_id
+
+-- select * from application
+-- order by app_status;
+
+-- select * from accepted_apps
+-- order by app_status;
