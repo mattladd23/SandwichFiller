@@ -15,16 +15,16 @@
     <h1 class="apps-header">Student insights</h1>
 
     <div class="apps-container">
-        {{#if noDeadlines}}
-        <div class="no-apps-container">
-            <p>There are no applications due in this week.</p>
-        </div>
 
-        {{else}}
-        <table>
+        <h3>Unsubmitted applications with deadlines this week</h3>
+        
+        {{#if noDeadlines}}
+        <p>There are no unsubmitted applications due this week.</p>
+
+        {{else}}        
+        <table>            
             <tr>
-                <th>First name</th>
-                <th>Last name</th>
+                <th>Name</th>                
                 <th>Student ID</th>
                 <th>Email</th>
                 <th>Course</th>
@@ -34,8 +34,7 @@
             </tr>
             {{#each deadlines as |value key|}}
             <tr>
-                <td>{{{value.f_name}}}</td>
-                <td>{{{value.l_name}}}</td>
+                <td>{{{value.f_name}}} {{{value.l_name}}}</td>
                 <td>{{{value.student_id}}}</td>
                 <td>{{{value.email}}}</td>
                 <td>{{{value.course}}}</td>
@@ -44,61 +43,188 @@
                 <td>{{{value.deadline}}}</td>                
             </tr>
             {{/each}}
-        </table>
+        </table>        
         {{/if}}
-    </div>
-    
-    {{#if noApps}}
-    <div class="no-apps-container">        
-        <p>No applications currently have the status: '{{{filter}}}'</p>
 
-        <form action="/staff" method="GET">
-            <button type="submit" class="btn btn-primary">Search again</button>
-        </form>
-    </div>
-    {{else}}
+        <h3>Accepted applications updated this week</h3>
 
-    <div class="apps-container">
-        {{#each apps as |value key|}}
-        <div class="card text-white bg-info mb-3">
-            <div class="card-header">Created by: {{{value.f_name}}} {{{value.l_name}}}</div>
-            <div class="card-body">
-                <div class="row">                         
-                    <div class="card-info col-sm-6">
-                        <div class="row">
-                            <h3 class="card-title">{{{value.role}}}</h3>
-                        </div>
-                        <div class="row">
-                            <h5 class="card-text">{{{value.organisation}}}</h5>
-                        </div>
-                        <div class="row">
-                            <p class="card-text">{{{value.city}}}, {{{value.country}}}</p>
-                        </div>
-                        <div class="row">
-                            <p class="card-text">{{{value.description}}}</p>
-                        </div>
-                    </div>
-                    <div class="card-dates col-sm-6">
-                        <div class="row">
-                            <p class="card-text">Application submitted: {{{value.app_date}}}</p>
-                        </div>
-                        <div class="row">
-                            <p class="card-text">Application deadline: {{{value.deadline}}}</p>
-                        </div>
-                        <div class="row">
-                            <p class="card-text">Application status: {{{value.app_status}}}</p>
-                        </div>                                
-                    </div>
-                </div>                        
-            </div>
-            <div class="card-footer">
-                <small>Last updated: {{{value.last_updated}}}</small>
-            </div>
-        </div>
-        {{/each}}
-    </div>        
-    {{/if}}         
-        
+        <table>            
+            <tr>
+                <th>Name</th>
+                <th>Student ID</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Organisation</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Last updated</th>
+            </tr>
+            {{#each appsAcc as |value key|}}
+            <tr>
+                <td>{{{value.f_name}}} {{{value.l_name}}}</td>
+                <td>{{{value.student_id}}}</td>
+                <td>{{{value.email}}}</td>
+                <td>{{{value.role}}}</td>
+                <td>{{{value.organisation}}}</td>
+                <td>{{{value.city}}}</td>
+                <td>{{{value.country}}}</td>
+                <td>{{{value.last_updated}}}</td>
+                <td>
+                    <form action="results/{{{value.app_id}}}" method="GET">
+                        <button type="submit" class="btn btn-primary">View application</button>                            
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </table>
+
+        <h3>Rejected applications updated this week</h3>
+
+        <table>            
+            <tr>
+                <th>Name</th>
+                <th>Student ID</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Organisation</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Last updated</th>
+            </tr>
+            {{#each appsRej as |value key|}}
+            <tr>
+                <td>{{{value.f_name}}} {{{value.l_name}}}</td>
+                <td>{{{value.student_id}}}</td>
+                <td>{{{value.email}}}</td>
+                <td>{{{value.role}}}</td>
+                <td>{{{value.organisation}}}</td>
+                <td>{{{value.city}}}</td>
+                <td>{{{value.country}}}</td>
+                <td>{{{value.last_updated}}}</td>
+                <td>
+                    <form action="results/{{{value.app_id}}}" method="GET">
+                        <button type="submit" class="btn btn-primary">View application</button>                            
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </table>
+
+        <h3>Students with most applications submitted</h3>
+
+        <table>            
+            <tr>
+                <th>Name</th>
+                <th>Student ID</th>
+                <th>Number of applications</th>
+            </tr>
+            {{#each mostApps as |value key|}}
+            <tr>
+                <td>{{{value.f_name}}} {{{value.l_name}}}</td>
+                <td>{{{value.student_id}}}</td>
+                <td>{{{value.num_apps}}}</td>                               
+            </tr>
+            {{/each}}
+        </table>
+
+        <h3>Students who have not submitted any applications</h3>
+
+        <table>            
+            <tr>
+                <th>Name</th>
+                <th>Student ID</th>
+                <th>Email</th>
+            </tr>
+            {{#each noApps as |value key|}}
+            <tr>
+                <td>{{{value.f_name}}} {{{value.l_name}}}</td>
+                <td>{{{value.student_id}}}</td>
+                <td>{{{value.email}}}</td>
+            </tr>
+            {{/each}}
+        </table>
+
+        <h3>Students with the most placement offers</h3>
+
+        <table>            
+            <tr>
+                <th>Name</th>
+                <th>Student ID</th>
+                <th>Email</th>
+                <th>Offers</th>
+            </tr>
+            {{#each mostOffers as |value key|}}
+            <tr>
+                <td>{{{value.f_name}}} {{{value.l_name}}}</td>
+                <td>{{{value.student_id}}}</td>
+                <td>{{{value.email}}}</td>
+                <td>{{{value.apps_accepted}}}</td>
+            </tr>
+            {{/each}}
+        </table>
+
+        <h3>Students who have not yet received a placement offer</h3>
+
+        <table>            
+            <tr>
+                <th>Name</th>
+                <th>Student ID</th>
+                <th>Email</th>
+            </tr>
+            {{#each noOffers as |value key|}}
+            <tr>
+                <td>{{{value.f_name}}} {{{value.l_name}}}</td>
+                <td>{{{value.student_id}}}</td>
+                <td>{{{value.email}}}</td>
+            </tr>
+            {{/each}}
+        </table>
+
+        <h3>Employers with most applicants</h3>
+
+        <table>            
+            <tr>
+                <th>Organisation</th>
+                <th>Number of applicants</th>
+            </tr>
+            {{#each empMostApps as |value key|}}
+            <tr>
+                <td>{{{value.organisation}}}</td>
+                <td>{{{value.num_apps}}}</td>
+            </tr>
+            {{/each}}
+        </table>
+
+        <h3>Employers with most placement offers</h3>
+
+        <table>            
+            <tr>
+                <th>Organisation</th>
+                <th>Number of offers</th>
+            </tr>
+            {{#each empMostOffers as |value key|}}
+            <tr>
+                <td>{{{value.organisation}}}</td>
+                <td>{{{value.accepted_apps}}}</td>
+            </tr>
+            {{/each}}
+        </table>
+
+        <h3>Employers with highest percentage of offers to applications</h3>
+
+        <table>            
+            <tr>
+                <th>Organisation</th>
+                <th>Offers to applications</th>
+            </tr>
+            {{#each empHighPerc as |value key|}}
+            <tr>
+                <td>{{{value.organisation}}}</td>
+                <td>{{{value.perc_offers}}}%</td>
+            </tr>
+            {{/each}}
+        </table>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

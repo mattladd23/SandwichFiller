@@ -237,7 +237,7 @@ router.get('/search/results/:id', async (req, res) => {
 // Render staff insights page
 router.get('/insights', async (req, res) => {
 
-    let searchPath = 'SET SEARCH_PATH TO sf;'
+    let searchPath = 'SET SEARCH_PATH TO sf; '
 
     // Define parameters and queries of all insights prior to executing promises in parallel
 
@@ -269,13 +269,13 @@ router.get('/insights', async (req, res) => {
 
     // Query to find accepted applications active this week
     let qAppsAcc = searchPath +
-    'SELECT student.user_id, student.f_name, student.l_name, student.student_id, ' +
+    'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, ' +
     'application.app_id, application.role, application.organisation, application.city, ' +
     'application.country, application.app_date, application.deadline, application.description, ' +
     'application.app_status, application.last_updated ' +
     'FROM student ' +
     'JOIN application ' +
-    'ON student.user_id = application.user_id '
+    'ON student.user_id = application.user_id ' +
     `WHERE application.last_updated >= NOW() - interval '${week}' ` +
     `AND application.app_status = '${accepted}';`
 
@@ -284,13 +284,13 @@ router.get('/insights', async (req, res) => {
 
     // Query to find rejected applications active this week
     let qAppsRej = searchPath +
-    'SELECT student.user_id, student.f_name, student.l_name, student.student_id, ' +
+    'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, ' +
     'application.app_id, application.role, application.organisation, application.city, ' +
     'application.country, application.app_date, application.deadline, application.description, ' +
     'application.app_status, application.last_updated ' +
     'FROM student ' +
     'JOIN application ' +
-    'ON student.user_id = application.user_id '
+    'ON student.user_id = application.user_id ' +
     `WHERE application.last_updated >= NOW() - interval '${week}' ` +
     `AND application.app_status = '${rejected}';`
     
@@ -312,11 +312,12 @@ router.get('/insights', async (req, res) => {
     // Query to find students who are yet to have submitted any applications
     let qNoApps = searchPath +
     'SELECT student.user_id, student.f_name, student.l_name, ' +
-    'student.student_id, application.app_id ' +
+    'student.student_id, student.email, all_submitted_apps.app_id, ' +
+    'all_submitted_apps.app_status ' +
     'FROM student ' +
-    'LEFT JOIN application ' +
-    'ON student.user_id = application.user_id ' +
-    'WHERE application.user_id IS NULL;'
+    'LEFT JOIN all_submitted_apps ' +
+    'ON student.user_id = all_submitted_apps.user_id ' +
+    'WHERE all_submitted_apps.app_status IS null;'
 
     console.log('------------- \n', qNoApps);
 
@@ -324,7 +325,7 @@ router.get('/insights', async (req, res) => {
     // Query to find students with the most placement offers received
     let qMostOffers = searchPath +
     'SELECT student.user_id, student.f_name, student.l_name, ' +
-    'student.student_id, COUNT(application.app_status) as apps_accepted ' +
+    'student.student_id, student.email, COUNT(application.app_status) as apps_accepted ' +
     'FROM student ' +
     'JOIN application ' +
     'ON student.user_id = application.user_id ' +
@@ -337,7 +338,7 @@ router.get('/insights', async (req, res) => {
     // Query to find student who are yet to have received any placement offers
     let qNoOffers = searchPath +
     'SELECT student.user_id, student.f_name, student.l_name, student.student_id, ' +
-    'accepted_apps.app_status ' +
+    'student.email, accepted_apps.app_status ' +
     'FROM student ' +
     'LEFT JOIN accepted_apps ' +
     'ON student.user_id = accepted_apps.user_id ' +
@@ -448,15 +449,25 @@ router.get('/insights', async (req, res) => {
                 const empHighPerc = qEmpHighPercRes[1].rows;
                 console.log(empHighPerc);
 
-                // if (deadlines.length === 0) {
-                //     return res.render('staff-insights', {
-                //         title: 'Student insights',
-                //         noDeadlines: true
-                //     })
-                // }
+                if (deadlines.length === 0) {
+                    return res.render('staff-insights', {
+                        title: 'Student insights',
+                        noDeadlines: true,
+                        appsAcc: appsAcc,
+                        appsRej: appsRej,
+                        mostApps: mostApps,
+                        noApps: noApps,
+                        mostOffers: mostOffers,
+                        noOffers: noOffers,
+                        empMostApps: empMostApps,
+                        empMostOffers: empMostOffers,
+                        empHighPerc: empHighPerc
+                    });
+                }
 
                 return res.render('staff-insights', {
                     title: 'Student insights',
+                    noDeadlines: false,
                     deadlines: deadlines,
                     appsAcc: appsAcc,
                     appsRej: appsRej,
@@ -467,7 +478,7 @@ router.get('/insights', async (req, res) => {
                     empMostApps: empMostApps,
                     empMostOffers: empMostOffers,
                     empHighPerc: empHighPerc
-                })            
+                });        
             })
             .catch((e) => {
                 console.log(e);
