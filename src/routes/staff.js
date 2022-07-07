@@ -269,18 +269,31 @@ router.get('/insights', async (req, res) => {
 
     // Query to find accepted applications active this week
     let qAppsAcc = searchPath +
-    'SELECT * FROM application ' +
-    `WHERE last_updated >= NOW() - interval '${week}' ` +
-    `AND app_status = '${accepted}';`
+    'SELECT student.user_id, student.f_name, student.l_name, student.student_id, ' +
+    'application.app_id, application.role, application.organisation, application.city, ' +
+    'application.country, application.app_date, application.deadline, application.description, ' +
+    'application.app_status, application.last_updated ' +
+    'FROM student ' +
+    'JOIN application ' +
+    'ON student.user_id = application.user_id '
+    `WHERE application.last_updated >= NOW() - interval '${week}' ` +
+    `AND application.app_status = '${accepted}';`
 
     console.log('------------- \n', qAppsAcc);   
 
 
     // Query to find rejected applications active this week
     let qAppsRej = searchPath +
-    'SELECT * FROM application ' +
-    `WHERE last_updated >= NOW() - interval '${week}' ` +
-    `AND app_status = '${rejected}';`
+    'SELECT student.user_id, student.f_name, student.l_name, student.student_id, ' +
+    'application.app_id, application.role, application.organisation, application.city, ' +
+    'application.country, application.app_date, application.deadline, application.description, ' +
+    'application.app_status, application.last_updated ' +
+    'FROM student ' +
+    'JOIN application ' +
+    'ON student.user_id = application.user_id '
+    `WHERE application.last_updated >= NOW() - interval '${week}' ` +
+    `AND application.app_status = '${rejected}';`
+    
 
     console.log('------------- \n', qAppsRej);
 
@@ -298,8 +311,8 @@ router.get('/insights', async (req, res) => {
 
     // Query to find students who are yet to have submitted any applications
     let qNoApps = searchPath +
-    'SELECT student.f_name, student.l_name, student.user_id, ' +
-    'application.app_id ' +
+    'SELECT student.user_id, student.f_name, student.l_name, ' +
+    'student.student_id, application.app_id ' +
     'FROM student ' +
     'LEFT JOIN application ' +
     'ON student.user_id = application.user_id ' +
@@ -311,7 +324,7 @@ router.get('/insights', async (req, res) => {
     // Query to find students with the most placement offers received
     let qMostOffers = searchPath +
     'SELECT student.user_id, student.f_name, student.l_name, ' +
-    'COUNT(application.app_status) as apps_accepted ' +
+    'student.student_id, COUNT(application.app_status) as apps_accepted ' +
     'FROM student ' +
     'JOIN application ' +
     'ON student.user_id = application.user_id ' +
@@ -323,11 +336,12 @@ router.get('/insights', async (req, res) => {
 
     // Query to find student who are yet to have received any placement offers
     let qNoOffers = searchPath +
-    'SELECT student.f_name, student.l_name, student.student_id, accepted_apps.app_status ' +
+    'SELECT student.user_id, student.f_name, student.l_name, student.student_id, ' +
+    'accepted_apps.app_status ' +
     'FROM student ' +
     'LEFT JOIN accepted_apps ' +
     'ON student.user_id = accepted_apps.user_id ' +
-    'WHERE app_status is null;'
+    'WHERE accepted_apps.app_status IS null;'
 
     console.log('------------- \n', qNoOffers);
 
