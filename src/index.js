@@ -1,10 +1,11 @@
-// Import relevant libraries and packages
+// Import relevant libraries and modules
 const path = require('path');
 const express = require('express');
 const hbs = require('hbs');
 const session = require('express-session');
 const passport = require('passport');
 const initializePassport = require('./config/passport');
+const { checkNotAuthenticated } = require('./middleware/checkAuth');
 
 // Define routes
 const registerRoute = require('./routes/register');
@@ -13,7 +14,6 @@ const userRoute = require('./routes/user');
 const studentRoute = require('./routes/student');
 const staffRoute = require('./routes/staff');
 const testRoute = require('./routes/test');
-
 
 // Instantiate server
 const app = express();
@@ -72,7 +72,7 @@ app.get('/', (req, res) => {
 });
 
 // Render homepage
-app.get('/home', (req, res) => {
+app.get('/home', checkNotAuthenticated, (req, res) => {
     res.render('home', {
         title: 'Welcome to SandwichFiller!'
     });

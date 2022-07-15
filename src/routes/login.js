@@ -11,8 +11,9 @@ const router = express.Router();
 const passport = require('passport');
 const initializePassport = require('../config/passport');
 
-// Other relevant libraries
+// Other relevant libraries and modules
 const flash = require('express-flash');
+const { checkNotAuthenticated } = require('../middleware/checkAuth');
 
 // Instantiate passport
 initializePassport(passport);
@@ -23,7 +24,7 @@ router.use(passport.session());
 router.use(flash());
 
 // Render login page
-router.get('/', (req, res) => {
+router.get('/', checkNotAuthenticated, (req, res) => {
     res.render('login', {
         title: 'Login',
         error: req.query.error      
@@ -31,7 +32,7 @@ router.get('/', (req, res) => {
 });
 
 // Login post request
-router.post('/', passport.authenticate('local', {
+router.post('/', checkNotAuthenticated, passport.authenticate('local', {
     successRedirect: '/user',
     failureRedirect: '/login?error=true',
     failureFlash: true

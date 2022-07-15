@@ -10,8 +10,9 @@ const router = express.Router();
 // Import database model
 const pool = require('../config/db');
 
-// Import relevant libraries
+// Import relevant libraries and modules
 const bcrypt = require('bcrypt');
+const { checkNotAuthenticated } = require('../middleware/checkAuth');
 
 // Registration options registration route
 router.get('/', (req, res) => {
@@ -22,14 +23,14 @@ router.get('/', (req, res) => {
 });
 
 // Redirect to login page from register route
-router.get('/register/login', (req, res) => {
+router.get('/register/login', checkNotAuthenticated, (req, res) => {
     res.redirect('/login');
 });
 
 // STAFF REGISTRATION
 
 // Render page
-router.get('/staff', (req, res) => {
+router.get('/staff', checkNotAuthenticated, (req, res) => {
     res.render('reg-staff', {
         title: 'Register as a member of staff',
         error: false
@@ -37,7 +38,7 @@ router.get('/staff', (req, res) => {
 });
 
 // Post registration form
-router.post('/staff', async (req, res) => {
+router.post('/staff', checkNotAuthenticated, async (req, res) => {
 
     // Parameterise middleware and express validation
 
@@ -78,15 +79,15 @@ router.post('/staff', async (req, res) => {
 // STUDENT REGISTRATION
 
 // Render page
-router.get('/student', (req, res) => {
+router.get('/student', checkNotAuthenticated, (req, res) => {
     res.render('reg-student', {
         title: 'Register as a student',
-        error:false
+        error: false
     });
 });
 
 // Post registration form
-router.post('/student', async (req, res) => {
+router.post('/student', checkNotAuthenticated, async (req, res) => {
 
     // Parameterise middleware and express validation
 
