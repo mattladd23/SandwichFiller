@@ -44,6 +44,7 @@ CREATE TABLE users (
     email VARCHAR(20) NOT NULL,
     password VARCHAR NOT NULL,
     is_authorised BOOLEAN NOT NULL DEFAULT FALSE,
+    is_staff BOOLEAN NOT NULL DEFAULT FALSE 
 
     CONSTRAINT users_pk PRIMARY KEY (user_id)
     -- CONSTRAINT users_fk1 FOREIGN KEY (user_id) REFERENCES staff
