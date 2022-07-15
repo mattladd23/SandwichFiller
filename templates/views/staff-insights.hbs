@@ -19,9 +19,11 @@
         <h3>Unsubmitted applications with deadlines this week</h3>
         
         {{#if noDeadlines}}
+
         <p>There are no unsubmitted applications due this week.</p>
 
-        {{else}}        
+        {{else}}
+               
         <table>            
             <tr>
                 <th>Name</th>                
@@ -47,6 +49,12 @@
         {{/if}}
 
         <h3>Accepted applications updated this week</h3>
+
+        {{#if noAppsAcc}}
+
+        <p>There have been no accepted applications updated this week.</p>
+
+        {{else}}
 
         <table>            
             <tr>
@@ -77,8 +85,15 @@
             </tr>
             {{/each}}
         </table>
+        {{/if}}
 
         <h3>Rejected applications updated this week</h3>
+
+        {{#if noAppsRej}}
+        
+        <p>There have been no rejected applications updated this week.</p>
+
+        {{else}}
 
         <table>            
             <tr>
@@ -109,6 +124,7 @@
             </tr>
             {{/each}}
         </table>
+        {{/if}}
 
         <h3>Students with most applications submitted</h3>
 

@@ -448,13 +448,112 @@ router.get('/insights', async (req, res) => {
 
                 const empHighPerc = qEmpHighPercRes[1].rows;
                 console.log(empHighPerc);
+                
+                console.log(deadlines.length);
+                console.log(appsAcc.length);
+                console.log(appsRej.length);
 
-                if (deadlines.length === 0) {
+                // Condition if one weekly metric is empty
+                
+                if (deadlines.length === 0  && appsAcc.length === 0 && appsRej.length === 0) {
                     return res.render('staff-insights', {
                         title: 'Student insights',
                         noDeadlines: true,
-                        appsAcc: appsAcc,
+                        noAppsAcc: true,
+                        noAppsRej: true,
+                        mostApps: mostApps,
+                        noApps: noApps,
+                        mostOffers: mostOffers,
+                        noOffers: noOffers,
+                        empMostApps: empMostApps,
+                        empMostOffers: empMostOffers,
+                        empHighPerc: empHighPerc                        
+                    });
+                } else if (deadlines.length === 0 && appsAcc.length === 0) {
+                    return res.render('staff-insights', {
+                        title: 'Student insights',
+                        noDeadlines: true,
+                        noAppsAcc: true,
+                        noAppsRej: false,
                         appsRej: appsRej,
+                        mostApps: mostApps,
+                        noApps: noApps,
+                        mostOffers: mostOffers,
+                        noOffers: noOffers,
+                        empMostApps: empMostApps,
+                        empMostOffers: empMostOffers,
+                        empHighPerc: empHighPerc
+                    });
+                } else if (deadlines.length === 0 && appsRej.length === 0) {
+                    return res.render('staff-insights', {
+                        title: 'Student insights',
+                        noDeadlines: true,
+                        noAppsAcc: false,
+                        appsAcc: appsAcc,
+                        noAppsRej: true,
+                        mostApps: mostApps,
+                        noApps: noApps,
+                        mostOffers: mostOffers,
+                        noOffers: noOffers,
+                        empMostApps: empMostApps,
+                        empMostOffers: empMostOffers,
+                        empHighPerc: empHighPerc 
+                    });
+                } else if (appsAcc.length === 0 && appsRej.length === 0) {
+                    return res.render('staff-insights', {
+                        title: 'Student insights',
+                        noDeadlines: false,
+                        deadlines: deadlines,
+                        noAppsAcc: true,
+                        noAppsRej: true,
+                        mostApps: mostApps,
+                        noApps: noApps,
+                        mostOffers: mostOffers,
+                        noOffers: noOffers,
+                        empMostApps: empMostApps,
+                        empMostOffers: empMostOffers,
+                        empHighPerc: empHighPerc
+                    });
+                } else if (deadlines.length === 0) {
+                    return res.render('staff-insights', {
+                        title: 'Student insights',
+                        noDeadlines: true,
+                        noAppsAcc: false,
+                        appsAcc: appsAcc,
+                        noAppsRej: false,
+                        appsRej: appsRej,
+                        mostApps: mostApps,
+                        noApps: noApps,
+                        mostOffers: mostOffers,
+                        noOffers: noOffers,
+                        empMostApps: empMostApps,
+                        empMostOffers: empMostOffers,
+                        empHighPerc: empHighPerc
+                    });
+                } else if (appsAcc.length === 0) {
+                    return res.render('staff-insights', {
+                        title: 'Student insights',
+                        noDeadlines: false,
+                        deadlines: deadlines,
+                        noAppsAcc: true,
+                        noAppsRej: false,
+                        appsRej: appsRej,
+                        mostApps: mostApps,
+                        noApps: noApps,
+                        mostOffers: mostOffers,
+                        noOffers: noOffers,
+                        empMostApps: empMostApps,
+                        empMostOffers: empMostOffers,
+                        empHighPerc: empHighPerc
+                    });
+                } else if (appsRej.length === 0) {
+                    return res.render('staff-insights', {
+                        title: 'Student insights',
+                        noDeadlines: false,
+                        deadlines: deadlines,
+                        noAppsAcc: false,
+                        appsAcc: appsAcc,
+                        noAppsRej: true,
                         mostApps: mostApps,
                         noApps: noApps,
                         mostOffers: mostOffers,
@@ -469,7 +568,9 @@ router.get('/insights', async (req, res) => {
                     title: 'Student insights',
                     noDeadlines: false,
                     deadlines: deadlines,
+                    noAppsAcc: false,
                     appsAcc: appsAcc,
+                    noAppsRej: false,
                     appsRej: appsRej,
                     mostApps: mostApps,
                     noApps: noApps,
@@ -478,7 +579,7 @@ router.get('/insights', async (req, res) => {
                     empMostApps: empMostApps,
                     empMostOffers: empMostOffers,
                     empHighPerc: empHighPerc
-                });        
+                });       
             })
             .catch((e) => {
                 console.log(e);
