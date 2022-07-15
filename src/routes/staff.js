@@ -8,6 +8,7 @@ const pool = require('../config/db');
 
 // Other modules
 const methodOverride = require('method-override');
+const { checkIsAuthenticated, checkNotAuthenticated } = require('../middleware/checkAuth');
 
 // Middleware
 router.use(methodOverride('_method'));
@@ -15,15 +16,15 @@ router.use(methodOverride('_method'));
 // Render login success page
 router.get('/', (req, res) => {
     res.render('staff-dashboard', {
-        title: 'SandwichFiller :: Staff',
+        title: 'SandwichFiller - Staff',
         error: false
     });
 });
 
 // Get all applications
 router.get('/applications', async (req, res) => {
-    let q = 'SET SEARCH_PATH TO SF;'
-    let prepared = false
+    let q = 'SET SEARCH_PATH TO SF;';
+    let prepared = false;
 
     if (Object.keys(req.query).length === 0) {
         q += 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
