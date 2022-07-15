@@ -8,12 +8,13 @@ const pool = require('../config/db');
 // Import other libraries and modules
 const methodOverride = require('method-override');
 const { checkIsAuthenticated } = require('../middleware/checkAuth');
+const { checkIsStudent } = require('../middleware/checkStaff');
 
 // Middleware
 router.use(methodOverride('_method'));
 
 // Render student home page
-router.get('/', checkIsAuthenticated, (req, res) => {
+router.get('/', checkIsAuthenticated, checkIsStudent, (req, res) => {
     res.render('student-dashboard', {
         title: 'SandwichFiller: Students',
         error: false
@@ -21,7 +22,7 @@ router.get('/', checkIsAuthenticated, (req, res) => {
 });
 
 // Get all applications of a student
-router.get('/applications', checkIsAuthenticated, async (req, res) => {
+router.get('/applications', checkIsAuthenticated, checkIsStudent, async (req, res) => {
 
     const userId = req.session.passport.user;
 
@@ -65,7 +66,7 @@ router.get('/applications', checkIsAuthenticated, async (req, res) => {
 });
 
 // Render create application page
-router.get('/applications/new', checkIsAuthenticated, (req, res) => {
+router.get('/applications/new', checkIsAuthenticated, checkIsStudent, (req, res) => {
     res.render('new-application', {
         title: 'Post a new application',
         error: false
@@ -73,7 +74,7 @@ router.get('/applications/new', checkIsAuthenticated, (req, res) => {
 });
 
 // Post a new application
-router.post('/applications/new', checkIsAuthenticated, async (req, res) => {
+router.post('/applications/new', checkIsAuthenticated, checkIsStudent, async (req, res) => {
 
     const userId = req.session.passport.user;    
     const appId = Date.now().toString();
@@ -106,7 +107,7 @@ router.post('/applications/new', checkIsAuthenticated, async (req, res) => {
 });
 
 // Render edit applications page
-router.get('/applications/update', checkIsAuthenticated, async (req, res) => {
+router.get('/applications/update', checkIsAuthenticated, checkIsStudent, async (req, res) => {
 
     const userId = req.session.passport.user;
 
@@ -150,7 +151,7 @@ router.get('/applications/update', checkIsAuthenticated, async (req, res) => {
 });
 
 // Edit an application(s)
-router.put('/applications/update/:id', checkIsAuthenticated, async (req, res) => {
+router.put('/applications/update/:id', checkIsAuthenticated, checkIsStudent, async (req, res) => {
         
     const appStatus = req.body.updateAppStatus;
     const description = req.body.updateDesc;
@@ -177,7 +178,7 @@ router.put('/applications/update/:id', checkIsAuthenticated, async (req, res) =>
 });
 
 // Delete an application
-router.delete('/applications/update/:id', checkIsAuthenticated, async (req, res) => {
+router.delete('/applications/update/:id', checkIsAuthenticated, checkIsStudent, async (req, res) => {
     
     const appId = req.params.id;
 
@@ -199,7 +200,7 @@ router.delete('/applications/update/:id', checkIsAuthenticated, async (req, res)
 });
 
 // Render student manage profile page
-router.get('/account', checkIsAuthenticated, async (req, res) => {
+router.get('/account', checkIsAuthenticated, checkIsStudent, async (req, res) => {
 
     const userId = req.session.passport.user;
 
@@ -232,7 +233,7 @@ router.get('/account', checkIsAuthenticated, async (req, res) => {
 })
 
 // Edit student account details
-router.put('/account', checkIsAuthenticated, async (req, res) => {
+router.put('/account', checkIsAuthenticated, checkIsStudent, async (req, res) => {
     
     const studentId = req.body.studentid;
     const course = req.body.course;
@@ -264,7 +265,7 @@ router.put('/account', checkIsAuthenticated, async (req, res) => {
 });
 
 // Student log out
-router.delete('/logout', checkIsAuthenticated, (req, res, next) => {
+router.delete('/logout', checkIsAuthenticated, checkIsStudent, (req, res, next) => {
     req.logOut((err) => {
         if (err) {
             return next(err);

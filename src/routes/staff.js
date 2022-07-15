@@ -9,12 +9,13 @@ const pool = require('../config/db');
 // Import other libraries and modules
 const methodOverride = require('method-override');
 const { checkIsAuthenticated } = require('../middleware/checkAuth');
+const { checkIsStaff } = require('../middleware/checkStaff');
 
 // Middleware
 router.use(methodOverride('_method'));
 
 // Render login success page
-router.get('/', checkIsAuthenticated, (req, res) => {
+router.get('/', checkIsAuthenticated, checkIsStaff, (req, res) => {
     res.render('staff-dashboard', {
         title: 'SandwichFiller - Staff',
         error: false
@@ -22,8 +23,8 @@ router.get('/', checkIsAuthenticated, (req, res) => {
 });
 
 // Get all applications
-router.get('/applications', checkIsAuthenticated, async (req, res) => {
-    let q = 'SET SEARCH_PATH TO SF;';
+router.get('/applications', checkIsAuthenticated, checkIsStaff, async (req, res) => {
+    let q = 'SET SEARCH_PATH TO sf;';
     let prepared = false;
 
     if (Object.keys(req.query).length === 0) {
@@ -122,7 +123,7 @@ router.get('/applications', checkIsAuthenticated, async (req, res) => {
 // Search student records
 
 // Render search bar page
-router.get('/search', checkIsAuthenticated, (req, res) => {
+router.get('/search', checkIsAuthenticated, checkIsStaff, (req, res) => {
     res.render('staff-search-students', {
         title: 'Find a student',
         error: false
@@ -130,7 +131,7 @@ router.get('/search', checkIsAuthenticated, (req, res) => {
 });
 
 // Render student results
-router.get('/search/results', checkIsAuthenticated, async (req, res) => {
+router.get('/search/results', checkIsAuthenticated, checkIsStaff, async (req, res) => {
     
     let nameQuery = req.query.nameSearch;
     // nameQuery = '%'+nameQuery+'%';
@@ -190,7 +191,7 @@ router.get('/search/results', checkIsAuthenticated, async (req, res) => {
 });
 
 // Render individual student profile
-router.get('/search/results/:id', checkIsAuthenticated, async (req, res) => {
+router.get('/search/results/:id', checkIsAuthenticated, checkIsStaff, async (req, res) => {
     studentUserId = req.params.id;
 
     let q = 'SET SEARCH_PATH TO sf;'
@@ -236,7 +237,7 @@ router.get('/search/results/:id', checkIsAuthenticated, async (req, res) => {
 });
 
 // Render staff insights page
-router.get('/insights', checkIsAuthenticated, async (req, res) => {
+router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => {
 
     let searchPath = 'SET SEARCH_PATH TO sf; '
 
@@ -588,7 +589,7 @@ router.get('/insights', checkIsAuthenticated, async (req, res) => {
 })
 
 // Render staff manage profile page
-router.get('/account', checkIsAuthenticated, async (req, res) => {
+router.get('/account', checkIsAuthenticated, checkIsStaff, async (req, res) => {
 
     const userId = req.session.passport.user;
 
@@ -620,7 +621,7 @@ router.get('/account', checkIsAuthenticated, async (req, res) => {
 })
 
 // Edit staff account details
-router.put('/account', checkIsAuthenticated, async (req, res) => {
+router.put('/account', checkIsAuthenticated, checkIsStaff, async (req, res) => {
     
     const staffFName = req.body.stafffname;
     const staffLName = req.body.stafflname;
@@ -647,7 +648,7 @@ router.put('/account', checkIsAuthenticated, async (req, res) => {
 
 
 // Staff log out
-router.delete('/logout', checkIsAuthenticated, (req, res, next) => {
+router.delete('/logout', checkIsAuthenticated, checkIsStaff, (req, res, next) => {
     req.logOut((err) => {
         if (err) {
             return next(err);
