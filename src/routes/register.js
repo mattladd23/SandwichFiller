@@ -13,6 +13,17 @@ const pool = require('../config/db');
 // Import relevant libraries and modules
 const bcrypt = require('bcrypt');
 const { checkNotAuthenticated } = require('../middleware/checkAuth');
+const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
+
+// Instantiate a nodemailer transporter
+let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'noreply.sandwichfiller@gmail.com',
+        pass: 'SfTest1!'
+    }
+});
 
 // Registration options registration route
 router.get('/', (req, res) => {
@@ -116,19 +127,63 @@ router.post('/student', checkNotAuthenticated, async (req, res) => {
     + 'INSERT INTO student (user_id, f_name, l_name, email, password, student_id, course, school, placement_year, grad_year, pref_sector, other_sectors) '
     + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);'
     + `EXECUTE registerStudent(${studentUserId}, '${studentFName}', '${studentLName}', '${studentEmail}', '${studentPassword}', ${studentId}, '${course}', '${school}', '${placementYear}', ${gradYear}, '${prefSector}', '${otherSectors}');`
-    + 'DEALLOCATE registerStudent;'    
+    + 'DEALLOCATE registerStudent;'
+    
+    console.log(q);
 
     await pool
         .query(q)        
         .then(() => {
             res.redirect('/login');
+
+            // Create payload and jwt variables for email verification
+
+            // let payload = {'userid': studentUserId};
+            // let token = jwt.sign(payload, process.env.JWT_SECRET);
+
+            // console.log(`Payload: ${payload}`);
+            // console.log(`Token: ${token}`);
+
+            // let mailOptions = {
+            //     from: '"SandwichFiller" <noreply.sandwichfiller@gmail.com>',
+            //     to: studentEmail,
+            //     subject: 'Account created successfully',
+            //     html: `<p>Please <a href=http://localhost:3000/student/verify/${token}>click here</a> to verify your email</p>`
+            // };
+
+            // console.log(`Mail options: ${mailOptions}`);
+
+            // transporter.sendMail(mailOptions, function(err) {
+            //     if(err) {
+            //         return console.log(err);
+            //     }
+            // });
         })               
     .catch((e) => {
         console.log(e);
-    })    
+    }) 
+});
 
-    // Create payload and jwt variables for email verification
+router.get('/verify/:token', (req, res) => {
 
+    let { token } = req.params;
+
+    jwt.verify(token, process.env.JWT_SECRET, async function(err, decoded) {
+        if (err) {
+            console.log(err);
+            res.send('Email verification failed');
+        } else {
+            let id = decoded.userid;
+            let q = 'SET SEARCH_PATH TO sf; ' +
+            'UPDATE users SET is_verified = TRUE ' +
+            `WHERE user_id = ${id}`;
+            await pool
+                .query(q)
+                .then(() => {
+                    res.send('Email has been verified. Please go to the login page.');
+                })
+        }
+    });
 });
 
 
