@@ -10,6 +10,7 @@ const pool = require('../config/db');
 const methodOverride = require('method-override');
 const { checkIsAuthenticated } = require('../middleware/checkAuth');
 const { checkIsStaff } = require('../middleware/checkStaff');
+const { body, validationResult } = require('express-validator');
 
 // Middleware
 router.use(methodOverride('_method'));
@@ -621,7 +622,12 @@ router.get('/account', checkIsAuthenticated, checkIsStaff, async (req, res) => {
 })
 
 // Edit staff account details
-router.put('/account', checkIsAuthenticated, checkIsStaff, async (req, res) => {
+router.put('/account', checkIsAuthenticated, checkIsStaff,
+    body('stafffname', 'Invalid name. Check for spaces before or after your name!').isAlpha('en-GB', {ignore: '-'}),
+    body('stafflname', 'Invalid name. Check for spaces before or after your name!').isAlpha('en-GB', {ignore: '-'}),
+    body('staffemail', 'Email is not a valid UEA email address').isEmail(),    
+
+    async (req, res) => {
     
     const staffFName = req.body.stafffname;
     const staffLName = req.body.stafflname;
@@ -636,10 +642,15 @@ router.put('/account', checkIsAuthenticated, checkIsStaff, async (req, res) => {
     + `EXECUTE editStaffAccount('${staffFName}', '${staffLName}', '${staffEmail}', ${userId}); `
     + 'DEALLOCATE editStaffAccount';
 
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.redirect('/staff/account?success=false');
+    }
+
     await pool
         .query(q)
         .then(() => {
-            res.redirect('/staff');
+            res.redirect('/staff?succss=true');
         })
     .catch((e) => {
         console.log(e);

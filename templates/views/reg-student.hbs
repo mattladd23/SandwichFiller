@@ -14,6 +14,12 @@
     
     <h1 class="reg-header">Student registration</h1>
     <br>
+    {{#if error}}
+    <div id="errors">
+        {{{errorMsg}}}
+    </div>
+    {{/if}}
+    <br>
     <form action="/register/student" method="POST">
         <div class="form-row">
             <div class="form-group col-md-6">

@@ -15,6 +15,7 @@ const bcrypt = require('bcrypt');
 const { checkNotAuthenticated } = require('../middleware/checkAuth');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
+const { body, validationResult } = require('express-validator');
 
 // Instantiate a nodemailer transporter
 let transporter = nodemailer.createTransport({
@@ -49,11 +50,31 @@ router.get('/staff', checkNotAuthenticated, (req, res) => {
 });
 
 // Post registration form
-router.post('/staff', checkNotAuthenticated, async (req, res) => {
+// Parameterise middleware and express validation
 
-    // Parameterise middleware and express validation
+router.post('/staff', checkNotAuthenticated, 
+    body('stafffname', 'Invalid name. Check for spaces before or after your name!').isAlpha('en-GB', {ignore: '-'}),
+    body('stafflname', 'Invalid name. Check for spaces before or after your name!').isAlpha('en-GB', {ignore: '-'}),
+    body('staffemail', 'Email is not a valid UEA email address').isEmail(),
+    body('staffpassword', 'Password must be a minimum of 8 characters').isLength({ min: 8 }),
+    body('staffconfirmpw').custom((value, { req }) => {
+        if (value !== req.body.staffpassword) {
+            throw new Error('Password confirmation does not match password');
+        }
+        return true;
+    }),
+
+    async (req, res) => {
 
     // Error handlers
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.render('reg-staff', {
+            title: 'Staff Registration',
+            error: true,
+            errorMsg: errors.errors[0].msg
+        })
+    }
 
     // Create form input variables
     const staffhashedPw = await bcrypt.hash(req.body.staffpassword, 10);
@@ -64,6 +85,34 @@ router.post('/staff', checkNotAuthenticated, async (req, res) => {
     const staffPassword = staffhashedPw;    
 
     // Query to check existing credentials
+    let qCheckIfExists = 'SET SEARCH_PATH TO sf; ' +
+    'SELECT email from users;'
+
+    let credentialExists = false;
+
+    await pool
+        .query(qCheckIfExists)
+        .then((results) => {
+            const rows = results[1].rows;
+            for (let i = 0; i < rows.length; i++) {
+                if (rows[i].email === req.body.staffemail) {
+                    credentialExists = true;
+                    return credentialExists;
+                }
+            }
+            return credentialExists;
+        })
+        .catch((e) => {
+            console.log(e);
+        })
+
+    if (credentialExists === true) {
+        return res.render('reg-staff', {
+            title: 'Staff Registration',
+            error: true,
+            errorMsg: 'One more more of your credentials are invalid. Please try again.'
+        });
+    }
 
     // Query to insert user into database
     let q = 'SET SEARCH_PATH TO sf;'
@@ -84,7 +133,8 @@ router.post('/staff', checkNotAuthenticated, async (req, res) => {
 
     // Create payload and jwt variables for email verification
 
-});
+    }
+);
 
 
 // STUDENT REGISTRATION
@@ -98,11 +148,33 @@ router.get('/student', checkNotAuthenticated, (req, res) => {
 });
 
 // Post registration form
-router.post('/student', checkNotAuthenticated, async (req, res) => {
+// Parameterise middleware and express validation
 
-    // Parameterise middleware and express validation
+router.post('/student', checkNotAuthenticated,
+    body('studentfname', 'Invalid name. Check for spaces before or after your name!').isAlpha('en-GB', {ignore: '-'}),
+    body('studentlname', 'Invalid name. Check for spaces before or after your name!').isAlpha('en-GB', {ignore: '-'}),
+    body('studentemail', 'Email is not a valid UEA email address').isEmail(),
+    body('studentid', 'Student ID must be a 9 digits in length').isNumeric().isLength({ min: 9, max: 9 }),    
+    body('othersectors').isAlpha('en-GB'),
+    body('studentpassword', 'Password must be a minimum of 8 characters').isLength({ min: 8 }),
+    body('confirmstudentpw').custom((value, { req }) => {
+        if (value !== req.body.studentpassword) {
+            throw new Error('Password confirmation does not match password');
+        }
+        return true;
+    }),
+
+    async (req, res) => {    
 
     // Error handlers
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.render('reg-student', {
+            title: 'Student Registration',
+            error: true,
+            errorMsg: errors.errors[0].msg
+        })
+    }
 
     // Create form input variables
     const studenthashedPw = await bcrypt.hash(req.body.studentpassword, 10);
@@ -120,6 +192,35 @@ router.post('/student', checkNotAuthenticated, async (req, res) => {
     const studentPassword = studenthashedPw;    
 
     // Query to check existing credentials
+
+    let qCheckIfExists = 'SET SEARCH_PATH TO sf; ' +
+    'SELECT email from users;'
+
+    let credentialExists = false;
+
+    await pool
+        .query(qCheckIfExists)
+        .then((results) => {
+            const rows = results[1].rows;
+            for (let i = 0; i < rows.length; i++) {
+                if (rows[i].email === req.body.studentemail) {
+                    credentialExists = true;
+                    return credentialExists;
+                }
+            }
+            return credentialExists;
+        })
+        .catch((e) => {
+            console.log(e);
+        })
+
+    if (credentialExists === true) {
+        return res.render('reg-student', {
+            title: 'Student Registration',
+            error: true,
+            errorMsg: 'One more more of your credentials are invalid. Please try again.'
+        });
+    }
 
     // Query to insert user into database
     let q = 'SET SEARCH_PATH TO sf;'
@@ -161,8 +262,10 @@ router.post('/student', checkNotAuthenticated, async (req, res) => {
         })               
     .catch((e) => {
         console.log(e);
-    }) 
-});
+    })
+
+    }
+);
 
 router.get('/verify/:token', (req, res) => {
 
