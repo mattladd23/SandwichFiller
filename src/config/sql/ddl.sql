@@ -9,9 +9,8 @@ CREATE TABLE staff (
     user_id BIGINT NOT NULL,
     f_name VARCHAR(20) NOT NULL,
     l_name VARCHAR(20) NOT NULL,
-    email VARCHAR(20) NOT NULL,
+    email VARCHAR(40) NOT NULL,
     password VARCHAR NOT NULL,
-    is_authorised BOOLEAN NOT NULL DEFAULT FALSE,
     
     CONSTRAINT user_pk PRIMARY KEY (user_id)
 );
@@ -22,7 +21,7 @@ CREATE TABLE student (
     user_id BIGINT NOT NULL,
     f_name VARCHAR(20) NOT NULL,
     l_name VARCHAR(20) NOT NULL,
-    email VARCHAR(20) NOT NULL,
+    email VARCHAR(40) NOT NULL,
     password VARCHAR NOT NULL,
     student_id BIGINT NOT NULL,
     course VARCHAR (50) NOT NULL,
@@ -32,7 +31,6 @@ CREATE TABLE student (
         CHECK (grad_year >= '2023'),
     pref_sector VARCHAR NOT NULL,
     other_sectors VARCHAR(100) NOT NULL,
-    is_verified BOOLEAN NOT NULL DEFAULT FALSE,
 
     CONSTRAINT student_pk PRIMARY KEY (user_id)      
 );
@@ -41,10 +39,10 @@ CREATE TABLE student (
 
 CREATE TABLE users (
     user_id BIGINT NOT NULL,
-    email VARCHAR(20) NOT NULL,
-    password VARCHAR NOT NULL,
-    is_authorised BOOLEAN NOT NULL DEFAULT FALSE,
-    is_staff BOOLEAN NOT NULL DEFAULT FALSE 
+    email VARCHAR(40) NOT NULL,
+    password VARCHAR NOT NULL,    
+    is_verified BOOLEAN NOT NULL DEFAULT FALSE,
+    is_staff BOOLEAN NOT NULL DEFAULT FALSE,
 
     CONSTRAINT users_pk PRIMARY KEY (user_id)
     -- CONSTRAINT users_fk1 FOREIGN KEY (user_id) REFERENCES staff
@@ -62,7 +60,7 @@ CREATE TABLE application (
     organisation VARCHAR NOT NULL,
     city VARCHAR,
     country VARCHAR,
-    app_date DATE,
+    app_date VARCHAR,
     deadline DATE,
     description VARCHAR(140),
     app_status VARCHAR NOT NULL,
@@ -72,3 +70,19 @@ CREATE TABLE application (
     CONSTRAINT application_fk FOREIGN KEY (user_id) REFERENCES student
         ON UPDATE CASCADE ON DELETE CASCADE 
 );
+
+/* Add a column to a table */
+
+ALTER TABLE users
+ADD COLUMN is_verified BOOLEAN NOT NULL DEFAULT FALSE;
+
+/* Drop a column from a table */
+ALTER TABLE student
+DROP COLUMN is_verified;
+
+/* Change the datatype of a column */
+ALTER TABLE application
+ALTER COLUMN app_date
+TYPE VARCHAR;
+
+
