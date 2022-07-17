@@ -3,3 +3,4 @@ bin
 .env
 src/config/db.js
 src/routes/register.js
+package-lock.json
