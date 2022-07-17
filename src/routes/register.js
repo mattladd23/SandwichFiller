@@ -19,10 +19,13 @@ const { body, validationResult } = require('express-validator');
 
 // Instantiate a nodemailer transporter
 let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: true,
     service: 'gmail',
     auth: {
         user: 'noreply.sandwichfiller@gmail.com',
-        pass: 'SfTest1!'
+        pass: 'yrkncjogdgeunxru'
     }
 });
 
@@ -239,26 +242,26 @@ router.post('/student', checkNotAuthenticated,
 
             // Create payload and jwt variables for email verification
 
-            // let payload = {'userid': studentUserId};
-            // let token = jwt.sign(payload, process.env.JWT_SECRET);
+            let payload = {'userid': studentUserId};
+            let token = jwt.sign(payload, process.env.JWT_SECRET);
 
-            // console.log(`Payload: ${payload}`);
-            // console.log(`Token: ${token}`);
+            console.log(`Payload: ${payload}`);
+            console.log(`Token: ${token}`);
 
-            // let mailOptions = {
-            //     from: '"SandwichFiller" <noreply.sandwichfiller@gmail.com>',
-            //     to: studentEmail,
-            //     subject: 'Account created successfully',
-            //     html: `<p>Please <a href=http://localhost:3000/student/verify/${token}>click here</a> to verify your email</p>`
-            // };
+            let mailOptions = {
+                from: '"SandwichFiller" <noreply.sandwichfiller@gmail.com>',
+                to: studentEmail,
+                subject: 'Account created successfully',
+                html: `<p>Please <a href=http://localhost:3000/register/student/verify/${token}>click here</a> to verify your email</p>`
+            };
 
-            // console.log(`Mail options: ${mailOptions}`);
+            console.log(`Mail options: ${mailOptions}`);
 
-            // transporter.sendMail(mailOptions, function(err) {
-            //     if(err) {
-            //         return console.log(err);
-            //     }
-            // });
+            transporter.sendMail(mailOptions, function(err) {
+                if(err) {
+                    return console.log(err);
+                }
+            });
         })               
     .catch((e) => {
         console.log(e);
@@ -267,7 +270,7 @@ router.post('/student', checkNotAuthenticated,
     }
 );
 
-router.get('/verify/:token', (req, res) => {
+router.get('/student/verify/:token', (req, res) => {
 
     let { token } = req.params;
 

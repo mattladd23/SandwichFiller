@@ -21,11 +21,17 @@ function initialize(passport) {
             .query(q)
             .then(async (results) => {
                 if (results[2].rows.length > 0) {
-                    const user = results[2].rows[0];                   
+                    const user = results[2].rows[0];
+                    
+                    console.log(user);
 
                     bcrypt.compare(password, user.password, async (err, result) => {
-                        if (result) {                                                        
-                            return done(null, user);
+                        if (result) {
+                            if (user.is_verified === true) {
+                                return done(null, user);
+                            } else {
+                                return done(null, false, { message: 'Email not verified'});
+                            }                                                   
                         } 
                         if (err) {                            
                             console.log(err);

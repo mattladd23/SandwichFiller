@@ -2,3 +2,4 @@ node_modules
 bin
 .env
 src/config/db.js
+src/routes/register.js
