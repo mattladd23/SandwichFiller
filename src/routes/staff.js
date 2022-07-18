@@ -11,6 +11,7 @@ const methodOverride = require('method-override');
 const { checkIsAuthenticated } = require('../middleware/checkAuth');
 const { checkIsStaff } = require('../middleware/checkPermission');
 const { body, validationResult } = require('express-validator');
+const { stringEscape, resultsHtmlEscape } = require('../middleware/escape');
 
 // Middleware
 router.use(methodOverride('_method'));
@@ -592,7 +593,7 @@ router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => 
 // Render staff manage profile page
 router.get('/account', checkIsAuthenticated, checkIsStaff, async (req, res) => {
 
-    const userId = req.session.passport.user;
+    const userId = stringEscape(req.session.passport.user);
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE getStaffAccount(bigint) AS '
@@ -641,10 +642,10 @@ router.put('/account', checkIsAuthenticated, checkIsStaff,
         })
     }
     
-    const staffFName = req.body.stafffname;
-    const staffLName = req.body.stafflname;
-    const staffEmail = req.body.staffemail;
-    const userId = req.session.passport.user;
+    const staffFName = stringEscape(req.body.stafffname);
+    const staffLName = stringEscape(req.body.stafflname);
+    const staffEmail = stringEscape(req.body.staffemail);
+    const userId = stringEscape(req.session.passport.user);
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE editStaffAccount(text, text, text, bigint) AS '
@@ -653,11 +654,6 @@ router.put('/account', checkIsAuthenticated, checkIsStaff,
     + 'WHERE user_id = $4;'
     + `EXECUTE editStaffAccount('${staffFName}', '${staffLName}', '${staffEmail}', ${userId}); `
     + 'DEALLOCATE editStaffAccount';
-
-    // const errors = validationResult(req);
-    // if (!errors.isEmpty()) {
-    //     return res.redirect('/staff/account?success=false');
-    // }
 
     await pool
         .query(q)

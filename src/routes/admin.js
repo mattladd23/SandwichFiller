@@ -10,6 +10,7 @@ const pool = require('../config/db');
 const methodOverride = require('method-override');
 const { checkIsAuthenticated } = require('../middleware/checkAuth');
 const { checkIsAdmin } = require('../middleware/checkPermission');
+const { stringEscape } = require('../middleware/escape');
 
 // Middleware
 router.use(methodOverride('_method'));
@@ -160,7 +161,7 @@ router.get('/users', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
 
 // To grant a staff account permission
 router.put('/users/verify/:id', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
-    let userId = req.params.id;
+    let userId = stringEscape(req.params.id);
 
     let q = 'SET SEARCH_PATH TO sf; ' +
     'UPDATE users ' +
@@ -172,8 +173,7 @@ router.put('/users/verify/:id', checkIsAuthenticated, checkIsAdmin, async (req, 
 
     await pool
         .query(q)
-        .then(() => {
-            // res.send('Staff account has been successfully approved.');
+        .then(() => {            
             res.redirect('/admin/users');
         })
         .catch((e) => {
@@ -183,7 +183,7 @@ router.put('/users/verify/:id', checkIsAuthenticated, checkIsAdmin, async (req, 
 
 // To deny a staff account permission
 router.put('/users/deny/:id', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
-    let userId = req.params.id;
+    let userId = stringEscape(req.params.id);
 
     let q = 'SET SEARCH_PATH TO sf; ' +
     'UPDATE users ' +
@@ -193,8 +193,7 @@ router.put('/users/deny/:id', checkIsAuthenticated, checkIsAdmin, async (req, re
 
     await pool
         .query(q)
-        .then(() => {
-            // res.send('Staff account has been denied permission.');
+        .then(() => {            
             res.redirect('/admin/users');
         })
         .catch((e) => {
@@ -204,7 +203,7 @@ router.put('/users/deny/:id', checkIsAuthenticated, checkIsAdmin, async (req, re
 
 // To remove an unverified user
 router.delete('/users/remove/:id', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
-    let userId = req.params.id;
+    let userId = stringEscape(req.params.id);
 
     let q = 'SET SEARCH_PATH TO sf; ' +
     'DELETE FROM users ' +
@@ -212,8 +211,7 @@ router.delete('/users/remove/:id', checkIsAuthenticated, checkIsAdmin, async (re
 
     await pool
         .query(q)
-        .then(() => {
-            // res.send('User has been removed.')
+        .then(() => {            
             res.redirect('/admin/users');
         })
 })

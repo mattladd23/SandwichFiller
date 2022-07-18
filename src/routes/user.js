@@ -36,7 +36,7 @@ router.get('/', checkIsAuthenticated, async (req, res) => {
         })
         .catch((e) => {
             console.log(e);
-        })
+        });
 });
 
 module.exports = router;

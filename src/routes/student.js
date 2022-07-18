@@ -10,6 +10,7 @@ const methodOverride = require('method-override');
 const { checkIsAuthenticated } = require('../middleware/checkAuth');
 const { checkIsStudent } = require('../middleware/checkPermission');
 const { body, validationResult } = require('express-validator');
+const { stringEscape, resultsHtmlEscape } = require('../middleware/escape');
 
 // Middleware
 router.use(methodOverride('_method'));
@@ -25,7 +26,7 @@ router.get('/', checkIsAuthenticated, checkIsStudent, (req, res) => {
 // Get all applications of a student
 router.get('/applications', checkIsAuthenticated, checkIsStudent, async (req, res) => {
 
-    const userId = req.session.passport.user;
+    const userId = stringEscape(req.session.passport.user);
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE userApps(bigint) AS '
@@ -81,8 +82,8 @@ router.post('/applications/new', checkIsAuthenticated, checkIsStudent,
     body('city', 'Please keep "City" to 40 characters or less.').isLength({ max: 40 }),
     body('country', 'Please keep "Country" to 40 characters or less.').isLength({ max: 40 }),
     body('appdate', 'Please enter a valid application date or leave "Application submission date" blank').isLength({ max: 10 }),
-    body('deadline', 'Please enter a valid application deadline.').isLength({ max: 30 }).isDate(),    
-    body('app_status').custom((value) => {
+    body('deadline', 'Please enter a valid application deadline.').isLength({ max: 30 }),    
+    body('appstatus').custom((value) => {
         let statusArray = ['Interested', 'Applied', 'Online tests', 'Assessment centre', 'Interview', 'Accepted', 'Rejected'];
         if (!statusArray.includes(value)) {
             throw new Error('Please select an application status from the list!')
@@ -102,16 +103,16 @@ router.post('/applications/new', checkIsAuthenticated, checkIsStudent,
         })
     }
 
-    const userId = req.session.passport.user;    
+    const userId = stringEscape(req.session.passport.user);    
     const appId = Date.now().toString();
-    const role = req.body.role;
-    const organisation = req.body.organisation;
-    const city = req.body.city;
-    const country = req.body.country;
-    const appDate = req.body.appdate;
-    const deadline = req.body.deadline;
-    const appStatus = req.body.appstatus;
-    const description = req.body.description;
+    const role = stringEscape(req.body.role);
+    const organisation = stringEscape(req.body.organisation);
+    const city = stringEscape(req.body.city);
+    const country = stringEscape(req.body.country);
+    const appDate = stringEscape(req.body.appdate);
+    const deadline = stringEscape(req.body.deadline);
+    const appStatus = stringEscape(req.body.appstatus);
+    const description = stringEscape(req.body.description);
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE newApp(bigint, bigint, text, text, text, text, text, date, text, text, text) AS '
@@ -135,7 +136,7 @@ router.post('/applications/new', checkIsAuthenticated, checkIsStudent,
 // Render edit applications page
 router.get('/applications/update', checkIsAuthenticated, checkIsStudent, async (req, res) => {
 
-    const userId = req.session.passport.user;
+    const userId = stringEscape(req.session.passport.user);
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE getStudentApps(bigint) AS '
@@ -198,9 +199,9 @@ router.put('/applications/update/:id', checkIsAuthenticated, checkIsStudent,
         })
     }
         
-    const appStatus = req.body.updateAppStatus;
-    const description = req.body.updateDesc;
-    const appId = req.params.id;
+    const appStatus = stringEscape(req.body.updateAppStatus);
+    const description = stringEscape(req.body.updateDesc);
+    const appId = stringEscape(req.params.id);
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE updateApp(text, text, timestamp, bigint) AS '
@@ -225,7 +226,7 @@ router.put('/applications/update/:id', checkIsAuthenticated, checkIsStudent,
 // Delete an application
 router.delete('/applications/update/:id', checkIsAuthenticated, checkIsStudent, async (req, res) => {
     
-    const appId = req.params.id;
+    const appId = stringEscape(req.params.id);
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE deleteApp(bigint) AS '
@@ -247,7 +248,7 @@ router.delete('/applications/update/:id', checkIsAuthenticated, checkIsStudent, 
 // Render student manage profile page
 router.get('/account', checkIsAuthenticated, checkIsStudent, async (req, res) => {
 
-    const userId = req.session.passport.user;
+    const userId = stringEscape(req.session.passport.user);
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE getAccount(bigint) AS '
@@ -280,14 +281,14 @@ router.get('/account', checkIsAuthenticated, checkIsStudent, async (req, res) =>
 // Edit student account details
 router.put('/account', checkIsAuthenticated, checkIsStudent, async (req, res) => {
     
-    const studentId = req.body.studentid;
-    const course = req.body.course;
-    const school = req.body.school;
-    const placementYear = req.body.placementyear;
-    const gradYear = req.body.gradyear;
-    const prefSector = req.body.prefsector;
-    const otherSectors = req.body.othersectors;
-    const userId = req.session.passport.user;
+    const studentId = stringEscape(req.body.studentid);
+    const course = stringEscape(req.body.course);
+    const school = stringEscape(req.body.school);
+    const placementYear = stringEscape(req.body.placementyear);
+    const gradYear = stringEscape(req.body.gradyear);
+    const prefSector = stringEscape(req.body.prefsector);
+    const otherSectors = stringEscape(req.body.othersectors);
+    const userId = stringEscape(req.session.passport.user);
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE editAccount(bigint, text, text, text, int, text, text, bigint) AS '

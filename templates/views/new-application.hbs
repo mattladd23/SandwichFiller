@@ -19,6 +19,12 @@
     
     <h1>Create a new application</h1>
     <br>
+    {{#if error}}
+    <div id="errors">
+        {{{errorMsg}}}
+    </div>
+    {{/if}}
+    <br>
     <form action="/student/applications/new" method="POST">
         <div class="form-row">
             <div class="form-group col-md-6">
