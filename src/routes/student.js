@@ -8,7 +8,7 @@ const pool = require('../config/db');
 // Import other libraries and modules
 const methodOverride = require('method-override');
 const { checkIsAuthenticated } = require('../middleware/checkAuth');
-const { checkIsStudent } = require('../middleware/checkStaff');
+const { checkIsStudent } = require('../middleware/checkPermission');
 
 // Middleware
 router.use(methodOverride('_method'));

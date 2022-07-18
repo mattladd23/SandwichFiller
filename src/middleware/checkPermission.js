@@ -69,7 +69,44 @@ const checkIsStudent = (async (req, res, next) => {
         })
 })
 
+const checkIsAdmin = (async (req, res, next) => {
+
+    let userId = req.session.passport.user;
+
+    let q = 'SET SEARCH_PATH TO sf; ' +
+    'PREPARE checkIsAdmin(bigint) AS ' +
+    'SELECT users.is_admin ' +
+    'FROM users ' +
+    'WHERE users.user_id = $1; ' +
+    `EXECUTE checkIsAdmin(${userId}); ` +
+    'DEALLOCATE checkIsAdmin;';
+
+    console.log(q);
+
+    await pool
+        .query(q)
+        .then((results) => {
+            console.log(results);
+            const isAdmin = results[2].rows[0];
+            console.log(isAdmin);
+
+            console.log(isAdmin.is_admin);
+
+            if (isAdmin.is_admin) {
+                return next();                
+            } else {
+                return res.redirect('/user');
+            }
+        })
+        .catch((e) => {
+            console.log(e);
+        })
+})
+
+
+
 module.exports = {
     checkIsStaff: checkIsStaff,
-    checkIsStudent: checkIsStudent
+    checkIsStudent: checkIsStudent,
+    checkIsAdmin: checkIsAdmin
 }

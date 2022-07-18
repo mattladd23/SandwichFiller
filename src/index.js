@@ -14,6 +14,7 @@ const userRoute = require('./routes/user');
 const studentRoute = require('./routes/student');
 const staffRoute = require('./routes/staff');
 const testRoute = require('./routes/test');
+const adminRoute = require('./routes/admin');
 
 // Instantiate server
 const app = express();
@@ -64,6 +65,7 @@ app.use('/user', userRoute);
 app.use('/student', studentRoute);
 app.use('/staff', staffRoute);
 app.use('/test', testRoute);
+app.use('/admin', adminRoute);
 
 
 // Root url

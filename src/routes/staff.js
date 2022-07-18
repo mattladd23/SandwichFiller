@@ -9,7 +9,7 @@ const pool = require('../config/db');
 // Import other libraries and modules
 const methodOverride = require('method-override');
 const { checkIsAuthenticated } = require('../middleware/checkAuth');
-const { checkIsStaff } = require('../middleware/checkStaff');
+const { checkIsStaff } = require('../middleware/checkPermission');
 const { body, validationResult } = require('express-validator');
 
 // Middleware
