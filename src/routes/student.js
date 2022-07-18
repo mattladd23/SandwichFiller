@@ -9,6 +9,7 @@ const pool = require('../config/db');
 const methodOverride = require('method-override');
 const { checkIsAuthenticated } = require('../middleware/checkAuth');
 const { checkIsStudent } = require('../middleware/checkPermission');
+const { body, validationResult } = require('express-validator');
 
 // Middleware
 router.use(methodOverride('_method'));
@@ -74,7 +75,32 @@ router.get('/applications/new', checkIsAuthenticated, checkIsStudent, (req, res)
 });
 
 // Post a new application
-router.post('/applications/new', checkIsAuthenticated, checkIsStudent, async (req, res) => {
+router.post('/applications/new', checkIsAuthenticated, checkIsStudent,
+    body('role', 'Please keep "Role / programme" to 40 characters or less.').isLength({ max: 40 }),
+    body('organisation', 'Please keep "Organisation" to 40 characters or less.').isLength({ max: 40 }),
+    body('city', 'Please keep "City" to 40 characters or less.').isLength({ max: 40 }),
+    body('country', 'Please keep "Country" to 40 characters or less.').isLength({ max: 40 }),
+    body('appdate', 'Please enter a valid application date or leave "Application submission date" blank').isLength({ max: 10 }),
+    body('deadline', 'Please enter a valid application deadline.').isLength({ max: 30 }).isDate(),    
+    body('app_status').custom((value) => {
+        let statusArray = ['Interested', 'Applied', 'Online tests', 'Assessment centre', 'Interview', 'Accepted', 'Rejected'];
+        if (!statusArray.includes(value)) {
+            throw new Error('Please select an application status from the list!')
+        }
+        return true
+    }),
+    body('description', 'Please keep your description to 140 characters or less.').isLength({ max: 140}), 
+
+    async (req, res) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.render('new-application', {
+            title: 'Post a new application',
+            error: true,
+            errorMsg: errors.errors[0].msg
+        })
+    }
 
     const userId = req.session.passport.user;    
     const appId = Date.now().toString();
@@ -88,7 +114,7 @@ router.post('/applications/new', checkIsAuthenticated, checkIsStudent, async (re
     const description = req.body.description;
 
     let q = 'SET SEARCH_PATH TO sf;'
-    + 'PREPARE newApp(bigint, bigint, text, text, text, text, date, date, text, text, text) AS '
+    + 'PREPARE newApp(bigint, bigint, text, text, text, text, text, date, text, text, text) AS '
     + 'INSERT INTO application(user_id, app_id, role, organisation, city, country, app_date, deadline, description, app_status, last_updated)'
     + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, LOCALTIMESTAMP(0));'
     + `EXECUTE newApp(${userId}, ${appId}, '${role}', '${organisation}', '${city}', '${country}', '${appDate}', '${deadline}', '${description}', '${appStatus}', 1);`
@@ -151,7 +177,26 @@ router.get('/applications/update', checkIsAuthenticated, checkIsStudent, async (
 });
 
 // Edit an application(s)
-router.put('/applications/update/:id', checkIsAuthenticated, checkIsStudent, async (req, res) => {
+router.put('/applications/update/:id', checkIsAuthenticated, checkIsStudent, 
+    body('app_status').custom((value) => {
+        let statusArray = ['Interested', 'Applied', 'Online tests', 'Assessment centre', 'Interview', 'Accepted', 'Rejected'];
+        if (!statusArray.includes(value)) {
+            throw new Error('Please select an application status from the list!')
+        }
+        return true
+    }),
+    body('description', 'Please keep your description to 140 characters or less.').isLength({ max: 140}),
+    
+    async (req, res) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.render('update-applications', {
+            title: 'Your applications',
+            error: true,
+            errorMsg: errors.errors[0].msg
+        })
+    }
         
     const appStatus = req.body.updateAppStatus;
     const description = req.body.updateDesc;

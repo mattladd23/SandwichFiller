@@ -69,7 +69,7 @@ app.use('/admin', adminRoute);
 
 
 // Root url
-app.get('/', (req, res) => {
+app.get('/', checkNotAuthenticated, (req, res) => {
     res.redirect('/home');
 });
 

@@ -623,11 +623,23 @@ router.get('/account', checkIsAuthenticated, checkIsStaff, async (req, res) => {
 
 // Edit staff account details
 router.put('/account', checkIsAuthenticated, checkIsStaff,
-    body('stafffname', 'Invalid name. Check for spaces before or after your name!').isAlpha('en-GB', {ignore: '-'}),
-    body('stafflname', 'Invalid name. Check for spaces before or after your name!').isAlpha('en-GB', {ignore: '-'}),
-    body('staffemail', 'Email is not a valid UEA email address').isEmail(),    
+    body('stafffname', 'Invalid first name. Check for spaces before or after your name!').isAlpha('en-GB', {ignore: '-'}),
+    body('stafffname', 'Invalid first name. Please keep your first name to 20 characters or less!').isLength({ max: 20 }),
+    body('stafflname', 'Invalid last name. Check for spaces before or after your name!').isAlpha('en-GB', {ignore: '-'}),
+    body('stafflname', 'Invalid last name. Please keep your last name to 20 characters or less!').isLength({ max: 20}),
+    body('staffemail', 'Email is not a valid UEA address!').isEmail().contains('@uea.ac.uk'),  
 
     async (req, res) => {
+
+    // Error handlers
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.render('staff-manage', {
+            title: 'Manage account',
+            error: true,            
+            errorMsg: errors.errors[0].msg
+        })
+    }
     
     const staffFName = req.body.stafffname;
     const staffLName = req.body.stafflname;
@@ -642,15 +654,15 @@ router.put('/account', checkIsAuthenticated, checkIsStaff,
     + `EXECUTE editStaffAccount('${staffFName}', '${staffLName}', '${staffEmail}', ${userId}); `
     + 'DEALLOCATE editStaffAccount';
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.redirect('/staff/account?success=false');
-    }
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //     return res.redirect('/staff/account?success=false');
+    // }
 
     await pool
         .query(q)
         .then(() => {
-            res.redirect('/staff?succss=true');
+            res.redirect('/staff?success=true');
         })
     .catch((e) => {
         console.log(e);
