@@ -11,10 +11,11 @@ const stringEscape = (input) => {
 
 // HTML escape
 const htmlEscape = (input) => {
-    input = input.replace(
+    input = input.toString();
+    input.replace(
         /[^0-9A-Za-z]/g,
-        c => '&#' + c.charCodeAt(0) + ';'
-    );
+        c => "&#" + c.charCodeAt(0) + ";"
+    )
     return input;
 }
 
