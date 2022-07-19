@@ -11,6 +11,7 @@ const { checkIsAuthenticated } = require('../middleware/checkAuth');
 const { checkIsStudent } = require('../middleware/checkPermission');
 const { body, validationResult } = require('express-validator');
 const { stringEscape, resultsHtmlEscape } = require('../middleware/escape');
+const { sanitizeTime } = require('../middleware/sanitizeTime');
 
 // Middleware
 router.use(methodOverride('_method'));
@@ -31,7 +32,7 @@ router.get('/applications', checkIsAuthenticated, checkIsStudent, async (req, re
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE userApps(bigint) AS '
     + 'SELECT student.f_name, student.l_name, application.app_id, application.role, application.organisation, application.city, '
-    + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
+    + 'application.country, application.deadline, application.description, application.app_status, '
     + 'application.last_updated '
     + 'FROM student JOIN application '
     + 'ON student.user_id = application.user_id '
@@ -81,7 +82,6 @@ router.post('/applications/new', checkIsAuthenticated, checkIsStudent,
     body('organisation', 'Please keep "Organisation" to 40 characters or less.').isLength({ max: 40 }),
     body('city', 'Please keep "City" to 40 characters or less.').isLength({ max: 40 }),
     body('country', 'Please keep "Country" to 40 characters or less.').isLength({ max: 40 }),
-    body('appdate', 'Please enter a valid application date or leave "Application submission date" blank').isLength({ max: 10 }),
     body('deadline', 'Please enter a valid application deadline.').isLength({ max: 30 }),    
     body('appstatus').custom((value) => {
         let statusArray = ['Interested', 'Applied', 'Online tests', 'Assessment centre', 'Interview', 'Accepted', 'Rejected'];
@@ -109,16 +109,15 @@ router.post('/applications/new', checkIsAuthenticated, checkIsStudent,
     const organisation = stringEscape(req.body.organisation);
     const city = stringEscape(req.body.city);
     const country = stringEscape(req.body.country);
-    const appDate = stringEscape(req.body.appdate);
     const deadline = stringEscape(req.body.deadline);
     const appStatus = stringEscape(req.body.appstatus);
     const description = stringEscape(req.body.description);
 
     let q = 'SET SEARCH_PATH TO sf;'
-    + 'PREPARE newApp(bigint, bigint, text, text, text, text, text, date, text, text, text) AS '
-    + 'INSERT INTO application(user_id, app_id, role, organisation, city, country, app_date, deadline, description, app_status, last_updated)'
-    + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, LOCALTIMESTAMP(0));'
-    + `EXECUTE newApp(${userId}, ${appId}, '${role}', '${organisation}', '${city}', '${country}', '${appDate}', '${deadline}', '${description}', '${appStatus}', 1);`
+    + 'PREPARE newApp(bigint, bigint, text, text, text, text, date, text, text, text) AS '
+    + 'INSERT INTO application(user_id, app_id, role, organisation, city, country, deadline, description, app_status, last_updated)'
+    + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, LOCALTIMESTAMP(0));'
+    + `EXECUTE newApp(${userId}, ${appId}, '${role}', '${organisation}', '${city}', '${country}', '${deadline}', '${description}', '${appStatus}', 1);`
     + 'DEALLOCATE newApp;'
 
     console.log(q);
@@ -140,9 +139,9 @@ router.get('/applications/update', checkIsAuthenticated, checkIsStudent, async (
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE getStudentApps(bigint) AS '
-    + 'SELECT student.f_name, student.l_name, application.app_id, application.role, application.organisation, application.city, '
-    + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
-    + 'application.last_updated '
+    + 'SELECT student.f_name, student.l_name, application.app_id, application.role, application.organisation, '
+    + 'application.city, application.country, application.deadline, application.description, '
+    + 'application.app_status, application.last_updated '
     + 'FROM student JOIN application '
     + 'ON student.user_id = application.user_id '
     + 'WHERE application.user_id = $1 '
@@ -179,7 +178,7 @@ router.get('/applications/update', checkIsAuthenticated, checkIsStudent, async (
 
 // Edit an application(s)
 router.put('/applications/update/:id', checkIsAuthenticated, checkIsStudent, 
-    body('app_status').custom((value) => {
+    body('appstatus').custom((value) => {
         let statusArray = ['Interested', 'Applied', 'Online tests', 'Assessment centre', 'Interview', 'Accepted', 'Rejected'];
         if (!statusArray.includes(value)) {
             throw new Error('Please select an application status from the list!')

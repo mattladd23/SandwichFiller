@@ -12,6 +12,7 @@ const { checkIsAuthenticated } = require('../middleware/checkAuth');
 const { checkIsStaff } = require('../middleware/checkPermission');
 const { body, validationResult } = require('express-validator');
 const { stringEscape, resultsHtmlEscape } = require('../middleware/escape');
+const { sanitizeTime } = require('../middleware/sanitizeTime');
 
 // Middleware
 router.use(methodOverride('_method'));
@@ -97,6 +98,8 @@ router.get('/applications', checkIsAuthenticated, checkIsStaff, async (req, res)
                         noApps: true
                     });
                 }
+
+                // const appFeatures = ['user_id', 'app_id', 'role', 'organisation', 'city', 'country']
 
                 return res.render('all-applications', {
                     title: 'Applications',
@@ -199,7 +202,7 @@ router.get('/search/results/:id', checkIsAuthenticated, checkIsStaff, async (req
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE getStudentApps(bigint) AS '
     + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
-    + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
+    + 'application.country, application.deadline, application.description, application.app_status, '
     + 'application.last_updated, student.user_id, student.f_name, student.l_name '
     + 'FROM application JOIN student ON application.user_id = student.user_id '
     + 'WHERE student.user_id = $1 '
@@ -275,7 +278,7 @@ router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => 
     let qAppsAcc = searchPath +
     'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, ' +
     'application.app_id, application.role, application.organisation, application.city, ' +
-    'application.country, application.app_date, application.deadline, application.description, ' +
+    'application.country, application.deadline, application.description, ' +
     'application.app_status, application.last_updated ' +
     'FROM student ' +
     'JOIN application ' +
@@ -290,7 +293,7 @@ router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => 
     let qAppsRej = searchPath +
     'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, ' +
     'application.app_id, application.role, application.organisation, application.city, ' +
-    'application.country, application.app_date, application.deadline, application.description, ' +
+    'application.country, application.deadline, application.description, ' +
     'application.app_status, application.last_updated ' +
     'FROM student ' +
     'JOIN application ' +

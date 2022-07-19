@@ -61,7 +61,6 @@ CREATE TABLE application (
     organisation VARCHAR NOT NULL,
     city VARCHAR,
     country VARCHAR,
-    app_date VARCHAR,
     deadline DATE,
     description VARCHAR(140),
     app_status VARCHAR NOT NULL,

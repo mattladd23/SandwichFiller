@@ -45,18 +45,7 @@
             </div>        
         </div>
         <div class="form-row">
-            <div class="form-group col-md-4">
-                <label for="appdate">Application submission date:</label>
-                <div class="input-group date" id="app-datepicker">
-                    <input type="text" class="form-control" id="appdatepicker" name="appdate">
-                    <span class="input-group-append">
-                        <span class="input-group-text bg-white">
-                            <i class="fa fa-calendar"></i>
-                        </span>
-                    </span>
-                </div>
-            </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-6">
                 <label for="deadline">Application deadline:</label>
                 <div class="input-group date" id="dl-datepicker">
                     <input type="text" class="form-control" id="dldatepicker" name="deadline">
@@ -67,7 +56,7 @@
                     </span>
                 </div>                    
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-6">
                 <label for="appstatus">Application status:</label>                    
                 <select class="form-control" id="appstatus" name="appstatus">
                     <option selected></option>
@@ -83,7 +72,7 @@
         </div>
         <div class="form-row">
             <div class="form-group col-md-12">
-                <label for="description">Description</label>
+                <label for="description">Description:</label>
                 <input type="text" class="form-control" name="description">
             </div>                
         </div>
@@ -94,9 +83,6 @@
         
 
     <script type="text/javascript">
-        $(function() {
-            $('#app-datepicker').datepicker();
-        });
         $(function() {
             $('#dl-datepicker').datepicker();
         });
