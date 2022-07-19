@@ -11,10 +11,26 @@ const { checkIsAuthenticated } = require('../middleware/checkAuth');
 const { checkIsStudent } = require('../middleware/checkPermission');
 const { body, validationResult } = require('express-validator');
 const { stringEscape, resultsHtmlEscape } = require('../middleware/escape');
-const { sanitizeTime } = require('../middleware/sanitizeTime');
+// const { sanitizeTime } = require('../middleware/sanitizeTime');
 
 // Middleware
 router.use(methodOverride('_method'));
+
+// Time sanitization to remove time and time zone from applicationd dealine and last updated
+const sanitizeTime = (results, deadline, updated) => {
+    for (let i = 0; i < results.length; i++) {
+        let deadlineResult = results[i][deadline];
+        deadlineResult = deadlineResult.toString();
+        deadlineResult = deadlineResult.split('00:');
+        results[i][deadline] = deadlineResult[0];
+
+        let updatedResult = results[i][updated];
+        updatedResult = updatedResult.toString();
+        updatedResult = updatedResult.split('GMT');
+        results[i][updated] = updatedResult[0];
+    }
+    return results;
+};
 
 // Render student home page
 router.get('/', checkIsAuthenticated, checkIsStudent, (req, res) => {
@@ -31,9 +47,9 @@ router.get('/applications', checkIsAuthenticated, checkIsStudent, async (req, re
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE userApps(bigint) AS '
-    + 'SELECT student.f_name, student.l_name, application.app_id, application.role, application.organisation, application.city, '
-    + 'application.country, application.deadline, application.description, application.app_status, '
-    + 'application.last_updated '
+    + 'SELECT student.user_id, student.f_name, student.l_name, application.app_id, application.role, '
+    + 'application.organisation, application.city, application.country, application.deadline, '
+    + 'application.description, application.app_status, application.last_updated '
     + 'FROM student JOIN application '
     + 'ON student.user_id = application.user_id '
     + 'WHERE application.user_id = $1 '
@@ -56,10 +72,15 @@ router.get('/applications', checkIsAuthenticated, checkIsStudent, async (req, re
                 const apps = results[2].rows;
                 console.log(apps);
 
+                const appFeatures = ['user_id', 'f_name', 'l_name', 'app_id', 'role', 'organisation', 'city',
+                                     'country','deadline', 'description', 'app_status', 'last_updated'];                                 
+                let sanitizedApps = resultsHtmlEscape(apps, appFeatures, ['deadline', 'last_updated']);
+                sanitizedApps = sanitizeTime(sanitizedApps, 'deadline', 'last_updated');
+
                 res.render('student-applications', {
                     title: 'Your applications',
                     result: true,
-                    apps: apps                    
+                    apps: sanitizedApps                    
                 })
             }
         })
@@ -139,9 +160,9 @@ router.get('/applications/update', checkIsAuthenticated, checkIsStudent, async (
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE getStudentApps(bigint) AS '
-    + 'SELECT student.f_name, student.l_name, application.app_id, application.role, application.organisation, '
-    + 'application.city, application.country, application.deadline, application.description, '
-    + 'application.app_status, application.last_updated '
+    + 'SELECT student.user_id, student.f_name, student.l_name, application.app_id, application.role, '
+    + 'application.organisation, application.city, application.country, application.deadline, '
+    + 'application.description, application.app_status, application.last_updated '
     + 'FROM student JOIN application '
     + 'ON student.user_id = application.user_id '
     + 'WHERE application.user_id = $1 '
@@ -164,10 +185,15 @@ router.get('/applications/update', checkIsAuthenticated, checkIsStudent, async (
                 const apps = results[2].rows;
                 console.log(apps);
 
+                const appFeatures = ['user_id', 'f_name', 'l_name', 'app_id', 'role', 'organisation', 'city',
+                                     'country','deadline', 'description', 'app_status', 'last_updated'];                                 
+                let sanitizedApps = resultsHtmlEscape(apps, appFeatures, ['deadline', 'last_updated']);
+                sanitizedApps = sanitizeTime(sanitizedApps, 'deadline', 'last_updated');
+
                 res.render('update-applications', {
                     title: 'Your applications',
                     result: true,
-                    apps: apps                    
+                    apps: sanitizedApps                    
                 })
             }
         })
@@ -251,7 +277,7 @@ router.get('/account', checkIsAuthenticated, checkIsStudent, async (req, res) =>
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE getAccount(bigint) AS '
-    + 'SELECT student.f_name, student.l_name, student.email, student.student_id, student.course, '
+    + 'SELECT student.user_id, student.f_name, student.l_name, student.email, student.student_id, student.course, '
     + 'student.school, student.placement_year, student.grad_year, student.pref_sector, student.other_sectors '
     + 'FROM student '
     + 'WHERE student.user_id = $1;'
@@ -266,10 +292,15 @@ router.get('/account', checkIsAuthenticated, checkIsStudent, async (req, res) =>
             console.log(results);
             const accDetails = results[2].rows;
             console.log(accDetails);
+
+            const accDetailsFeatures = ['user_id', 'f_name', 'l_name', 'email', 'student_id', 'course', 'school',
+                                        'placement_year', 'grad_year', 'pref_sector', 'other_sectors'];
+            const sanitizedAccDetails = resultsHtmlEscape(accDetails, accDetailsFeatures, ['user_id']);
+
             res.render('student-manage', {
                 title: 'Manage my account',
                 error: false,
-                accDetails: accDetails
+                accDetails: sanitizedAccDetails
             });
         })
     .catch((e) => {

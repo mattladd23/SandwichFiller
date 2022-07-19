@@ -11,11 +11,27 @@ const methodOverride = require('method-override');
 const { checkIsAuthenticated } = require('../middleware/checkAuth');
 const { checkIsStaff } = require('../middleware/checkPermission');
 const { body, validationResult } = require('express-validator');
-const { stringEscape, resultsHtmlEscape } = require('../middleware/escape');
-const { sanitizeTime } = require('../middleware/sanitizeTime');
+const { stringEscape, resultsHtmlEscape, htmlEscape } = require('../middleware/escape');
+// const { sanitizeTime } = require('../middleware/sanitizeTime');
 
 // Middleware
 router.use(methodOverride('_method'));
+
+// Time sanitization to remove time and time zone from applicationd dealine and last updated
+const sanitizeTime = (results, deadline, updated) => {
+    for (let i = 0; i < results.length; i++) {
+        let deadlineResult = results[i][deadline];
+        deadlineResult = deadlineResult.toString();
+        deadlineResult = deadlineResult.split('00:');
+        results[i][deadline] = deadlineResult[0];
+
+        let updatedResult = results[i][updated];
+        updatedResult = updatedResult.toString();
+        updatedResult = updatedResult.split('GMT');
+        results[i][updated] = updatedResult[0];
+    }
+    return results;
+};
 
 // Render login success page
 router.get('/', checkIsAuthenticated, checkIsStaff, (req, res) => {
@@ -32,7 +48,7 @@ router.get('/applications', checkIsAuthenticated, checkIsStaff, async (req, res)
 
     if (Object.keys(req.query).length === 0) {
         q += 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
-        + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
+        + 'application.country, application.deadline, application.description, application.app_status, '
         + 'application.last_updated, student.user_id, student.f_name, student.l_name '
         + 'FROM application JOIN student ON application.user_id = student.user_id '
         + 'ORDER BY application.last_updated DESC;'
@@ -41,7 +57,7 @@ router.get('/applications', checkIsAuthenticated, checkIsStaff, async (req, res)
     } else {
         if (req.query.filter === 'All applications') {
             q += 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
-            + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
+            + 'application.country, application.deadline, application.description, application.app_status, '
             + 'application.last_updated, student.user_id, student.f_name, student.l_name '
             + 'FROM application JOIN student ON application.user_id = student.user_id '
             + 'ORDER BY application.last_updated DESC;'
@@ -50,7 +66,7 @@ router.get('/applications', checkIsAuthenticated, checkIsStaff, async (req, res)
         } else {
             q += 'PREPARE filter(text) AS '
             + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
-            + 'application.country, application.app_date, application.deadline, application.description, application.app_status, '
+            + 'application.country, application.deadline, application.description, application.app_status, '
             + 'application.last_updated, student.user_id, student.f_name, student.l_name '
             + 'FROM application JOIN student ON application.user_id = student.user_id '
             + 'WHERE application.app_status = $1 '
@@ -99,11 +115,14 @@ router.get('/applications', checkIsAuthenticated, checkIsStaff, async (req, res)
                     });
                 }
 
-                // const appFeatures = ['user_id', 'app_id', 'role', 'organisation', 'city', 'country']
+                const appFeatures = ['user_id', 'app_id', 'role', 'organisation', 'city', 'country',
+                                     'deadline', 'description', 'app_status', 'last_updated', 'f_name', 'l_name'];
+                let sanitizedApps = resultsHtmlEscape(apps, appFeatures, ['deadline', 'last_updated']);
+                sanitizedApps = sanitizeTime(sanitizedApps, 'deadline', 'last_updated');
 
                 return res.render('all-applications', {
                     title: 'Applications',
-                    apps: apps,
+                    apps: sanitizedApps,
                     filter: req.query.filter,
                     noFilter: false,
                     status: statusArray
@@ -113,9 +132,14 @@ router.get('/applications', checkIsAuthenticated, checkIsStaff, async (req, res)
             const apps = results[1].rows
             console.log(apps);
 
+            const appFeatures = ['user_id', 'app_id', 'role', 'organisation', 'city', 'country',
+                                 'deadline', 'description', 'app_status', 'last_updated', 'f_name', 'l_name'];
+            let sanitizedApps = resultsHtmlEscape(apps, appFeatures, ['deadline', 'last_updated']);
+            sanitizedApps = sanitizeTime(sanitizedApps, 'deadline', 'last_updated');
+
             return res.render('all-applications', {
                 title: 'Applications',
-                apps: apps,
+                apps: sanitizedApps,
                 noFilter: true,
                 status: statusArray
             }); 
@@ -138,17 +162,23 @@ router.get('/search', checkIsAuthenticated, checkIsStaff, (req, res) => {
 // Render student results
 router.get('/search/results', checkIsAuthenticated, checkIsStaff, async (req, res) => {
     
-    let nameQuery = req.query.nameSearch;
-    // nameQuery = '%'+nameQuery+'%';
-    console.log(nameQuery);
-
-    let schoolQuery = req.query.schoolSearch;
-    // schoolQuery = '%'+schoolQuery+'%';
-    console.log(schoolQuery);
+    const nameQuery = req.query.nameSearch;
+    const nameQueryStrEscaped = stringEscape(nameQuery);
+    const nameQueryHtmlEscaped = htmlEscape(nameQuery);    
     
-    let placementYearQuery = req.query.placementYearSearch;
-    // placementYearQuery = '%'+placementYearQuery+'%';
-    console.log(placementYearQuery);
+    console.log(nameQueryStrEscaped);
+
+    const schoolQuery = req.query.schoolSearch;
+    const schoolQueryStrEscaped = stringEscape(schoolQuery);
+    const schoolQueryHtmlEscaped = htmlEscape(schoolQuery);
+
+    console.log(schoolQueryStrEscaped);
+    
+    const placementYearQuery = req.query.placementYearSearch;
+    const placementYearQueryStrEscaped = stringEscape(placementYearQuery);
+    const placementYearQueryHtmlEscaped = htmlEscape(placementYearQuery);
+
+    console.log(placementYearQueryStrEscaped);
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE searchStudents(text, text, text) AS '
@@ -159,7 +189,7 @@ router.get('/search/results', checkIsAuthenticated, checkIsStaff, async (req, re
     + 'WHERE student.f_name ILIKE $1 OR student.l_name ILIKE $1 OR student.email ILIKE $1 '
     + 'OR student.school = $2 OR student.placement_year = $3 ' 
     + 'ORDER BY student.l_name ASC;'
-    + `EXECUTE searchStudents('${nameQuery}', '${schoolQuery}', '${placementYearQuery}');`
+    + `EXECUTE searchStudents('${nameQueryStrEscaped}', '${schoolQueryStrEscaped}', '${placementYearQueryStrEscaped}');`
     + 'DEALLOCATE searchStudents;'
 
     console.log(q);
@@ -171,18 +201,22 @@ router.get('/search/results', checkIsAuthenticated, checkIsStaff, async (req, re
             if (results[2].rowCount === 0) {
                 res.render('search-results', {
                     title: 'Find a student',
-                    nameSearch: nameQuery,
-                    schoolSearch: schoolQuery,
-                    placementYearSearch: placementYearQuery,
+                    nameSearch: nameQueryHtmlEscaped,
+                    schoolSearch: schoolQueryHtmlEscaped,
+                    placementYearSearch: placementYearQueryHtmlEscaped,
                     result: false
                 })
             } else {
                 const students = results[2].rows;
                 console.log(students);
+                const studentFeatures = ['user_id', 'f_name', 'l_name', 'email', 'student_id', 'course',
+                                         'school', 'placement_year','grad_year', 'pref_sector', 'other_sectors'];
+                let sanitizedStudents = resultsHtmlEscape(students, studentFeatures, ['user_id']);
+
 
                 res.render('search-results', {
                     title: 'Search students',
-                    students: students,
+                    students: sanitizedStudents,
                     nameSearch: nameQuery,
                     schoolSearch: schoolQuery,
                     placementYearSearch: placementYearQuery,
@@ -223,16 +257,22 @@ router.get('/search/results/:id', checkIsAuthenticated, checkIsStaff, async (req
                 })
             } else {
                 const studentApps = results[2].rows;
-                console.log(studentApps);                
+                console.log(studentApps);
+                
+                const appFeatures = ['user_id', 'app_id', 'role', 'organisation', 'city', 'country',
+                                 'deadline', 'description', 'app_status', 'last_updated', 'f_name', 'l_name'];
+                let sanitizedApps = resultsHtmlEscape(studentApps, appFeatures, ['deadline', 'last_updated']);
+                sanitizedApps = sanitizeTime(sanitizedApps, 'deadline', 'last_updated');
                 
                 const studentFName = studentApps[0].f_name;
                 console.log(studentFName);
+                const studentFNameHtmlEscaped = htmlEscape(studentFName);
 
                 res.render('staff-view-student', {
                     title: 'Student applications',
                     result: true,
-                    studentApps: studentApps,
-                    studentFName: studentFName 
+                    studentApps: sanitizedApps,
+                    studentFName: studentFNameHtmlEscaped
                 })
             }
         })
@@ -600,7 +640,7 @@ router.get('/account', checkIsAuthenticated, checkIsStaff, async (req, res) => {
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE getStaffAccount(bigint) AS '
-    + 'SELECT staff.f_name, staff.l_name, staff.email '
+    + 'SELECT staff.user_id, staff.f_name, staff.l_name, staff.email '
     + 'FROM staff '
     + 'WHERE staff.user_id = $1;'
     + `EXECUTE getStaffAccount(${userId});`
@@ -612,12 +652,17 @@ router.get('/account', checkIsAuthenticated, checkIsStaff, async (req, res) => {
         .query(q)
         .then((results) => {
             console.log(results);
+            
             const accDetails = results[2].rows;
             console.log(accDetails);
+
+            const accDetailsFeatures = ['user_id', 'f_name', 'l_name', 'email'];
+            const sanitizedAccDetails = resultsHtmlEscape(accDetails, accDetailsFeatures, ['user_id']);
+
             res.render('staff-manage', {
                 title: 'Manage my account',
                 error: false,
-                accDetails: accDetails
+                accDetails: sanitizedAccDetails
             });
         })
     .catch((e) => {

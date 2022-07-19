@@ -10,7 +10,7 @@ const pool = require('../config/db');
 const methodOverride = require('method-override');
 const { checkIsAuthenticated } = require('../middleware/checkAuth');
 const { checkIsAdmin } = require('../middleware/checkPermission');
-const { stringEscape } = require('../middleware/escape');
+const { stringEscape, resultsHtmlEscape } = require('../middleware/escape');
 
 // Middleware
 router.use(methodOverride('_method'));
@@ -71,12 +71,18 @@ router.get('/users', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
 
             const staffUsers = qStaffRes[1].rows;
             console.log(staffUsers);
+            const staffUserFeatures = ['user_id', 'email'];
+            const sanitizedStaffUsers = resultsHtmlEscape(staffUsers, staffUserFeatures, ['user_id']);
 
             const studentUsers = qStudentsRes[1].rows;
             console.log(studentUsers);
+            const studentUserFeatures = ['user_id', 'email'];
+            const sanitizedStudentUsers = resultsHtmlEscape(studentUsers, studentUserFeatures, ['user_id']);
 
             const unverifiedUsers = qUnverifiedRes[1].rows;
             console.log(unverifiedUsers);
+            const unverifiedUserFeatures = ['user_id', 'email'];
+            const sanitizedUnverifiedUsers = resultsHtmlEscape(unverifiedUsers, unverifiedUserFeatures, ['user_id']);
 
             if (staffUsers.length === 0 && studentUsers.length === 0 && unverifiedUsers.length === 0) {
                 return res.render('admin-manage', {
@@ -90,7 +96,7 @@ router.get('/users', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
                 return res.render('admin-manage', {
                     title: 'SandwichFiller - Manage users',
                     noStaffUsers: false,
-                    staffUsers: staffUsers,
+                    staffUsers: sanitizedStaffUsers,
                     noStudentUsers: true,
                     noUnverifiedUsers: true
                 });
@@ -100,7 +106,7 @@ router.get('/users', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
                     title: 'SandwichFiller - Manage users',
                     noStaffUsers: true,
                     noStudentUsers: false,
-                    studentUsers: studentUsers,
+                    studentUsers: sanitizedStudentUsers,
                     noUnverifiedUsers: true
                 });
 
@@ -110,7 +116,7 @@ router.get('/users', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
                     noStaffUsers: true,
                     noStudentUsers: true,
                     noUnverifiedUsers: false,
-                    unverifiedUsers: unverifiedUsers
+                    unverifiedUsers: sanitizedUnverifiedUsers
                 });
 
             } else if (staffUsers.length === 0) {
@@ -118,28 +124,28 @@ router.get('/users', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
                     title: 'SandwichFiller - Manage users',
                     noStaffUsers: true,
                     noStudentUsers: false,
-                    studentUsers: studentUsers,
+                    studentUsers: sanitizedStudentUsers,
                     noUnverifiedUsers: false,
-                    unverifiedUsers: unverifiedUsers
+                    unverifiedUsers: sanitizedUnverifiedUsers
                 });
 
             } else if (studentUsers.length === 0) {
                 return res.render('admin-manage', {
                     title: 'SandwichFiller - Manage users',
                     noStaffUsers: false,
-                    staffUsers: staffUsers,
+                    staffUsers: sanitizedStaffUsers,
                     noStudentUsers: true,
                     noUnverifiedUsers: false,
-                    unverifiedUsers: unverifiedUsers                    
+                    unverifiedUsers: sanitizedUnverifiedUsers                    
                 });
 
             } else if (unverifiedUsers.length === 0) {
                 return res.render('admin-manage', {
                     title: 'SandwichFiller - Manage users',
                     noStaffUsers: false,
-                    staffUsers: staffUsers,
+                    staffUsers: sanitizedStaffUsers,
                     noStudentUsers: false,
-                    studentUsers: studentUsers,
+                    studentUsers: sanitizedStudentUsers,
                     noUnverifiedUsers: true
                 });
             }
@@ -147,11 +153,11 @@ router.get('/users', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
             return res.render('admin-manage', {
                 title: 'SandwichFiller - Manage users',
                 noStaffUsers: false,
-                staffUsers: staffUsers,
+                staffUsers: sanitizedStaffUsers,
                 noStudentUsers: false,
-                studentUsers: studentUsers,
+                studentUsers: sanitizedStudentUsers,
                 noUnverifiedUsers: false,
-                unverifiedUsers: unverifiedUsers
+                unverifiedUsers: sanitizedUnverifiedUsers
             });
         })
         .catch((e) => {
