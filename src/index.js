@@ -38,10 +38,10 @@ hbs.registerPartials(partialsPath);
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: true,
-    roling: true,
+    rolling: true,
     saveUninitialized: false,
     cookie: {
-        expires: 10000000
+        expires: 120000
     }
 }));
 
