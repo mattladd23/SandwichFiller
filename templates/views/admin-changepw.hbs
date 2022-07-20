@@ -12,6 +12,12 @@
 
 {{>adminNavbar}}
     <h1>Change password</h1>
+    <br>    
+    <div class="back-button-container">
+        <form action="/admin/account" method="GET">
+            <button type="submit" class="col btn btn-warning">Back to account</button>
+        </form>
+    </div>
     <br>
     <div class="changepw-error">
             {{#if success}}

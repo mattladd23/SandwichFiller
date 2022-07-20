@@ -19,6 +19,14 @@
 {{>studentNavbar}}   
     
     <h1 class="apps-header">Update or delete an application</h1>
+
+    <div class="back-button-container">
+        <form action="/student" method="GET">
+            <button type="submit" class="col btn btn-warning">Back to dashboard</button>
+        </form>
+    </div>
+    <br>
+
     {{#if result}}          
     
     <div class="apps-container">
@@ -68,13 +76,8 @@
                     <button type="submit" class="col-sm-12 btn btn-primary">Edit</button>
                 </form>
                 <br>
-                <div class="row">
-                    <div class="col-sm-6 back-button-container">
-                    <form action="/student" method="GET">
-                        <button type="submit" class="col btn btn-warning">Back to dashboard</button>
-                    </form>
-                    </div>                  
-                    <div class="col-sm-6 delete-button-container">
+                <div class="row">                                     
+                    <div class="col-sm-12 delete-button-container">
                         <form action="/student/applications/update/{{{value.app_id}}}?_method=DELETE" method="POST">
                             <button type="submit" class="col btn btn-danger">Delete</button>
                         </form>                            

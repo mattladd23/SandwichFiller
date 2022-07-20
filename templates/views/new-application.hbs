@@ -19,6 +19,12 @@
     
     <h1>Create a new application</h1>
     <br>
+    <div class="back-button-container">
+        <form action="/student" method="GET">
+            <button type="submit" class="col btn btn-warning">Back to dashboard</button>
+        </form>
+    </div>
+    <br>
     {{#if error}}
     <div id="errors">
         {{{errorMsg}}}

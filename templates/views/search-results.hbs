@@ -11,8 +11,8 @@
 <body>
 
 {{>staffNavbar}}    
-    
     <h1>Search results</h1>
+    <br>
     {{#if result}}            
     <div class="results-table-container">
         <table>
@@ -55,7 +55,14 @@
     <div class="no-results-container">
         <p>Your search returned no results.</p>
     </div>
-    {{/if}}           
+    {{/if}}
+
+    <br>
+    <div class="back-button-container">
+        <form action="/staff/search" method="GET">
+            <button type="submit" class="col btn btn-warning">Search again</button>
+        </form>
+    </div>       
         
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

@@ -13,6 +13,13 @@
 {{>studentNavbar}}
             
     <h1 class="apps-header">Your applications</h1>
+
+    <div class="back-button-container">
+        <form action="/student" method="GET">
+            <button type="submit" class="col btn btn-warning">Back to dashboard</button>
+        </form>
+    </div>
+    <br>
     
     {{#if result}}
 

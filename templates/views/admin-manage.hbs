@@ -13,7 +13,13 @@
 {{>staffNavbar}}    
     
     <h1>Manage my account</h1>
-    <br>  
+    <br>    
+    <div class="back-button-container">
+        <form action="/admin" method="GET">
+            <button type="submit" class="col btn btn-warning">Back to dashboard</button>
+        </form>
+    </div>
+    <br>
 
     {{#if error}}
     <div id="errors">

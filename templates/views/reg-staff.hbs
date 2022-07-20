@@ -13,6 +13,12 @@
 {{>notAuthNavbar}}
     
     <h1 class="reg-header">Staff registration</h1>
+    <br>   
+    <div class="back-button-container">
+        <form action="/register" method="GET">
+            <button type="submit" class="col btn btn-warning">Return to registration options</button>
+        </form>
+    </div>
     <br>
     {{#if error}}
     <div id="errors">

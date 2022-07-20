@@ -15,6 +15,12 @@
     {{#if result}}
 
     <h1>{{studentFName}}'s applications</h1>
+    <br>   
+    <div class="back-button-container">
+        <form action="/staff/search" method="GET">
+            <button type="submit" class="col btn btn-warning">Find another student</button>
+        </form>
+    </div>
     <br>
     <div class="apps-container">
         {{#each studentApps as |value key|}}       

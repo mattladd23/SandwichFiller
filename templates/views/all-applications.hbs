@@ -13,6 +13,13 @@
 {{>staffNavbar}}
 
     <h1 class="apps-header">Student applications</h1>
+    <br>
+    <div class="back-button-container">
+        <form action="/staff" method="GET">
+            <button type="submit" class="col btn btn-warning">Back to dashboard</button>
+        </form>
+    </div>
+    <br>
 
     <div class="apps-filter-container">
         <form action="/staff/applications" method="GET">
@@ -35,11 +42,7 @@
     </div>
     {{#if noApps}}
     <div class="no-apps-container">        
-        <p>No applications currently have the status: '{{{filter}}}'</p>
-
-        <form action="/staff" method="GET">
-            <button type="submit" class="btn btn-primary">Search agin</button>
-        </form>
+        <p>No applications currently have the status: '{{{filter}}}'</p>        
     </div>
     {{else}}
 
