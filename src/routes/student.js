@@ -12,6 +12,7 @@ const { checkIsStudent } = require('../middleware/checkPermission');
 const { body, validationResult } = require('express-validator');
 const { stringEscape, resultsHtmlEscape } = require('../middleware/escape');
 // const { sanitizeTime } = require('../middleware/sanitizeTime');
+const bcrypt = require('bcrypt');
 
 // Middleware
 router.use(methodOverride('_method'));
@@ -339,11 +340,94 @@ router.put('/account', checkIsAuthenticated, checkIsStudent, async (req, res) =>
     await pool
         .query(q)
         .then(() => {
-            res.redirect('/student');
+            res.redirect('/student?success=true');
         })
     .catch((e) => {
         console.log(e);
     })
+});
+
+// To render student change password page
+router.get('/account/password', checkIsAuthenticated, checkIsStudent, (req, res) => {
+    res.render('student-changepw', {
+        title: 'Student - Change password'
+    });
+});
+
+// To change staff password
+router.put('/account/password', checkIsAuthenticated, checkIsStudent,
+    body('newpw', 'Password must be at least 8 characters in length').isLength({ min: 8 }),
+    body('confirmnewpw').custom((value, { req }) => {
+        if (value !== stringEscape(req.body.newpw)) {
+            throw new Error('Passwords do not match!');
+        }
+        return true;
+    }),
+    
+    async (req, res) => {
+    const currentPw = stringEscape(req.body.currentpw);
+    const newPw = stringEscape(req.body.newpw);
+    const userId = stringEscape(req.session.passport.user);
+
+    const errors = validationResult(req);
+
+    const qGetPw = 'SET SEARCH_PATH TO sf; '
+    + 'PREPARE getPassword(bigint) AS '
+    + 'SELECT users.password '
+    + 'FROM users '
+    + 'WHERE user_id = $1; '
+    + `EXECUTE getPassword(${userId}); `
+    + 'DEALLOCATE getPassword;';
+
+    if (!errors.isEmpty()) {
+        return res.render('student-changepw', {
+            title: 'Student - Change password',
+            error: errors.errors[0].msg
+        });
+    }
+
+    await pool
+        .query(qGetPw)
+        .then((results) => {
+            const currentPwHashed = results[2].rows[0].password;
+            bcrypt.compare(currentPw, currentPwHashed, async (err, result) => {
+                if (err) {
+                    return console.log(err);
+                }
+                if (result) {
+                    if (newPw === currentPw) {
+                        return res.render('student-changepw', {
+                            title: 'Student - Change password',
+                            error: 'New password and existing passwords cannot be the same!'
+                        });
+                    }
+                    const newPwHashed = await bcrypt.hash(newPw, 10);
+                    const qUpdatePw = 'PREPARE updatePw(text, bigint) AS '
+                    + 'UPDATE users '
+                    + 'SET password = $1 '
+                    + 'WHERE user_id = $2; '
+                    + `EXECUTE updatePw('${newPwHashed}', ${userId}); `
+                    + 'DEALLOCATE updatePw;';
+
+                    await pool
+                        .query(qUpdatePw)
+                        .then(() => {
+                            res.redirect('/student/account?success=true');                            
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                        })
+                } else {
+                    res.render('student-changepw', {
+                        title: 'Student - Change password',
+                        error: 'Password entered incorrectly. Please try again!'
+                    });
+                }
+            })
+        })
+        .catch((e) => {
+            console.log(e);
+        });
 });
 
 // Student log out

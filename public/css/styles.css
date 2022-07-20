@@ -94,6 +94,14 @@ h2, h3, h4 {
   margin-top: 0%;
 }
 
+.reg-login-header {
+  margin-top: 5%;
+}
+
+#changepw-btn-form {
+  margin-bottom: 5%;
+}
+
 html {
   overflow-y: scroll;
 }
@@ -118,10 +126,6 @@ h1, .apps-header, h2, h3, h4, .reg-login-header {
 
 h2, h3, h4 {
   margin-top: 0%;
-}
-
-.reg-header {
-  margin-top: 10%;
 }
 
 .apps-header {
