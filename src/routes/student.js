@@ -203,29 +203,19 @@ router.get('/applications/update', checkIsAuthenticated, checkIsStudent, async (
 });
 
 // Edit an application(s)
-router.put('/applications/update/:id', checkIsAuthenticated, checkIsStudent, 
-    body('appstatus').custom((value) => {
+router.put('/applications/update/:id', checkIsAuthenticated, checkIsStudent,
+    body('updateappstatus').custom((value) => {
         let statusArray = ['Interested', 'Applied', 'Online tests', 'Assessment centre', 'Interview', 'Accepted', 'Rejected'];
         if (!statusArray.includes(value)) {
             throw new Error('Please select an application status from the list!')
         }
-        return true
+        return true;
     }),
-    body('description', 'Please keep your description to 140 characters or less.').isLength({ max: 140}),
+    body('updatedesc', 'Please keep your description to 140 characters or less.').isLength({ max: 140}),
     
     async (req, res) => {
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.render('update-applications', {
-            title: 'Your applications',
-            error: true,
-            errorMsg: errors.errors[0].msg
-        })
-    }
-        
-    const appStatus = stringEscape(req.body.updateAppStatus);
-    const description = stringEscape(req.body.updateDesc);
+    const appStatus = stringEscape(req.body.updateappstatus);
+    const description = stringEscape(req.body.updatedesc);
     const appId = stringEscape(req.params.id);
 
     let q = 'SET SEARCH_PATH TO sf;'
@@ -238,10 +228,26 @@ router.put('/applications/update/:id', checkIsAuthenticated, checkIsStudent,
 
     console.log(q);
 
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.render('update-applications', {
+            title: 'Your applications',
+            error: true,
+            errorMsg: errors.errors[0].msg
+        })
+    }      
+
+    
+
     await pool
         .query(q)
         .then(() => {
-            res.redirect('/student/applications');
+            res.redirect('/student/applications?success=true');
+            // res.render('student-applications', {
+            //     title: 'Your applications',
+            //     result: true,
+            //     error: false
+            // });
         })
     .catch((e) => {
         console.log(e);

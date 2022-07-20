@@ -16,79 +16,75 @@
 </head>
 <body>
 
-{{>studentNavbar}}
-    
+{{>studentNavbar}}   
     
     <h1 class="apps-header">Update or delete an application</h1>
     {{#if result}}          
     
     <div class="apps-container">
-        {{#each apps as |value key|}}
-        <form action="/student/applications/update/{{{value.app_id}}}?_method=PUT" method="POST">
-            <div class="card text-white bg-info mb-3">
-                <div class="card-header">Created by: {{{value.f_name}}} {{{value.l_name}}}</div>
-                <div class="card-body">
+        {{#each apps as |value key|}}        
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">
+                Created by: {{{value.f_name}}} {{{value.l_name}}}   
+            </div>
+            <div class="card-body">
+                <form method="POST" action="/student/applications/update/{{{value.app_id}}}?_method=PUT">
                     <div class="row">                         
                         <div class="card-info col-sm-6">
                             <div class="row">
-                                <h3 class="card-title">{{{value.role}}}</h3>
+                                <h3 class="card-title">{{{value.role}}} at {{{value.organisation}}}</h3>
                             </div>
                             <div class="row">
-                                <h5 class="card-text">{{{value.organisation}}}</h5>
+                                <h5 class="card-text"></h5>
                             </div>
                             <div class="row">
                                 <p class="card-text">{{{value.city}}}, {{{value.country}}}</p>
                             </div>
                             <div class="row">
-                                <p class="card-text">{{{value.description}}}</p>
+                                <p class="card-text">Deadline: {{{value.deadline}}}</p>
                             </div>
-                        </div>
-                        <div class="card-dates col-sm-6">
-                            <div class="row">
-                                <p class="card-text">Application deadline: {{{value.deadline}}}</p>
-                            </div>
-                            <div class="row">
-                                <label for="updateAppStatus">Application status:</label>                    
-                                    <select class="form-control" id="appstatus" name="updateAppStatus">
-                                        <option selected>{{{value.app_status}}}</option>
-                                        <option>Interested</option>
-                                        <option>Applied</option>
-                                        <option>Online tests</option>
-                                        <option>Assessment centre</option>
-                                        <option>Interview</option>
-                                        <option>Accepted</option>
-                                        <option>Rejected</option>
-                                    </select>
-                            </div>                                
+                        </div>                        
+                        <div class="card-dates col-sm-6">                            
+                                <div class="row">
+                                    <label for="updateappstatus">Application status:</label>                    
+                                        <select class="form-control" id="appstatus" name="updateappstatus">
+                                            <option selected>{{{value.app_status}}}</option>
+                                            <option>Interested</option>
+                                            <option>Applied</option>
+                                            <option>Online tests</option>
+                                            <option>Assessment centre</option>
+                                            <option>Interview</option>
+                                            <option>Accepted</option>
+                                            <option>Rejected</option>
+                                        </select>
+                                </div>
+                                <div class="row">
+                                    <label for="updatedesc" class="card-text">Description:</p>
+                                    <textarea id="desc-textarea" name="updatedesc">{{{value.description}}}</textarea>
+                                </div>                                                                                                                                              
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="card-desc col-sm-14">
-                            <label for="updateDesc" class="card-text">Description:</p>
-                            <textarea id="desc-textarea" name="updateDesc">{{{value.description}}}</textarea>
-                        </div>
+                    <br>
+                    <button type="submit" class="col-sm-12 btn btn-primary">Edit</button>
+                </form>
+                <br>
+                <div class="row">
+                    <div class="col-sm-6 back-button-container">
+                    <form action="/student" method="GET">
+                        <button type="submit" class="col btn btn-warning">Back to dashboard</button>
+                    </form>
+                    </div>                  
+                    <div class="col-sm-6 delete-button-container">
+                        <form action="/student/applications/update/{{{value.app_id}}}?_method=DELETE" method="POST">
+                            <button type="submit" class="col btn btn-danger">Delete</button>
+                        </form>                            
                     </div>
-                    <div class="row buttons-row">
-                        <div class="col-sm-4 back-button-container">
-                            <form action="/student" method="GET">
-                                <button type="submit" class="col btn btn-warning">Back to dashboard</button>
-                            </form>
-                        </div>
-                        <div class="col-sm-4 edit-button-container">                                        
-                            <button type="submit" class="col btn btn-primary">Edit</button>                                                                  
-                        </div>
-                        <div class="col-sm-4 delete-button-container">
-                            <form action="/student/applications/update/{{{value.app_id}}}?_method=DELETE" method="POST">
-                                <button type="submit" class="col btn btn-danger">Delete</button>
-                            </form>                            
-                        </div>           
-                    </div>                      
-                </div>
-                <div class="card-footer">
-                    <small>Last updated: {{{value.last_updated}}}</small>
-                </div>
+                </div>                   
             </div>
-        </form>        
+            <div class="row card-footer">
+               <small>Last updated: {{{value.last_updated}}}</small>               
+            </div>
+        </div>                
         {{/each}}
     </div>                                            
         
