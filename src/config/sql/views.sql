@@ -54,3 +54,20 @@ FROM sf.application
 WHERE application.app_status::text = 'Applied'::text OR application.app_status::text = 'Online tests'::text OR application.app_status::text = 'Assessment centre'::text OR application.app_status::text = 'Interview'::text OR application.app_status::text = 'Accepted'::text OR application.app_status::text = 'Rejected'::text
 GROUP BY application.organisation
 ORDER BY (count(application.organisation));
+
+
+-- Create view of relation from which to search verified students
+CREATE VIEW student_search AS
+SELECT users.user_id, users.is_verified, users.is_staff, student.f_name, student.l_name, student.email, student.student_id,
+student.course, student.school, student.placement_year, student.grad_year, student.pref_sector,
+student.other_sectors
+FROM users
+LEFT JOIN student
+ON users.user_id = student.user_id
+WHERE 
+users.is_verified = true
+AND
+users.is_staff = false
+AND
+users.is_admin = false
+ORDER BY student.l_name ASC;

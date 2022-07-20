@@ -183,13 +183,13 @@ router.get('/search/results', checkIsAuthenticated, checkIsStaff, async (req, re
 
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE searchStudents(text, text, text) AS '
-    + 'SELECT student.user_id, student.f_name, student.l_name, student.email, student.student_id, '
-    + 'student.course, student.school, student.placement_year, student.grad_year, student.pref_sector, '
-    + 'other_sectors '
-    + 'FROM student '
-    + 'WHERE student.f_name ILIKE $1 OR student.l_name ILIKE $1 OR student.email ILIKE $1 '
-    + 'OR student.school = $2 OR student.placement_year = $3 ' 
-    + 'ORDER BY student.l_name ASC;'
+    + 'SELECT student_search.user_id, student_search.f_name, student_search.l_name, student_search.email, '
+    + 'student_search.student_id, student_search.course, student_search.school, student_search.placement_year, '
+    + 'student_search.grad_year, student_search.pref_sector, student_search.other_sectors '
+    + 'FROM student_search '
+    + 'WHERE student_search.f_name ILIKE $1 OR student_search.l_name ILIKE $1 OR student_search.email ILIKE $1 '
+    + 'OR student_search.school = $2 OR student_search.placement_year = $3 ' 
+    + 'ORDER BY student_search.l_name ASC;'
     + `EXECUTE searchStudents('${nameQueryStrEscaped}', '${schoolQueryStrEscaped}', '${placementYearQueryStrEscaped}');`
     + 'DEALLOCATE searchStudents;'
 
