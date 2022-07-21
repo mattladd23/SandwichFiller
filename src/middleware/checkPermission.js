@@ -26,14 +26,14 @@ const checkIsStaff = (async(req, res, next) => {
             if (isStaff.is_staff) {
                 return next();
             } else {
-                return res.redirect('/student');
+                return res.redirect('/user');
             }
 
         })
         .catch((e) => {
             console.log(e);
         })
-})
+});
 
 const checkIsStudent = (async (req, res, next) => {
 
@@ -41,7 +41,7 @@ const checkIsStudent = (async (req, res, next) => {
 
     let q = 'SET SEARCH_PATH TO sf; ' +
     'PREPARE checkIsStudent(bigint) AS ' +
-    'SELECT users.is_staff ' +
+    'SELECT users.is_staff, users.is_admin ' +
     'FROM users ' +
     'WHERE users.user_id = $1; ' +
     `EXECUTE checkIsStudent(${userId}); ` +
@@ -53,21 +53,22 @@ const checkIsStudent = (async (req, res, next) => {
         .query(q)
         .then((results) => {
             console.log(results);
-            const isStaff = results[2].rows[0];
-            console.log(isStaff);
+            const checkAccountType = results[2].rows[0];
+            console.log(checkAccountType);           
 
-            console.log(isStaff.is_staff);
+            console.log(checkAccountType.is_staff);
+            console.log(checkAccountType.is_admin);
 
-            if (!isStaff.is_staff) {
+            if (!checkAccountType.is_staff && !checkAccountType.is_admin) {
                 return next();                
             } else {
-                return res.redirect('/staff');
+                return res.redirect('/user');
             }
         })
         .catch((e) => {
             console.log(e);
         })
-})
+});
 
 const checkIsAdmin = (async (req, res, next) => {
 
@@ -101,9 +102,7 @@ const checkIsAdmin = (async (req, res, next) => {
         .catch((e) => {
             console.log(e);
         })
-})
-
-
+});
 
 module.exports = {
     checkIsStaff: checkIsStaff,

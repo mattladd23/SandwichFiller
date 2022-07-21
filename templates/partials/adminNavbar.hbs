@@ -4,13 +4,10 @@
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">            
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="/admin/users">Manage users</a>
-            <a class="dropdown-item" href="/staff/students">Search students</a>
-            <a class="dropdown-item" href="/staff/applications">Recent applications</a>            
-            <a class="dropdown-item" href="/staff/insights">Student insights</a>
-            <a class="dropdown-item" href="/staff/account">Account</a>
+            <a class="dropdown-item" href="/admin/users">Manage users</a>        
+            <a class="dropdown-item" href="/admin/account">Account</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="/logout">Logout</a>
+            <a class="dropdown-item" href="/admin/logout">Logout</a>
         </div>
     </div>
 
@@ -19,7 +16,7 @@
     </div>
   
    <div>
-        <form class="form-inline my-2 my-lg-0" action="/staff/logout?_method=DELETE" method="POST">
+        <form class="form-inline my-2 my-lg-0" action="/admin/logout?_method=DELETE" method="POST">
             <button type="submit" id="logout-button" class="btn btn-primary">Log out</button>
         </form>
     </div>  

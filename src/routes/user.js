@@ -26,9 +26,9 @@ router.get('/', checkIsAuthenticated, async (req, res) => {
             const isStaff = results[2].rows[0].is_staff;
             const isAdmin = results[2].rows[0].is_admin;
 
-            if (isStaff && isAdmin) {
+            if (isAdmin) {
                 res.redirect('/admin');
-            } else if (isStaff && !isAdmin) {
+            } else if (isStaff) {
                 res.redirect('/staff');
             } else {
                 res.redirect('/student');
