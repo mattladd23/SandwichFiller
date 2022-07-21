@@ -316,7 +316,21 @@ router.get('/account', checkIsAuthenticated, checkIsStudent, async (req, res) =>
 })
 
 // Edit student account details
-router.put('/account', checkIsAuthenticated, checkIsStudent, async (req, res) => {
+router.put('/account', checkIsAuthenticated, checkIsStudent,
+    body('course', 'Please keep course name to 50 characters or less!').isLength({ max: 50 }),
+    body('othersectors', 'Please keep "other sectors" to 100 characters or less!').isLength({ max: 100 }),
+    
+    async (req, res) => {
+    
+    // Error handlers
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.render('student-manage', {
+            title: 'Manage my account',
+            error: true,
+            errorMsg: errors.errors[0].msg
+        });
+    }
     
     const studentId = stringEscape(req.body.studentid);
     const course = stringEscape(req.body.course);
@@ -336,6 +350,8 @@ router.put('/account', checkIsAuthenticated, checkIsStudent, async (req, res) =>
     + `EXECUTE editAccount(${studentId}, '${course}', '${school}', '${placementYear}', '${gradYear}', '${prefSector}', `
     + `'${otherSectors}', ${userId});`
     + 'DEALLOCATE editAccount;'
+
+    console.log(q);
 
     await pool
         .query(q)

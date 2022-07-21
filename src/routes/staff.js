@@ -699,9 +699,9 @@ router.put('/account', checkIsAuthenticated, checkIsStaff,
     let q = 'SET SEARCH_PATH TO sf;'
     + 'PREPARE editStaffAccount(text, text, text, bigint) AS '
     + 'UPDATE staff '
-    + 'SET f_name = $1, l_name = $2, email = $3 '
-    + 'WHERE user_id = $4;'
-    + `EXECUTE editStaffAccount('${staffFName}', '${staffLName}', '${staffEmail}', ${userId}); `
+    + 'SET f_name = $1, l_name = $2 '
+    + 'WHERE user_id = $3;'
+    + `EXECUTE editStaffAccount('${staffFName}', '${staffLName}', ${userId}); `
     + 'DEALLOCATE editStaffAccount';
 
     await pool
