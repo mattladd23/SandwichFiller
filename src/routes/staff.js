@@ -359,12 +359,12 @@ router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => 
 
     // Query to find students who are yet to have submitted any applications
     let qNoApps = searchPath +
-    'SELECT student.user_id, student.f_name, student.l_name, ' +
-    'student.student_id, student.email, all_submitted_apps.app_id, ' +
+    'SELECT student_search.user_id, student_search.f_name, student_search.l_name, ' +
+    'student_search.student_id, student_search.email, all_submitted_apps.app_id, ' +
     'all_submitted_apps.app_status ' +
-    'FROM student ' +
+    'FROM student_search ' +
     'LEFT JOIN all_submitted_apps ' +
-    'ON student.user_id = all_submitted_apps.user_id ' +
+    'ON student_search.user_id = all_submitted_apps.user_id ' +
     'WHERE all_submitted_apps.app_status IS null;'
 
     console.log('------------- \n', qNoApps);
@@ -385,11 +385,11 @@ router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => 
 
     // Query to find student who are yet to have received any placement offers
     let qNoOffers = searchPath +
-    'SELECT student.user_id, student.f_name, student.l_name, student.student_id, ' +
-    'student.email, accepted_apps.app_status ' +
-    'FROM student ' +
+    'SELECT student_search.user_id, student_search.f_name, student_search.l_name, student_search.student_id, ' +
+    'student_search.email, accepted_apps.app_status ' +
+    'FROM student_search ' +
     'LEFT JOIN accepted_apps ' +
-    'ON student.user_id = accepted_apps.user_id ' +
+    'ON student_search.user_id = accepted_apps.user_id ' +
     'WHERE accepted_apps.app_status IS null;'
 
     console.log('------------- \n', qNoOffers);
@@ -425,7 +425,7 @@ router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => 
     'ON acc_apps_per_emp.organisation = total_apps_per_emp.organisation ' +
     'ORDER BY perc_offers;'
 
-    console.log('------------- \n', qEmpHighPerc)         
+    console.log('------------- \n', qEmpHighPerc);         
 
 
     await Promise.all([
