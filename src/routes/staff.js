@@ -303,8 +303,9 @@ router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => 
 
     // Query to find applications with deadlines this week
     let qDeadlines = searchPath +
-    'SELECT student.user_id, student.f_name, student.l_name, student.student_id, ' +
-    'student.email, student.course, application.role, application.organisation, application.city ' +
+    'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, ' +
+    'student.course, application.app_id, application.role, application.organisation, application.city, ' +
+    'application.country, application.deadline, application.description, application.app_status ' +
     'FROM student ' +
     'JOIN application ' +
     'ON student.user_id = application.user_id ' +
@@ -319,8 +320,7 @@ router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => 
     let qAppsAcc = searchPath +
     'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, ' +
     'application.app_id, application.role, application.organisation, application.city, ' +
-    'application.country, application.deadline, application.description, ' +
-    'application.app_status ' +
+    'application.country, application.deadline, application.description, application.app_status ' +
     'FROM student ' +
     'JOIN application ' +
     'ON student.user_id = application.user_id ' +
@@ -334,8 +334,7 @@ router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => 
     let qAppsRej = searchPath +
     'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, ' +
     'application.app_id, application.role, application.organisation, application.city, ' +
-    'application.country, application.deadline, application.description, ' +
-    'application.app_status ' +
+    'application.country, application.deadline, application.description, application.app_status ' +
     'FROM student ' +
     'JOIN application ' +
     'ON student.user_id = application.user_id ' +
@@ -632,7 +631,41 @@ router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => 
             .catch((e) => {
                 console.log(e);
             });
-})
+});
+
+router.get('/insights/application/:id', checkIsAuthenticated, checkIsStaff, async (req, res) => {
+
+    const appId = stringEscape(req.params.id);
+
+    let q = 'SET SEARCH_PATH TO sf; '
+    + 'PREPARE getApplication(bigint) AS '
+    + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
+    + 'application.country, application.deadline, application.description, application.app_status, '
+    + 'application.last_updated, student.user_id, student.f_name, student.l_name '
+    + 'FROM application JOIN student ON application.user_id = student.user_id '
+    + 'WHERE application.app_id = $1; '
+    + `EXECUTE getApplication(${appId}); `
+    + 'DEALLOCATE getApplication;'
+
+    console.log(q);
+
+    await pool
+        .query(q)
+        .then((results) => {
+            const app = results[2].rows;
+
+            const appFeatures = ['user_id', 'app_id', 'role', 'organisation', 'city', 'country',
+                                     'deadline', 'description', 'app_status', 'last_updated', 'f_name', 'l_name'];
+            let sanitizedApp = resultsHtmlEscape(app, appFeatures, ['deadline', 'last_updated']);
+            sanitizedApp = sanitizeTime(sanitizedApp, 'deadline', 'last_updated');
+
+            res.render('staff-view-application', {
+                title: 'Application information',
+                app: sanitizedApp,
+                result: true
+            });
+        })
+});
 
 // Render staff manage profile page
 router.get('/account', checkIsAuthenticated, checkIsStaff, async (req, res) => {

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>      
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/styles.css">      
+</head>
+<body>
+
+{{>staffNavbar}}
+
+    <h1>Application Information</h1>
+
+    {{#if result}}   
+    <br>   
+    <div class="back-button-container">
+        <form action="/staff/insights" method="GET">
+            <button type="submit" class="col btn btn-warning">Return to insights</button>
+        </form>
+    </div>
+    <br>
+    <div class="apps-container">
+        {{#each app as |value key|}}       
+
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Created by: {{{value.f_name}}} {{{value.l_name}}}</div>
+            <div class="card-body">
+                <div class="row">                         
+                    <div class="card-info col-sm-6">
+                        <div class="row">
+                            <h3 class="card-title">{{{value.role}}}</h3>
+                        </div>
+                        <div class="row">
+                            <h5 class="card-text">{{{value.organisation}}}</h5>
+                        </div>
+                        <div class="row">
+                            <p class="card-text">{{{value.city}}}, {{{value.country}}}</p>
+                        </div>
+                        <div class="row">
+                            <p class="card-text">{{{value.description}}}</p>
+                        </div>
+                    </div>
+                    <div class="card-dates col-sm-6">
+                        <div class="row">
+                            <p class="card-text">Application deadline: {{{value.deadline}}}</p>
+                        </div>
+                        <div class="row">
+                            <p class="card-text">Application status: {{{value.app_status}}}</p>
+                        </div>                                
+                    </div>
+                </div>                        
+            </div>
+            <div class="card-footer">
+                <small>Last updated: {{{value.last_updated}}}</small>
+            </div>
+        </div>
+        {{/each}}
+    </div>      
+    
+    {{else}}
+    <div class="student-no-applications-container">
+        <p>{{{value.f_name}}} {{{value.l_name}}} has not posted any applications yet.</p>
+    </div>
+    {{/if}}
+        
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+{{>footer}} 
+</body>
+</html>
