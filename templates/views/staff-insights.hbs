@@ -40,6 +40,7 @@
                 <th>Role / Programme</th>
                 <th>Organisation</th>
                 <th>City</th>
+                <th>Country</th>
             </tr>
             {{#each deadlines as |value key|}}
             <tr>
@@ -50,6 +51,7 @@
                 <td>{{{value.role}}}</td>
                 <td>{{{value.organisation}}}</td>
                 <td>{{{value.city}}}</td>
+                <td>{{{value.country}}}</td>
                 <td>
                     <form action="/staff/insights/application/{{{value.app_id}}}" method="GET">
                         <button type="submit" class="btn btn-primary">View application</button>                            
