@@ -304,7 +304,7 @@ router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => 
     // Query to find applications with deadlines this week
     let qDeadlines = searchPath +
     'SELECT student.user_id, student.f_name, student.l_name, student.student_id, ' +
-    'student.email, student.course, application.role, application.organisation, application.deadline ' +
+    'student.email, student.course, application.role, application.organisation, application.city ' +
     'FROM student ' +
     'JOIN application ' +
     'ON student.user_id = application.user_id ' +
@@ -320,7 +320,7 @@ router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => 
     'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, ' +
     'application.app_id, application.role, application.organisation, application.city, ' +
     'application.country, application.deadline, application.description, ' +
-    'application.app_status, application.last_updated ' +
+    'application.app_status ' +
     'FROM student ' +
     'JOIN application ' +
     'ON student.user_id = application.user_id ' +
@@ -335,7 +335,7 @@ router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => 
     'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, ' +
     'application.app_id, application.role, application.organisation, application.city, ' +
     'application.country, application.deadline, application.description, ' +
-    'application.app_status, application.last_updated ' +
+    'application.app_status ' +
     'FROM student ' +
     'JOIN application ' +
     'ON student.user_id = application.user_id ' +
