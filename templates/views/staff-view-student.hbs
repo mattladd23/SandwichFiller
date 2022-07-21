@@ -10,12 +10,19 @@
 </head>
 <body>
 
-{{>staffNavbar}}
+{{>staffNavbar}}   
 
-    
+    {{#if noResult}}
+    <h1>This student currently has no applications</h1>
+    <br>
+    <div class="back-button-container">
+        <form action="/staff/search" method="GET">
+            <button type="submit" class="col btn btn-warning">Find another student</button>
+        </form>
+    </div>
 
-    {{#if result}}
-    <h1>{{studentFName}}'s applications</h1>   
+    {{else}}
+    <h1>{{studentFName}}'s applications</h1>  
     <br>   
     <div class="back-button-container">
         <form action="/staff/search" method="GET">
@@ -59,12 +66,11 @@
             </div>
         </div>
         {{/each}}
-    </div>      
+    </div>  
     
-    {{else}}
-    <div class="student-no-applications-container">
+    {{!-- <div class="student-no-applications-container">
         <p>{{{value.f_name}}} {{{value.l_name}}} has not posted any applications yet.</p>
-    </div>
+    </div> --}}
     {{/if}}
         
 

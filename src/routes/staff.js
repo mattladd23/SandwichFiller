@@ -251,15 +251,18 @@ router.get('/search/results/:id', checkIsAuthenticated, checkIsStaff, async (req
         .query(q)
         .then((results) => {
             console.log(results);
-            if (results[2].rowCount === 0) {
+
+            const studentApps = results[2].rows;
+            console.log(studentApps);
+
+            if (studentApps.length === 0) {
                 res.render('staff-view-student', {
-                    title: 'Student applications',
-                    result: false
-                })
+                    title: 'Student applications',                                         
+                    noResult: true
+                });
+
             } else {
-                const studentApps = results[2].rows;
-                console.log(studentApps);
-                
+
                 const appFeatures = ['user_id', 'app_id', 'role', 'organisation', 'city', 'country',
                                  'deadline', 'description', 'app_status', 'last_updated', 'f_name', 'l_name'];
                 let sanitizedApps = resultsHtmlEscape(studentApps, appFeatures, ['deadline', 'last_updated']);
@@ -271,6 +274,7 @@ router.get('/search/results/:id', checkIsAuthenticated, checkIsStaff, async (req
 
                 res.render('staff-view-student', {
                     title: 'Student applications',
+                    noResult: false,
                     result: true,
                     studentApps: sanitizedApps,
                     studentFName: studentFNameHtmlEscaped
