@@ -20,16 +20,20 @@
         </form>
     </div>
     <br>
-
-    {{#if error}}
-    <div id="errors">
-        {{{msg}}}
+    <div class="success-error-container">
+        {{#if success}}
+        <br>
+        <div class="success-msg-container">
+            <p class="success-msg">{{{successMsg}}}</p>
+        </div>        
+        {{else if error}}
+        <br>
+        <div class="error-msg-container">
+            <p class="error-msg">{{{errorMsg}}}</p>
+        </div>        
+        {{/if}}
     </div>
-    {{else if success}}
-    <div id="success">
-        {{{msg}}}
-    </div>
-    {{/if}}
+    <br>
 
     {{#each accDetails as |value key|}}
     <form action="/staff/account?_method=PUT" method="POST">

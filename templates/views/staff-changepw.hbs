@@ -19,12 +19,18 @@
         </form>
     </div>
     <br>
-    <div class="changepw-error">
-            {{#if success}}
-            <p>Password changed successfully!</p>
-            {{else}}
-            <p>{{{error}}}</p>
-            {{/if}}
+    <div class="success-error-container">
+        {{#if success}}
+        <br>
+        <div class="success-msg-container">
+            <p class="success-msg">{{{successMsg}}}</p>
+        </div>        
+        {{else if error}}
+        <br>
+        <div class="error-msg-container">
+            <p class="error-msg">{{{errorMsg}}}</p>
+        </div>        
+        {{/if}}
     </div>
     <br>
 

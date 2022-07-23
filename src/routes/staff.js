@@ -37,8 +37,7 @@ const sanitizeTime = (results, deadline, updated) => {
 // Render login success page
 router.get('/', checkIsAuthenticated, checkIsStaff, (req, res) => {
     res.render('staff-dashboard', {
-        title: 'SandwichFiller - Staff',
-        error: false
+        title: 'SandwichFiller - Staff'
     });
 });
 
@@ -155,8 +154,7 @@ router.get('/applications', checkIsAuthenticated, checkIsStaff, async (req, res)
 // Render search bar page
 router.get('/search', checkIsAuthenticated, checkIsStaff, (req, res) => {
     res.render('staff-search-students', {
-        title: 'Find a student',
-        error: false
+        title: 'Find a student'
     });
 });
 
@@ -698,8 +696,9 @@ router.get('/account', checkIsAuthenticated, checkIsStaff, async (req, res) => {
             const sanitizedAccDetails = resultsHtmlEscape(accDetails, accDetailsFeatures, ['user_id']);
 
             res.render('staff-manage', {
-                title: 'Manage my account',
-                error: false,
+                title: 'Manage my account',                
+                error: req.query.error,
+                success: req.query.success,
                 accDetails: sanitizedAccDetails
             });
         })
@@ -714,7 +713,8 @@ router.put('/account', checkIsAuthenticated, checkIsStaff,
     body('stafffname', 'Invalid first name. Please keep your first name to 20 characters or less!').isLength({ max: 20 }),
     body('stafflname', 'Invalid last name. Check for spaces before or after your name!').isAlpha('en-GB', {ignore: '-'}),
     body('stafflname', 'Invalid last name. Please keep your last name to 20 characters or less!').isLength({ max: 20}),
-    body('staffemail', 'Email is not a valid UEA address!').isEmail().contains('@uea.ac.uk'),  
+    body('staffemail', 'Email is not a valid address!').isEmail(),
+    // body('staffemail', 'Email is not a valid UEA address!').isEmail().contains('@uea.ac.uk'),  
 
     async (req, res) => {
 
@@ -734,7 +734,7 @@ router.put('/account', checkIsAuthenticated, checkIsStaff,
     const userId = stringEscape(req.session.passport.user);
 
     let q = 'SET SEARCH_PATH TO sf;'
-    + 'PREPARE editStaffAccount(text, text, text, bigint) AS '
+    + 'PREPARE editStaffAccount(text, text, bigint) AS '
     + 'UPDATE staff '
     + 'SET f_name = $1, l_name = $2 '
     + 'WHERE user_id = $3;'
@@ -744,7 +744,12 @@ router.put('/account', checkIsAuthenticated, checkIsStaff,
     await pool
         .query(q)
         .then(() => {
-            res.redirect('/staff?success=true');
+            // res.redirect('/staff?success=true');
+            res.render('staff-manage', {
+                title: 'Manage account',
+                success: true,
+                successMsg: 'Account updated successfully!'
+            })
         })
     .catch((e) => {
         console.log(e);
@@ -754,7 +759,9 @@ router.put('/account', checkIsAuthenticated, checkIsStaff,
 // To render staff change password page
 router.get('/account/password', checkIsAuthenticated, checkIsStaff, (req, res) => {
     res.render('staff-changepw', {
-        title: 'Staff - Change password'
+        title: 'Staff - Change password',
+        success: req.query.success,
+        error: req.query.error
     });
 });
 
@@ -786,7 +793,8 @@ router.put('/account/password', checkIsAuthenticated, checkIsStaff,
     if (!errors.isEmpty()) {
         return res.render('staff-changepw', {
             title: 'Staff - Change password',
-            error: errors.errors[0].msg
+            error: true, 
+            errorMsg: errors.errors[0].msg
         });
     }
 
@@ -802,7 +810,8 @@ router.put('/account/password', checkIsAuthenticated, checkIsStaff,
                     if (newPw === currentPw) {
                         return res.render('staff-changepw', {
                             title: 'Staff - Change password',
-                            error: 'New password and existing passwords cannot be the same!'
+                            error: true,
+                            errorMsg: 'New password and existing passwords cannot be the same!'
                         });
                     }
                     const newPwHashed = await bcrypt.hash(newPw, 10);
@@ -816,7 +825,12 @@ router.put('/account/password', checkIsAuthenticated, checkIsStaff,
                     await pool
                         .query(qUpdatePw)
                         .then(() => {
-                            res.redirect('/staff/account?success=true');                            
+                            // res.redirect('/staff/account?success=true');
+                            res.render('staff-changepw', {
+                                title: 'Staff - Change password',
+                                success: true,
+                                successMsg: 'Password changed successfully!'
+                            })                     
                         })
                         .catch((e) => {
                             console.log(e);
@@ -824,7 +838,8 @@ router.put('/account/password', checkIsAuthenticated, checkIsStaff,
                 } else {
                     res.render('staff-changepw', {
                         title: 'Staff - Change password',
-                        error: 'Password entered incorrectly. Please try again!'
+                        error: true,
+                        errorMsg: 'Password entered incorrectly. Please try again!'
                     });
                 }
             })
