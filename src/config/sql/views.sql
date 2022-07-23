@@ -47,7 +47,7 @@ ORDER BY (count(all_submitted_apps.app_id)) DESC;
 
 
 -- Create view of employers ordered by number of applications received
-CREATE VIEW apps_per_emp AS
+CREATE VIEW total_apps_per_emp AS
 SELECT application.organisation,
 count(application.organisation) AS total_apps
 FROM sf.application

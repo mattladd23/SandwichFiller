@@ -71,6 +71,9 @@ CREATE TABLE application (
         ON UPDATE CASCADE ON DELETE CASCADE 
 );
 
+
+/* TABLE MODIFICATION TEMPLATES */
+
 /* Add a column to a table */
 
 ALTER TABLE users

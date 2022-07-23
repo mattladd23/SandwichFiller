@@ -59,10 +59,6 @@ $$
 LANGUAGE 'plpgsql';
 
 
--- USERS TABLE
-
--- Delete a user firing a deletion in the student table
-
 CREATE TRIGGER student_user_insert
 
     AFTER INSERT
@@ -74,7 +70,9 @@ CREATE TRIGGER student_user_insert
     EXECUTE PROCEDURE student_user_insert();
 
 
--- DELETE STUDENT USER
+-- USERS TABLE
+
+-- DELETE STUDENT USER - Delete a user firing a deletion in the student table - not working yet
 
 CREATE OR REPLACE FUNCTION delete_user_student()
 
