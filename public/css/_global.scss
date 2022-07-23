@@ -38,3 +38,23 @@ h4 {
 h5 {
     @extend h4;
 }
+
+.success-msg-container {
+    background-color: #fff;
+    border-radius: 1rem;
+}
+
+.success-msg {
+    color: #00a699;
+    padding: 1rem;
+}
+
+.error-msg-container {
+    background-color: #fff;
+    border-radius: 1rem;
+}
+
+.error-msg {
+    color: #ff5a5f;
+    padding: 1rem;
+}

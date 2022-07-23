@@ -24,6 +24,26 @@ h2, h3, h4, h5 {
   margin-top: 0%;
 }
 
+.success-msg-container {
+  background-color: #fff;
+  border-radius: 1rem;
+}
+
+.success-msg {
+  color: #00a699;
+  padding: 1rem;
+}
+
+.error-msg-container {
+  background-color: #fff;
+  border-radius: 1rem;
+}
+
+.error-msg {
+  color: #ff5a5f;
+  padding: 1rem;
+}
+
 .navbar {
   position: fixed;
   height: 10%;
@@ -94,6 +114,26 @@ h2, h3, h4, h5 {
   margin-top: 0%;
 }
 
+.success-msg-container {
+  background-color: #fff;
+  border-radius: 1rem;
+}
+
+.success-msg {
+  color: #00a699;
+  padding: 1rem;
+}
+
+.error-msg-container {
+  background-color: #fff;
+  border-radius: 1rem;
+}
+
+.error-msg {
+  color: #ff5a5f;
+  padding: 1rem;
+}
+
 .reg-login-header {
   margin-top: 5%;
 }
@@ -126,6 +166,26 @@ h1, .apps-header, h2, h3, h4, h5, .reg-login-header {
 
 h2, h3, h4, h5 {
   margin-top: 0%;
+}
+
+.success-msg-container {
+  background-color: #fff;
+  border-radius: 1rem;
+}
+
+.success-msg {
+  color: #00a699;
+  padding: 1rem;
+}
+
+.error-msg-container {
+  background-color: #fff;
+  border-radius: 1rem;
+}
+
+.error-msg {
+  color: #ff5a5f;
+  padding: 1rem;
 }
 
 .apps-header {

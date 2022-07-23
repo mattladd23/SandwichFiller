@@ -295,7 +295,8 @@ router.put('/account/password', checkIsAuthenticated, checkIsAdmin,
     if (!errors.isEmpty()) {
         return res.render('admin-changepw', {
             title: 'Admin - Change password',
-            error: errors.errors[0].msg
+            error: true,
+            errorMsg: errors.errors[0].msg
         });
     }
 
@@ -311,7 +312,8 @@ router.put('/account/password', checkIsAuthenticated, checkIsAdmin,
                     if (newPw === currentPw) {
                         return res.render('admin-changepw', {
                             title: 'Admin - Change password',
-                            error: 'New password and existing passwords cannot be the same!'
+                            error: true,
+                            errorMsg: 'New password and existing passwords cannot be the same!'
                         });
                     }
                     const newPwHashed = await bcrypt.hash(newPw, 10);
@@ -325,7 +327,11 @@ router.put('/account/password', checkIsAuthenticated, checkIsAdmin,
                     await pool
                         .query(qUpdatePw)
                         .then(() => {
-                            res.redirect('/admin/account?success=true');                            
+                            res.render('admin-changepw', {
+                                title: 'Admin - Change password',
+                                success: true,
+                                successMsg: 'Password changed successfully!'
+                            });                           
                         })
                         .catch((e) => {
                             console.log(e);
@@ -333,7 +339,8 @@ router.put('/account/password', checkIsAuthenticated, checkIsAdmin,
                 } else {
                     res.render('admin-changepw', {
                         title: 'Admin - Change password',
-                        error: 'Password entered incorrectly. Please try again!'
+                        error: true,
+                        errorMsg: 'Password entered incorrectly. Please try again!'
                     });
                 }
             })
