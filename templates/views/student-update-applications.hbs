@@ -26,8 +26,23 @@
         </form>
     </div>
     <br>
+    <div class="success-error-container">
+        {{#if success}}
+        <br>
+        <div class="success-msg-container">
+            <p class="success-msg">Application deleted!</p>
+        </div>        
+        {{else if error}}
+        <br>
+        <div class="error-msg-container">
+            <p class="error-msg">{{{errorMsg}}}</p>
+        </div>        
+        {{/if}}
+    </div>   
 
-    {{#if result}}          
+    {{#if result}}
+
+    <br>       
     
     <div class="apps-container">
         {{#each apps as |value key|}}        

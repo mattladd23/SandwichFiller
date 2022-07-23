@@ -36,8 +36,7 @@ const sanitizeTime = (results, deadline, updated) => {
 // Render student home page
 router.get('/', checkIsAuthenticated, checkIsStudent, (req, res) => {
     res.render('student-dashboard', {
-        title: 'SandwichFiller: Students',
-        error: false
+        title: 'SandwichFiller: Students'
     });
 });
 
@@ -81,7 +80,8 @@ router.get('/applications', checkIsAuthenticated, checkIsStudent, async (req, re
                 res.render('student-applications', {
                     title: 'Your applications',
                     result: true,
-                    apps: sanitizedApps                    
+                    apps: sanitizedApps,
+                    success: req.query.success                    
                 })
             }
         })
@@ -92,9 +92,10 @@ router.get('/applications', checkIsAuthenticated, checkIsStudent, async (req, re
 
 // Render create application page
 router.get('/applications/new', checkIsAuthenticated, checkIsStudent, (req, res) => {
-    res.render('new-application', {
+    res.render('student-new-application', {
         title: 'Post a new application',
-        error: false
+        error: req.query.error,
+        success: req.query.success
     });
 });
 
@@ -118,7 +119,7 @@ router.post('/applications/new', checkIsAuthenticated, checkIsStudent,
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render('new-application', {
+        return res.render('student-new-application', {
             title: 'Post a new application',
             error: true,
             errorMsg: errors.errors[0].msg
@@ -147,7 +148,12 @@ router.post('/applications/new', checkIsAuthenticated, checkIsStudent,
     await pool
         .query(q)
         .then(() => {
-            res.redirect('/student/applications');
+            // res.redirect('/student/applications');
+            res.render('student-new-application', {
+                title: 'Post a new application',
+                success: true, 
+                successMsg: 'Application created successfully!' 
+            });
         })
         .catch((e) => {
             console.log(e);
@@ -178,9 +184,10 @@ router.get('/applications/update', checkIsAuthenticated, checkIsStudent, async (
         .then((results) => {
             console.log(results);
             if (results[2].rowCount === 0) {
-                res.render('update-applications', {
+                res.render('student-update-applications', {
                     title: 'Your applications',
-                    result: false
+                    result: false,
+                    success: req.query.success
                 })
             } else {
                 const apps = results[2].rows;
@@ -191,11 +198,13 @@ router.get('/applications/update', checkIsAuthenticated, checkIsStudent, async (
                 let sanitizedApps = resultsHtmlEscape(apps, appFeatures, ['deadline', 'last_updated']);
                 sanitizedApps = sanitizeTime(sanitizedApps, 'deadline', 'last_updated');
 
-                res.render('update-applications', {
+                res.render('student-update-applications', {
                     title: 'Your applications',
                     result: true,
-                    apps: sanitizedApps                    
-                })
+                    apps: sanitizedApps,
+                    error: req.query.error,
+                    success: req.query.success                  
+                });
             }
         })
         .catch((e) => {
@@ -231,24 +240,16 @@ router.put('/applications/update/:id', checkIsAuthenticated, checkIsStudent,
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render('update-applications', {
+        return res.render('student-update-applications', {
             title: 'Your applications',
             error: true,
             errorMsg: errors.errors[0].msg
         })
-    }      
-
-    
-
+    }   
     await pool
         .query(q)
         .then(() => {
             res.redirect('/student/applications?success=true');
-            // res.render('student-applications', {
-            //     title: 'Your applications',
-            //     result: true,
-            //     error: false
-            // });
         })
     .catch((e) => {
         console.log(e);
@@ -270,7 +271,7 @@ router.delete('/applications/update/:id', checkIsAuthenticated, checkIsStudent, 
     await pool
         .query(q)
         .then(() => {
-            return res.redirect('/student/applications');
+            res.redirect('/student/applications/update?success=true');
         })
     .catch((e) => {
         console.log(e);
@@ -305,9 +306,10 @@ router.get('/account', checkIsAuthenticated, checkIsStudent, async (req, res) =>
             const sanitizedAccDetails = resultsHtmlEscape(accDetails, accDetailsFeatures, ['user_id']);
 
             res.render('student-manage', {
-                title: 'Manage my account',
-                error: false,
-                accDetails: sanitizedAccDetails
+                title: 'Manage my account',                
+                accDetails: sanitizedAccDetails,
+                error: req.query.error,
+                success: req.query.success
             });
         })
     .catch((e) => {
@@ -356,7 +358,12 @@ router.put('/account', checkIsAuthenticated, checkIsStudent,
     await pool
         .query(q)
         .then(() => {
-            res.redirect('/student?success=true');
+            // res.redirect('/student?success=true');
+            res.render('student-manage', {
+                title: 'Manage my account',
+                success: true,
+                successMsg: 'Account updated successfully!'
+            })
         })
     .catch((e) => {
         console.log(e);
@@ -366,7 +373,9 @@ router.put('/account', checkIsAuthenticated, checkIsStudent,
 // To render student change password page
 router.get('/account/password', checkIsAuthenticated, checkIsStudent, (req, res) => {
     res.render('student-changepw', {
-        title: 'Student - Change password'
+        title: 'Student - Change password',
+        error: req.query.error,
+        success: req.query.success
     });
 });
 
@@ -398,7 +407,8 @@ router.put('/account/password', checkIsAuthenticated, checkIsStudent,
     if (!errors.isEmpty()) {
         return res.render('student-changepw', {
             title: 'Student - Change password',
-            error: errors.errors[0].msg
+            error: true,
+            errorMsg: errors.errors[0].msg
         });
     }
 
@@ -412,9 +422,10 @@ router.put('/account/password', checkIsAuthenticated, checkIsStudent,
                 }
                 if (result) {
                     if (newPw === currentPw) {
-                        return res.render('student-changepw', {
+                        res.render('student-changepw', {
                             title: 'Student - Change password',
-                            error: 'New password and existing passwords cannot be the same!'
+                            error: true,
+                            errorMsg: 'New password and existing passwords cannot be the same!'
                         });
                     }
                     const newPwHashed = await bcrypt.hash(newPw, 10);
@@ -428,7 +439,12 @@ router.put('/account/password', checkIsAuthenticated, checkIsStudent,
                     await pool
                         .query(qUpdatePw)
                         .then(() => {
-                            res.redirect('/student/account?success=true');                            
+                            // res.redirect('/student/account?success=true');
+                            res.render('student-changepw', {
+                                title: 'Student - Change password',
+                                success: true,
+                                successMsg: 'Password changed successfully!'
+                            })                         
                         })
                         .catch((e) => {
                             console.log(e);
@@ -436,7 +452,8 @@ router.put('/account/password', checkIsAuthenticated, checkIsStudent,
                 } else {
                     res.render('student-changepw', {
                         title: 'Student - Change password',
-                        error: 'Password entered incorrectly. Please try again!'
+                        error: true,
+                        errorMsg: 'Password entered incorrectly. Please try again!'
                     });
                 }
             })

@@ -19,10 +19,24 @@
             <button type="submit" class="col btn btn-warning">Back to dashboard</button>
         </form>
     </div>
-    <br>
+    <br>    
+    <div class="success-error-container">
+        {{#if success}}
+        <br>
+        <div class="success-msg-container">
+            <p class="success-msg">Application successfully updated!</p>
+        </div>        
+        {{else if error}}
+        <br>
+        <div class="error-msg-container">
+            <p class="error-msg">{{{errorMsg}}}</p>
+        </div>        
+        {{/if}}
+    </div>
     
     {{#if result}}
 
+    <br>
     <div class="apps-container">
         {{#each apps as |value key|}}
         <div class="card text-white bg-info mb-3">
