@@ -17,9 +17,20 @@
     <form action="/login" method="GET">
         <button type="submit" class="btn btn-primary">Return to login</button>
     </form>
-    {{#if error}}
-    <p>{{{errorMsg}}}</p>
-    {{else}}
+    <br>
+    <div class="success-error-container">
+        {{#if success}}
+        <br>
+        <div class="success-msg-container">
+            <p class="success-msg">{{{successMsg}}}</p>
+        </div>        
+        {{else if error}}
+        <br>
+        <div class="error-msg-container">
+            <p class="error-msg">{{{errorMsg}}}</p>
+        </div>        
+        {{/if}}
+    </div>
     <br>
     <form action="/forgot" method="POST">
         <div class="form-group">
@@ -29,8 +40,7 @@
         <div>
             <button class="btn btn-primary" type="submit" id="signup-button">Submit</button>
         </div>
-    </form>
-    {{/if}}          
+    </form>      
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

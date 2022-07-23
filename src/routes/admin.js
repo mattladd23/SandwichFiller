@@ -20,8 +20,7 @@ router.use(methodOverride('_method'));
 // Render admin dashboard
 router.get('/', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
     res.render('admin-dashboard', {
-        title: 'SandwichFiller - Admin',
-        error: false
+        title: 'SandwichFiller - Admin'
     });
 });
 

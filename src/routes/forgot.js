@@ -54,12 +54,12 @@ let transporter = nodemailer.createTransport({
 router.get('/', checkNotAuthenticated, (req, res) => {
     res.render('forgot-email', {
         title: 'Password reset',
-        error: false
+        error: req.query.error
     });
 });
 
 router.post('/', checkNotAuthenticated, 
-    body('emailforgot', 'Email is not a valid UEA address!').isEmail().contains('@uea.ac.uk'),
+    body('emailforgot', 'Invalid email address').isEmail(),
 
     async (req, res) => {
 
@@ -161,10 +161,11 @@ router.post('/', checkNotAuthenticated,
 router.get('/:token', checkNotAuthenticated, (req, res) => {
     res.render('forgot-password', {
         title: 'Password reset',
-        error: false,
+        error: req.query.error,
+        success: req.query.success,
         token: req.params.token
     });
-})
+});
 
 router.put('/:token', checkNotAuthenticated,
     body('newpw', 'Password must be a minimum of 8 characters').isLength({ min: 8 }),
@@ -180,14 +181,14 @@ router.put('/:token', checkNotAuthenticated,
     // Error handlers
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render('reg-staff', {
-            title: 'Staff Registration',
+        return res.render('forgot-password', {
+            title: 'Password reset',
             error: true,
             errorMsg: errors.errors[0].msg
         })
     }
 
-    console.log('No errors');
+    console.log('No errors yet...');
 
     // Create form input variables
     const hashedNewPw = await bcrypt.hash(req.body.newpw, 10);
@@ -226,7 +227,12 @@ router.put('/:token', checkNotAuthenticated,
             await pool
                 .query(qNewPw)
                 .then(() => {
-                    res.redirect('/login?success=true');
+                    // res.redirect('/login?success=true');
+                    res.render('forgot-password', {
+                        title: 'Password reset',
+                        success: true,
+                        successMsg: 'Password reset successfully! Continue to the login page to access your account!'
+                    })
                 })
                 .catch((e) => {
                     console.log(e);

@@ -27,7 +27,8 @@ router.use(flash());
 router.get('/', checkNotAuthenticated, (req, res) => {
     res.render('login', {
         title: 'Login',
-        error: req.query.error      
+        error: req.query.error,
+        errorMsg: 'Incorrect email or password!'
     });
 });
 

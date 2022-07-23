@@ -13,18 +13,26 @@
 {{>notAuthNavbar}}
     
     <h1 class="reg-header">Staff registration</h1>
-    <br>   
+    <br>       
     <div class="back-button-container">
         <form action="/register" method="GET">
             <button type="submit" class="col btn btn-warning">Return to registration options</button>
         </form>
     </div>
     <br>
-    {{#if error}}
-    <div id="errors">
-        {{{errorMsg}}}
-    </div>
-    {{/if}}
+    <div class="success-error-container">
+        {{#if success}}
+        <br>
+        <div class="success-msg-container">
+            <p class="success-msg">{{{successMsg}}}</p>
+        </div>        
+        {{else if error}}
+        <br>
+        <div class="error-msg-container">
+            <p class="error-msg">{{{errorMsg}}}</p>
+        </div>        
+        {{/if}}
+    </div>    
     <br>
     <form action="/register/staff" method="POST">
         <div class="form-group">
