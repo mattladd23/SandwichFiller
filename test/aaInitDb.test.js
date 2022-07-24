@@ -23,6 +23,22 @@ describe('Initalize database', () => {
                 done();
             })
     });
+
+    describe('Creating a test admin user', (done) => {
+        chai.request(app)
+            .post('/test/create/admin')
+            .end(() => {
+                done();
+            })
+    });
+
+    describe('Creating a test student user', (done) => {
+        chai.request(app)
+            .post('/test/create/student')
+            .end(() => {
+                done();
+            })
+    });
 });
 
 
