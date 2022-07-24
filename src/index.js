@@ -87,3 +87,5 @@ app.get('/home', checkNotAuthenticated, (req, res) => {
 app.listen(port, () => {
     console.log(`Listening on port ${port} (${process.env.NODE_ENV})`);
 });
+
+module.exports = app;
