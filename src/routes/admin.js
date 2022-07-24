@@ -14,6 +14,14 @@ const { stringEscape, resultsHtmlEscape } = require('../middleware/escape');
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 
+// Define search path variable for development environment
+let searchPath = 'SET SEARCH_PATH TO sf; ';
+
+// Define search path variable for testing environment to access test database
+if (process.env.NODE_ENV === 'test') {
+    searchPath = 'SET SEARCH_PATH TO sf_test; ';
+}
+
 // Middleware
 router.use(methodOverride('_method'));
 
@@ -27,34 +35,34 @@ router.get('/', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
 // Render manage users page
 router.get('/users', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
 
-    let qStaff = 'SET SEARCH_PATH TO sf; ' +
-    'SELECT user_id, email, is_verified, is_staff, is_admin ' +
-    'FROM users ' +
-    'WHERE ' +
-    'is_verified = true ' +
-    'AND ' +
-    'is_staff = true ' +
-    'AND ' +
-    'is_admin = false;'
+    let qStaff = searchPath
+    + 'SELECT user_id, email, is_verified, is_staff, is_admin '
+    + 'FROM users '
+    + 'WHERE '
+    + 'is_verified = true '
+    + 'AND '
+    + 'is_staff = true '
+    + 'AND '
+    + 'is_admin = false;'
 
     console.log(qStaff);
 
-    let qStudents = 'SET SEARCH_PATH TO sf; ' +
-    'SELECT user_id, email, is_verified, is_staff, is_admin ' +
-    'FROM users ' +
-    'WHERE ' +
-    'is_verified = true ' +
-    'AND ' +
-    'is_staff = false ' +
-    'AND ' +
-    'is_admin = false; '
+    let qStudents = searchPath
+    + 'SELECT user_id, email, is_verified, is_staff, is_admin '
+    + 'FROM users '
+    + 'WHERE '
+    + 'is_verified = true '
+    + 'AND '
+    + 'is_staff = false '
+    + 'AND '
+    + 'is_admin = false; '
 
     console.log(qStudents);
 
-    let qUnverified = 'SET SEARCH_PATH TO sf; ' +
-    'SELECT user_id, email, is_verified, is_staff, is_admin ' +
-    'FROM users ' +
-    'WHERE is_verified = false;'
+    let qUnverified = searchPath
+    + 'SELECT user_id, email, is_verified, is_staff, is_admin '
+    + 'FROM users '
+    + 'WHERE is_verified = false;'
 
     console.log(qUnverified);
 
@@ -170,11 +178,11 @@ router.get('/users', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
 router.put('/users/verify/:id', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
     let userId = stringEscape(req.params.id);
 
-    let q = 'SET SEARCH_PATH TO sf; ' +
-    'UPDATE users ' +
-    'SET ' +
-    'is_staff = true ' +
-    `WHERE user_id = ${userId}`;
+    let q = searchPath
+    + 'UPDATE users '
+    + 'SET '
+    + 'is_staff = true '
+    + `WHERE user_id = ${userId}`;
 
     console.log(q);
 
@@ -192,11 +200,11 @@ router.put('/users/verify/:id', checkIsAuthenticated, checkIsAdmin, async (req, 
 router.put('/users/deny/:id', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
     let userId = stringEscape(req.params.id);
 
-    let q = 'SET SEARCH_PATH TO sf; ' +
-    'UPDATE users ' +
-    'SET ' +
-    'is_staff = false ' +
-    `WHERE user_id = ${userId};`;
+    let q = searchPath
+    + 'UPDATE users '
+    + 'SET '
+    + 'is_staff = false '
+    + `WHERE user_id = ${userId};`;
 
     await pool
         .query(q)
@@ -212,22 +220,22 @@ router.put('/users/deny/:id', checkIsAuthenticated, checkIsAdmin, async (req, re
 router.delete('/users/remove/:id', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
     let userId = stringEscape(req.params.id);
 
-    let q = 'SET SEARCH_PATH TO sf; ' +
-    'DELETE FROM users ' +
-    `WHERE user_id = ${userId};`;
+    let q = searchPath
+    + 'DELETE FROM users '
+    + `WHERE user_id = ${userId};`;
 
     await pool
         .query(q)
         .then(() => {            
             res.redirect('/admin/users');
         })
-})
+});
 
 // To render manage admin profile page
 router.get('/account', checkIsAuthenticated, checkIsAdmin, async (req, res) => {
     const userId = stringEscape(req.session.passport.user);
 
-    let q = 'SET SEARCH_PATH TO sf;'
+    let q = searchPath
     + 'PREPARE getAdminAccount(bigint) AS '
     + 'SELECT staff.user_id, staff.f_name, staff.l_name, staff.email '
     + 'FROM staff '
@@ -283,7 +291,7 @@ router.put('/account/password', checkIsAuthenticated, checkIsAdmin,
 
     const errors = validationResult(req);
 
-    const qGetPw = 'SET SEARCH_PATH TO sf; '
+    const qGetPw = searchPath
     + 'PREPARE getPassword(bigint) AS '
     + 'SELECT users.password '
     + 'FROM users '

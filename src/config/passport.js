@@ -3,6 +3,14 @@ const LocalStrategy = require('passport-local').Strategy
 const pool = require('./db');
 const bcrypt = require('bcrypt');
 
+// Define search path variable for development environment
+let searchPath = 'SET SEARCH_PATH TO sf; ';
+
+// Define search path variable for testing environment to access test database
+if (process.env.NODE_ENV === 'test') {
+    searchPath = 'SET SEARCH_PATH TO sf_test; ';
+}
+
 // Function to initialize authentication
 function initialize(passport) {    
 
@@ -10,10 +18,10 @@ function initialize(passport) {
     const authenticateUser = (async (email, password, done) => {        
 
         // Select query and prepared statement
-        let q = 'SET SEARCH_PATH TO sf;'
+        let q = searchPath
         + 'PREPARE login(text) AS '
-        + 'SELECT * FROM users WHERE email = $1;'
-        + `EXECUTE login('${email}');`
+        + 'SELECT * FROM users WHERE email = $1; '
+        + `EXECUTE login('${email}'); `
         + 'DEALLOCATE login;'        
 
         // Run query through database
@@ -61,10 +69,10 @@ function initialize(passport) {
 
     // Deserialize user
     passport.deserializeUser(async (userId, done) => {
-        let q = 'SET SEARCH_PATH TO sf;'
+        let q = searchPath
         + 'PREPARE deserializeUser(bigint) AS '
-        + 'SELECT * FROM users WHERE user_id = $1;'
-        + `EXECUTE deserializeUser('${userId}');`
+        + 'SELECT * FROM users WHERE user_id = $1; '
+        + `EXECUTE deserializeUser('${userId}'); `
         + 'DEALLOCATE deserializeUser;'
 
         await pool

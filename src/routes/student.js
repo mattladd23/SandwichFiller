@@ -14,6 +14,14 @@ const { stringEscape, resultsHtmlEscape } = require('../middleware/escape');
 // const { sanitizeTime } = require('../middleware/sanitizeTime');
 const bcrypt = require('bcrypt');
 
+// Define search path variable for development environment
+let searchPath = 'SET SEARCH_PATH TO sf; ';
+
+// Define search path variable for testing environment to access test database
+if (process.env.NODE_ENV === 'test') {
+    searchPath = 'SET SEARCH_PATH TO sf_test; ';
+}
+
 // Middleware
 router.use(methodOverride('_method'));
 
@@ -45,7 +53,7 @@ router.get('/applications', checkIsAuthenticated, checkIsStudent, async (req, re
 
     const userId = stringEscape(req.session.passport.user);
 
-    let q = 'SET SEARCH_PATH TO sf;'
+    let q = searchPath
     + 'PREPARE userApps(bigint) AS '
     + 'SELECT student.user_id, student.f_name, student.l_name, application.app_id, application.role, '
     + 'application.organisation, application.city, application.country, application.deadline, '
@@ -136,7 +144,7 @@ router.post('/applications/new', checkIsAuthenticated, checkIsStudent,
     const appStatus = stringEscape(req.body.appstatus);
     const description = stringEscape(req.body.description);
 
-    let q = 'SET SEARCH_PATH TO sf;'
+    let q = searchPath
     + 'PREPARE newApp(bigint, bigint, text, text, text, text, date, text, text, text) AS '
     + 'INSERT INTO application(user_id, app_id, role, organisation, city, country, deadline, description, app_status, last_updated)'
     + 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, LOCALTIMESTAMP(0));'
@@ -165,7 +173,7 @@ router.get('/applications/update', checkIsAuthenticated, checkIsStudent, async (
 
     const userId = stringEscape(req.session.passport.user);
 
-    let q = 'SET SEARCH_PATH TO sf;'
+    let q = searchPath
     + 'PREPARE getStudentApps(bigint) AS '
     + 'SELECT student.user_id, student.f_name, student.l_name, application.app_id, application.role, '
     + 'application.organisation, application.city, application.country, application.deadline, '
@@ -228,7 +236,7 @@ router.put('/applications/update/:id', checkIsAuthenticated, checkIsStudent,
     const description = stringEscape(req.body.updatedesc);
     const appId = stringEscape(req.params.id);
 
-    let q = 'SET SEARCH_PATH TO sf;'
+    let q = searchPath
     + 'PREPARE updateApp(text, text, timestamp, bigint) AS '
     + 'UPDATE application '
     + 'SET app_status = $1, description = $2, last_updated = $3'
@@ -261,7 +269,7 @@ router.delete('/applications/update/:id', checkIsAuthenticated, checkIsStudent, 
     
     const appId = stringEscape(req.params.id);
 
-    let q = 'SET SEARCH_PATH TO sf;'
+    let q = searchPath
     + 'PREPARE deleteApp(bigint) AS '
     + 'DELETE FROM application '
     + 'WHERE application.app_id = $1; '
@@ -283,7 +291,7 @@ router.get('/account', checkIsAuthenticated, checkIsStudent, async (req, res) =>
 
     const userId = stringEscape(req.session.passport.user);
 
-    let q = 'SET SEARCH_PATH TO sf;'
+    let q = searchPath
     + 'PREPARE getAccount(bigint) AS '
     + 'SELECT student.user_id, student.f_name, student.l_name, student.email, student.student_id, student.course, '
     + 'student.school, student.placement_year, student.grad_year, student.pref_sector, student.other_sectors '
@@ -343,7 +351,7 @@ router.put('/account', checkIsAuthenticated, checkIsStudent,
     const otherSectors = stringEscape(req.body.othersectors);
     const userId = stringEscape(req.session.passport.user);
 
-    let q = 'SET SEARCH_PATH TO sf;'
+    let q = searchPath
     + 'PREPARE editAccount(bigint, text, text, text, int, text, text, bigint) AS '
     + 'UPDATE student '
     + 'SET student_id = $1, course = $2, school = $3, placement_year = $4, '
@@ -396,7 +404,7 @@ router.put('/account/password', checkIsAuthenticated, checkIsStudent,
 
     const errors = validationResult(req);
 
-    const qGetPw = 'SET SEARCH_PATH TO sf; '
+    const qGetPw = searchPath
     + 'PREPARE getPassword(bigint) AS '
     + 'SELECT users.password '
     + 'FROM users '

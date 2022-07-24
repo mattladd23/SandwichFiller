@@ -15,6 +15,14 @@ const { stringEscape, resultsHtmlEscape, htmlEscape } = require('../middleware/e
 // const { sanitizeTime } = require('../middleware/sanitizeTime');
 const bcrypt = require('bcrypt');
 
+// Define search path variable for development environment
+let searchPath = 'SET SEARCH_PATH TO sf; ';
+
+// Define search path variable for testing environment to access test database
+if (process.env.NODE_ENV === 'test') {
+    searchPath = 'SET SEARCH_PATH TO sf_test; ';
+}
+
 // Middleware
 router.use(methodOverride('_method'));
 
@@ -43,7 +51,7 @@ router.get('/', checkIsAuthenticated, checkIsStaff, (req, res) => {
 
 // Get all applications
 router.get('/applications', checkIsAuthenticated, checkIsStaff, async (req, res) => {
-    let q = 'SET SEARCH_PATH TO sf;';
+    let q = searchPath;
     let prepared = false;
 
     if (Object.keys(req.query).length === 0) {
@@ -179,7 +187,7 @@ router.get('/search/results', checkIsAuthenticated, checkIsStaff, async (req, re
 
     console.log(placementYearQueryStrEscaped);
 
-    let q = 'SET SEARCH_PATH TO sf;'
+    let q = searchPath
     + 'PREPARE searchStudents(text, text, text) AS '
     + 'SELECT student_search.user_id, student_search.f_name, student_search.l_name, student_search.email, '
     + 'student_search.student_id, student_search.course, student_search.school, student_search.placement_year, '
@@ -232,7 +240,7 @@ router.get('/search/results', checkIsAuthenticated, checkIsStaff, async (req, re
 router.get('/search/results/:id', checkIsAuthenticated, checkIsStaff, async (req, res) => {
     studentUserId = req.params.id;
 
-    let q = 'SET SEARCH_PATH TO sf;'
+    let q = searchPath
     + 'PREPARE getStudentApps(bigint) AS '
     + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
     + 'application.country, application.deadline, application.description, application.app_status, '
@@ -287,11 +295,7 @@ router.get('/search/results/:id', checkIsAuthenticated, checkIsStaff, async (req
 // Render staff insights page
 router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => {
 
-    let searchPath = 'SET SEARCH_PATH TO sf; '
-
     // Define parameters and queries of all insights prior to executing promises in parallel
-
-    // Parameters to be used across all queries
     const week = '7 days';
     const zero = '0';
     const interested = 'Interested';
@@ -304,127 +308,127 @@ router.get('/insights', checkIsAuthenticated, checkIsStaff, async (req, res) => 
     
 
     // Query to find applications with deadlines this week
-    let qDeadlines = searchPath +
-    'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, ' +
-    'student.course, application.app_id, application.role, application.organisation, application.city, ' +
-    'application.country, application.deadline, application.description, application.app_status ' +
-    'FROM student ' +
-    'JOIN application ' +
-    'ON student.user_id = application.user_id ' +
-    `WHERE deadline - NOW() <= interval '${week}' ` +
-    `AND deadline - NOW() >= interval '${zero}' ` +
-    `AND app_status = '${interested}';` 
+    let qDeadlines = searchPath
+    + 'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, '
+    + 'student.course, application.app_id, application.role, application.organisation, application.city, '
+    + 'application.country, application.deadline, application.description, application.app_status '
+    + 'FROM student '
+    + 'JOIN application '
+    + 'ON student.user_id = application.user_id '
+    + `WHERE deadline - NOW() <= interval '${week}' `
+    + `AND deadline - NOW() >= interval '${zero}' `
+    + `AND app_status = '${interested}';`;
 
     console.log('------------- \n', qDeadlines);
 
 
     // Query to find accepted applications active this week
-    let qAppsAcc = searchPath +
-    'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, ' +
-    'application.app_id, application.role, application.organisation, application.city, ' +
-    'application.country, application.deadline, application.description, application.app_status ' +
-    'FROM student ' +
-    'JOIN application ' +
-    'ON student.user_id = application.user_id ' +
-    `WHERE application.last_updated >= NOW() - interval '${week}' ` +
-    `AND application.app_status = '${accepted}';`
+    let qAppsAcc = searchPath
+    + 'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, '
+    + 'application.app_id, application.role, application.organisation, application.city, '
+    + 'application.country, application.deadline, application.description, application.app_status '
+    + 'FROM student '
+    + 'JOIN application '
+    + 'ON student.user_id = application.user_id '
+    + `WHERE application.last_updated >= NOW() - interval '${week}' `
+    + `AND application.app_status = '${accepted}';`
 
     console.log('------------- \n', qAppsAcc);   
 
 
     // Query to find rejected applications active this week
-    let qAppsRej = searchPath +
-    'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, ' +
-    'application.app_id, application.role, application.organisation, application.city, ' +
-    'application.country, application.deadline, application.description, application.app_status ' +
-    'FROM student ' +
-    'JOIN application ' +
-    'ON student.user_id = application.user_id ' +
-    `WHERE application.last_updated >= NOW() - interval '${week}' ` +
-    `AND application.app_status = '${rejected}';`
+    let qAppsRej = searchPath
+    + 'SELECT student.user_id, student.f_name, student.l_name, student.student_id, student.email, '
+    + 'application.app_id, application.role, application.organisation, application.city, '
+    + 'application.country, application.deadline, application.description, application.app_status '
+    + 'FROM student '
+    + 'JOIN application '
+    + 'ON student.user_id = application.user_id '
+    + `WHERE application.last_updated >= NOW() - interval '${week}' `
+    + `AND application.app_status = '${rejected}';`
     
 
     console.log('------------- \n', qAppsRej);
 
 
     // Query to find students with most applications submitted
-    let qMostApps = searchPath +
-    'SELECT * FROM apps_submitted_ordered ' +
-    'WHERE apps_submitted_ordered.num_apps >= (' +
-    'SELECT percentile_disc(0.75) WITHIN GROUP ' +
-    '(ORDER BY apps_submitted_ordered.num_apps) ' +
-    'FROM apps_submitted_ordered' +
-    ');'
+    let qMostApps = searchPath
+    + 'SELECT * FROM apps_submitted_ordered '
+    + 'WHERE apps_submitted_ordered.num_apps >= ('
+    + 'SELECT percentile_disc(0.75) WITHIN GROUP '
+    + '(ORDER BY apps_submitted_ordered.num_apps) '
+    + 'FROM apps_submitted_ordered'
+    + ');'
 
     console.log('------------- \n', qMostApps);
 
     // Query to find students who are yet to have submitted any applications
-    let qNoApps = searchPath +
-    'SELECT student_search.user_id, student_search.f_name, student_search.l_name, ' +
-    'student_search.student_id, student_search.email, all_submitted_apps.app_id, ' +
-    'all_submitted_apps.app_status ' +
-    'FROM student_search ' +
-    'LEFT JOIN all_submitted_apps ' +
-    'ON student_search.user_id = all_submitted_apps.user_id ' +
-    'WHERE all_submitted_apps.app_status IS null;'
+    let qNoApps = searchPath
+    + 'SELECT student_search.user_id, student_search.f_name, student_search.l_name, '
+    + 'student_search.student_id, student_search.email, all_submitted_apps.app_id, '
+    + 'all_submitted_apps.app_status '
+    + 'FROM student_search '
+    + 'LEFT JOIN all_submitted_apps '
+    + 'ON student_search.user_id = all_submitted_apps.user_id '
+    + 'WHERE all_submitted_apps.app_status IS null;'
 
     console.log('------------- \n', qNoApps);
 
 
     // Query to find students with the most placement offers received
-    let qMostOffers = searchPath +
-    'SELECT student.user_id, student.f_name, student.l_name, ' +
-    'student.student_id, student.email, COUNT(application.app_status) as apps_accepted ' +
-    'FROM student ' +
-    'JOIN application ' +
-    'ON student.user_id = application.user_id ' +
-    `WHERE application.app_status = '${accepted}' ` +
-    'GROUP BY student.user_id ' +
-    'ORDER BY apps_accepted DESC;'
+    let qMostOffers = searchPath
+    + 'SELECT student.user_id, student.f_name, student.l_name, '
+    + 'student.student_id, student.email, COUNT(application.app_status) as apps_accepted '
+    + 'FROM student '
+    + 'JOIN application '
+    + 'ON student.user_id = application.user_id '
+    + `WHERE application.app_status = '${accepted}' `
+    + 'GROUP BY student.user_id '
+    + 'ORDER BY apps_accepted DESC;'
 
     console.log('------------- \n', qMostOffers);
 
     // Query to find student who are yet to have received any placement offers
-    let qNoOffers = searchPath +
-    'SELECT student_search.user_id, student_search.f_name, student_search.l_name, student_search.student_id, ' +
-    'student_search.email, accepted_apps.app_status ' +
-    'FROM student_search ' +
-    'LEFT JOIN accepted_apps ' +
-    'ON student_search.user_id = accepted_apps.user_id ' +
-    'WHERE accepted_apps.app_status IS null;'
+    let qNoOffers = searchPath
+    + 'SELECT student_search.user_id, student_search.f_name, student_search.l_name, student_search.student_id, '
+    + 'student_search.email, accepted_apps.app_status '
+    + 'FROM student_search '
+    + 'LEFT JOIN accepted_apps '
+    + 'ON student_search.user_id = accepted_apps.user_id '
+    + 'WHERE accepted_apps.app_status IS null;'
 
     console.log('------------- \n', qNoOffers);
 
 
     // Query to find employers with most applications
-    let qEmpMostApps = searchPath +
-    'SELECT application.organisation, COUNT(application.organisation) AS num_apps ' +
-    'FROM application ' +
-    `WHERE application.app_status = '${applied}' ` +
-    `OR application.app_status = '${onlineTests}' ` +
-    `OR application.app_status = '${assessmentCentre}' ` +
-    `OR application.app_status = '${interview}' ` +
-    `OR application.app_status = '${accepted}' ` +
-    `OR application.app_status = '${rejected}' ` +
-    'GROUP BY application.organisation ' +
-    'ORDER BY num_apps;'
+    let qEmpMostApps = searchPath
+    + 'SELECT application.organisation, COUNT(application.organisation) AS num_apps '
+    + 'FROM application '
+    + `WHERE application.app_status = '${applied}' `
+    + `OR application.app_status = '${onlineTests}' `
+    + `OR application.app_status = '${assessmentCentre}' `
+    + `OR application.app_status = '${interview}' `
+    + `OR application.app_status = '${accepted}' `
+    + `OR application.app_status = '${rejected}' `
+    + 'GROUP BY application.organisation '
+    + 'ORDER BY num_apps;'
 
     console.log('------------- \n', qEmpMostApps);
 
     // Query to find employers with most placement offers
-    let qEmpMostOffers = searchPath +
-    'SELECT * from acc_apps_per_emp;'
+    let qEmpMostOffers = searchPath
+    + 'SELECT * from acc_apps_per_emp;'
 
     console.log('------------- \n', qEmpMostOffers);
 
     // Query to find employers with highest percentage of offers to applications
-    let qEmpHighPerc = searchPath +
-    'SELECT acc_apps_per_emp.organisation, acc_apps_per_emp.accepted_apps, ' +
-    'total_apps_per_emp.total_apps, (accepted_apps/total_apps*100) as perc_offers ' +
-    'FROM acc_apps_per_emp ' +
-    'JOIN total_apps_per_emp ' +
-    'ON acc_apps_per_emp.organisation = total_apps_per_emp.organisation ' +
-    'ORDER BY perc_offers;'
+    let qEmpHighPerc = searchPath
+    + 'SELECT acc_apps_per_emp.organisation, acc_apps_per_emp.accepted_apps, '
+    + 'total_apps_per_emp.total_apps, (accepted_apps/total_apps*100) as perc_offers '
+    + 'FROM acc_apps_per_emp '
+    + 'JOIN total_apps_per_emp '
+    + 'ON acc_apps_per_emp.organisation = total_apps_per_emp.organisation '
+    + 'ORDER BY perc_offers;'
 
     console.log('------------- \n', qEmpHighPerc);         
 
@@ -639,7 +643,7 @@ router.get('/insights/application/:id', checkIsAuthenticated, checkIsStaff, asyn
 
     const appId = stringEscape(req.params.id);
 
-    let q = 'SET SEARCH_PATH TO sf; '
+    let q = searchPath
     + 'PREPARE getApplication(bigint) AS '
     + 'SELECT application.user_id, application.app_id, application.role, application.organisation, application.city, '
     + 'application.country, application.deadline, application.description, application.app_status, '
@@ -674,7 +678,7 @@ router.get('/account', checkIsAuthenticated, checkIsStaff, async (req, res) => {
 
     const userId = stringEscape(req.session.passport.user);
 
-    let q = 'SET SEARCH_PATH TO sf;'
+    let q = searchPath
     + 'PREPARE getStaffAccount(bigint) AS '
     + 'SELECT staff.user_id, staff.f_name, staff.l_name, staff.email '
     + 'FROM staff '
@@ -733,7 +737,7 @@ router.put('/account', checkIsAuthenticated, checkIsStaff,
     const staffEmail = stringEscape(req.body.staffemail);
     const userId = stringEscape(req.session.passport.user);
 
-    let q = 'SET SEARCH_PATH TO sf;'
+    let q = searchPath
     + 'PREPARE editStaffAccount(text, text, bigint) AS '
     + 'UPDATE staff '
     + 'SET f_name = $1, l_name = $2 '
@@ -782,7 +786,7 @@ router.put('/account/password', checkIsAuthenticated, checkIsStaff,
 
     const errors = validationResult(req);
 
-    const qGetPw = 'SET SEARCH_PATH TO sf; '
+    const qGetPw = searchPath
     + 'PREPARE getPassword(bigint) AS '
     + 'SELECT users.password '
     + 'FROM users '

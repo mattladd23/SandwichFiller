@@ -22,6 +22,14 @@ const { handlebars } = require('hbs');
 const { stringEscape, resultsHtmlEscape } = require('../middleware/escape');
 const methodOverride = require('method-override');
 
+// Define search path variable for development environment
+let searchPath = 'SET SEARCH_PATH TO sf; ';
+
+// Define search path variable for testing environment to access test database
+if (process.env.NODE_ENV === 'test') {
+    searchPath = 'SET SEARCH_PATH TO sf_test; ';
+}
+
 // Middleware
 router.use(methodOverride('_method'));
 
@@ -77,8 +85,8 @@ router.post('/', checkNotAuthenticated,
     const email = stringEscape(req.body.emailforgot);
 
     // Query to check existing credentials
-    let qCheckIfExists = 'SET SEARCH_PATH TO sf; ' +
-    'SELECT email, is_verified from users;'
+    let qCheckIfExists = searchPath
+    + 'SELECT email, is_verified from users;'
 
     let credentialExists = false;
 
@@ -110,7 +118,7 @@ router.post('/', checkNotAuthenticated,
 
     // Query to find user id to pass into payload for email verification
 
-    let qUserId = 'SET SEARCH_PATH TO sf; '
+    let qUserId = searchPath
     + 'PREPARE getUserId(text) AS '
     + 'SELECT user_id '
     + 'FROM users '
@@ -213,7 +221,7 @@ router.put('/:token', checkNotAuthenticated,
 
             console.log(`User ID: ${userId}`);
 
-            let qNewPw = 'SET SEARCH_PATH TO sf; '
+            let qNewPw = searchPath
             + 'PREPARE updatePwForgot(text, bigint) AS '
             + 'UPDATE users '
             + 'SET '
