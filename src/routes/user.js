@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'test') {
 // Render loggedin tester page - call it user for now
 router.get('/', checkIsAuthenticated, async (req, res) => {
 
-    userId = req.session.passport.user;
+    const userId = req.session.passport.user;
 
     let q = searchPath
     + 'PREPARE redirectUser(bigint) AS ' 

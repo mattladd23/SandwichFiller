@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === 'test') {
         + 'DELETE FROM application; '
         + 'DELETE FROM users; '
         + 'DELETE FROM student; '
-        + 'DELETE FROM staff; ';
+        + 'DELETE FROM staff;';
 
         await pool
             .query(q)

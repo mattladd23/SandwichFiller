@@ -1,16 +1,25 @@
-const pool = require("../config/db")
+// Import database model
+const pool = require("../config/db");
+
+// Define search path variable for development environment
+let searchPath = 'SET SEARCH_PATH TO sf; ';
+
+// Define search path variable for testing environment to access test database
+if (process.env.NODE_ENV === 'test') {
+    searchPath = 'SET SEARCH_PATH TO sf_test; ';
+}
 
 const checkIsStaff = (async(req, res, next) => {
 
     let userId = req.session.passport.user
 
-    let q = 'SET SEARCH_PATH TO sf; ' +
-    'PREPARE checkIsStaff(bigint) AS ' +
-    'SELECT users.is_staff ' +
-    'FROM users ' +
-    'WHERE users.user_id = $1; ' +
-    `EXECUTE checkIsStaff(${userId}); ` +
-    'DEALLOCATE checkIsStaff;';
+    let q = searchPath
+    + 'PREPARE checkIsStaff(bigint) AS '
+    + 'SELECT users.is_staff '
+    + 'FROM users '
+    + 'WHERE users.user_id = $1; '
+    + `EXECUTE checkIsStaff(${userId}); `
+    + 'DEALLOCATE checkIsStaff;';
 
     console.log(q);
 
@@ -39,13 +48,13 @@ const checkIsStudent = (async (req, res, next) => {
 
     let userId = req.session.passport.user;
 
-    let q = 'SET SEARCH_PATH TO sf; ' +
-    'PREPARE checkIsStudent(bigint) AS ' +
-    'SELECT users.is_staff, users.is_admin ' +
-    'FROM users ' +
-    'WHERE users.user_id = $1; ' +
-    `EXECUTE checkIsStudent(${userId}); ` +
-    'DEALLOCATE checkIsStudent;';
+    let q = searchPath
+    + 'PREPARE checkIsStudent(bigint) AS '
+    + 'SELECT users.is_staff, users.is_admin '
+    + 'FROM users '
+    + 'WHERE users.user_id = $1; '
+    + `EXECUTE checkIsStudent(${userId}); `
+    + 'DEALLOCATE checkIsStudent;';
 
     console.log(q);
 
@@ -74,13 +83,13 @@ const checkIsAdmin = (async (req, res, next) => {
 
     let userId = req.session.passport.user;
 
-    let q = 'SET SEARCH_PATH TO sf; ' +
-    'PREPARE checkIsAdmin(bigint) AS ' +
-    'SELECT users.is_admin ' +
-    'FROM users ' +
-    'WHERE users.user_id = $1; ' +
-    `EXECUTE checkIsAdmin(${userId}); ` +
-    'DEALLOCATE checkIsAdmin;';
+    let q = searchPath
+    + 'PREPARE checkIsAdmin(bigint) AS '
+    + 'SELECT users.is_admin '
+    + 'FROM users '
+    + 'WHERE users.user_id = $1; '
+    + `EXECUTE checkIsAdmin(${userId}); `
+    + 'DEALLOCATE checkIsAdmin;';
 
     console.log(q);
 
